@@ -3,7 +3,7 @@
 
 // Import dependencies
 const puzzle = require('../../../lib').puzzle,
-      turing  = require('../../lib/turing');
+      turing = require('../../lib/turing');
 
 // Set global inputs
 const prog = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map(a => parseInt(a));;
@@ -41,6 +41,6 @@ function puzzle02 (...args) {
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '09', '02', puzzle02, [
-    [[...prog], [2]], { expected: undefined, test: false },
+    [[...prog], [2]], { expected: [64236], test: false },
   ]);
 };

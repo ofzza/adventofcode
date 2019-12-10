@@ -18,7 +18,7 @@ module.exports.processLayers = function processLayers (width, height, data) {
   return layers;
 }
 
-module.exports.renderFactory = function (width, height) {
+module.exports.renderFactory = function renderFactory (width, height) {
   return function * render (image) {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
