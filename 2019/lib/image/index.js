@@ -18,20 +18,45 @@ module.exports.processLayers = function processLayers (width, height, data) {
   return layers;
 }
 
-module.exports.renderFactory = function renderFactory (width, height) {
+// Renders 1D array as image
+module.exports.renderLinearFactory = function renderLinearFactory ({ width, height, extract = null } = {}) {
   return function * render (image) {
+    // Check if image needs to be extracted from result
+    if (extract !== null) { image = extract(image); }
+    // Render image
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const pixel = image[y * width + x];
-        if (pixel === 2) {
-          yield ' ';
-        } else if (pixel === 1) {
-          yield '░';
-        } else if (pixel === 0){
-          yield '█';
-        }
+        yield drawPixel(image[y * width + x]);
       }
-      yield '\n';
+      yield drawPixel(null);
     }
   };
 };
+
+// Renders 2D array as image
+module.exports.renderFieldFactory = function renderFieldFactory ({ extract = null } = {}) {
+  return function * render (image) {
+    // Check if image needs to be extracted from result
+    if (extract !== null) { image = extract(image); }
+    // Render image
+    for (let y = 0; y < image.length; y++) {
+      for (let x = 0; x < image[0].length; x++) {
+        yield drawPixel(image[y][x]);
+      }
+      yield drawPixel(null);
+    }
+  };
+};
+
+// Draw a pixes as ASCII
+function drawPixel (pixel) {
+  if (pixel === 2) {
+    return ' ';
+  } else if (pixel === 1) {
+    return '█';
+  } else if (pixel === 0){
+    return '░';
+  } else if (pixel === null) {
+    return '\n';
+  }
+}

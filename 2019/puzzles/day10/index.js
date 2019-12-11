@@ -8,7 +8,7 @@ const puzzle      = require('../../../lib').puzzle,
 // Set global inputs
 const input = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split('\n').map((row) => {
   return row.trim().split('');
-});;
+});
 
 // 1st puzzle of the day
 function puzzle01 (...args) {

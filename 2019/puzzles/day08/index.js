@@ -2,9 +2,9 @@
 // https://adventofcode.com/2019/day/8
 
 // Import dependencies
-const puzzle        = require('../../../lib').puzzle,
-      processLayers = require('../../lib/image').processLayers,
-      renderFactory = require('../../lib/image').renderFactory;
+const puzzle              = require('../../../lib').puzzle,
+      processLayers       = require('../../lib/image').processLayers,
+      renderLinearFactory = require('../../lib/image').renderLinearFactory;
 
 // Set global inputs
 const input = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split('').map(a => parseInt(a));;
@@ -43,11 +43,11 @@ function puzzle02 (...args) {
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '08', '02', puzzle02, [
-    [[2,2], [0,2,2,2,1,1,2,2,2,2,1,2,0,0,0,0]], { expected: [0,1,1,0], render: renderFactory(2, 2) },
+    [[2,2], [0,2,2,2,1,1,2,2,2,2,1,2,0,0,0,0]], { expected: [0,1,1,0], render: renderLinearFactory({ width: 2, height: 2 }) },
     [[25,6], input],                            { expected: [1,1,1,1,0,1,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,0,
                                                              1,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,1,0,1,
                                                              0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,
                                                              0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,
-                                                             0,1,0,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0], render: renderFactory(25, 6), test: false },
+                                                             0,1,0,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0], render: renderLinearFactory({ width: 25, height: 6 }), test: false },
   ]);
 };
