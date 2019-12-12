@@ -23,7 +23,7 @@ function puzzle01 (...args) {
 }
 module.exports.puzzle01 = () => {
   puzzle('2019', '11', '01', puzzle01, [
-    prog, { expected: undefined, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
+    prog, { expected: 1709, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
   ]);
 };
 
@@ -41,6 +41,6 @@ function puzzle02 (...args) {
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '11', '02', puzzle02, [
-    prog, { expected: undefined, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
+    prog, { expected: 249, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
   ]);
 };
