@@ -4,19 +4,24 @@
 // Import dependencies
 const fs    = require('fs'),
       path  = require('path'),
-      yargs = require('yargs');
+      yargs = require('yargs'),
+      flags = require('./lib').flags;
 
 // Check if yargs installed
 if (!yargs) {
 
   // Run all available tests
-  runTests();
+  try {
+    runTests();
+  } catch (err) {
+    console.error(err.message);
+  }
 
 } else {
 
   // Define yargs arguments
   const argv = yargs
-    .usage('Usage: node $0 -y [num] -d [num] -p [num]')
+    .usage('Usage: node $0 -y [num] -d [num] -p [num] -i [boolean]')
     .example('node ./ --year 2019 --day 1 --puzzle 1')
     .alias('y', 'year')
     .describe('y', 'Run only puzzles from a single year')
@@ -24,6 +29,8 @@ if (!yargs) {
     .describe('d', 'Run only puzzles from a single day')
     .alias('p', 'puzzle')
     .describe('p', 'Run only single puzzle')
+    .alias('i', 'interactive')
+    .describe('i', 'Run in interactive mode (output all frames) when available')
     .demandOption([])
     .help('h')
     .alias('h', 'help')
@@ -31,15 +38,19 @@ if (!yargs) {
 
   // Use yargs to determine which tests to run
   runTests({
-    year:   argv.year,
-    day:    argv.day,
-    puzzle: argv.puzzle
+    year:         argv.year,
+    day:          argv.day,
+    puzzle:       argv.puzzle,
+    interactive:  argv.interactive
   });
 
 }
 
 // Search and run all tests
-function runTests ({ year, day, puzzle } = {}) {
+function runTests ({ year, day, puzzle, interactive } = {}) {
+
+  // Set interactive flag
+  flags.INTERACTIVE = interactive;
 
   // Find all year directories
   for (let yearDir of fs.readdirSync('./')) {

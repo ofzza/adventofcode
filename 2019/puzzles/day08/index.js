@@ -23,7 +23,7 @@ function puzzle01 (...args) {
 module.exports.puzzle01 = () => {
   puzzle('2019', '08', '01', puzzle01, [
     [[3,2], [1,2,3,4,5,6,7,8,9,0,1,2]], { expected: 1 },
-    [[25,6], input],                    { expected: 2250, test: false },
+    [[25,6], input],                    { expected: 2250, example: false },
   ]);
 };
 
@@ -48,6 +48,6 @@ module.exports.puzzle02 = () => {
                                                              1,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,1,1,0,0,1,1,1,1,0,0,0,0,1,0,1,
                                                              0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,
                                                              0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,
-                                                             0,1,0,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0], render: renderLinearFactory({ width: 25, height: 6 }), test: false },
+                                                             0,1,0,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0], render: renderLinearFactory({ width: 25, height: 6 }), example: false },
   ]);
 };

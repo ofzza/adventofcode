@@ -4,6 +4,7 @@
 // Import dependencies
 const puzzle              = require('../../../lib').puzzle,
       robot               = require('../../lib/ehprobot'),
+      drawPointsAsImage   = require('../../lib/image').drawPointsAsImage,
       renderFieldFactory  = require('../../lib/image').renderFieldFactory;
 
 // Set global inputs
@@ -19,11 +20,11 @@ function puzzle01 (...args) {
     surface[key] = point.color;
   }
   // Return count and drawn image
-  return { count: Object.values(surface).length, image: robot.drawTrailAsImage(trail) }
+  return { count: Object.values(surface).length, image: drawPointsAsImage(trail) }
 }
 module.exports.puzzle01 = () => {
   puzzle('2019', '11', '01', puzzle01, [
-    prog, { expected: 1709, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
+    prog, { expected: 1709, transform: r => r.count, render: renderFieldFactory({ transform: r => r.image }), example: false }
   ]);
 };
 
@@ -37,10 +38,10 @@ function puzzle02 (...args) {
     surface[key] = point.color;
   }
   // Return count and drawn image
-  return { count: Object.values(surface).length, image: robot.drawTrailAsImage(trail) }
+  return { count: Object.values(surface).length, image: drawPointsAsImage(trail) }
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '11', '02', puzzle02, [
-    prog, { expected: 249, extract: r => r.count, render: renderFieldFactory({ extract: r => r.image }), test: false }
+    prog, { expected: 249, transform: r => r.count, render: renderFieldFactory({ transform: r => r.image }), example: false }
   ]);
 };

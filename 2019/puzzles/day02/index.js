@@ -25,7 +25,7 @@ module.exports.puzzle01 = () => {
     [2,3,0,3,99],                             { expected: 2 },
     [2,4,4,5,99,0],                           { expected: 2 },
     [1,1,1,4,99,5,6,0,99],                    { expected: 30 },
-    [program[0], 12, 2, ...program.slice(3)], { expected: 3101878, test: false }
+    [program[0], 12, 2, ...program.slice(3)], { expected: 3101878, example: false }
   ]);
 }
 
@@ -42,6 +42,6 @@ function puzzle02 (target) {
 module.exports.puzzle02 = () => {
   puzzle('2019', '02', '02', puzzle02, [
     [3101878],  { expected: 1202 },
-    [19690720], { expected: 8444, test: false }
+    [19690720], { expected: 8444, example: false }
   ]);
 };

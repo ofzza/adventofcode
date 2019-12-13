@@ -17,7 +17,7 @@ function puzzle01 (...masses) {
 module.exports.puzzle01 = () => {
   puzzle('2019', '01', '01', puzzle01, [
     [12, 14, 1969, 100756], { expected: 34241 },
-    input,                  { expected: 3262358, test: false }
+    input,                  { expected: 3262358, example: false }
   ]);
 };
 
@@ -32,6 +32,6 @@ module.exports.puzzle02 = () => {
   // Run puzzle
   puzzle('2019', '01', '02', puzzle02, [
     [14, 1969, 100756], { expected: 51314 },
-    input,              { expected: 4890696, test: false }
+    input,              { expected: 4890696, example: false }
   ]);
 };

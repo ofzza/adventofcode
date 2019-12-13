@@ -16,7 +16,7 @@ function puzzle01 (...args) {
 module.exports.puzzle01 = () => {
   puzzle('2019', '06', '01', puzzle01, [
     ['COM)B','B)C','C)D','D)E','E)F','B)G','G)H','D)I','E)J','J)K','K)L'],  { expected: 42 },
-    input,                                                                  { expected: 204521, test: false },
+    input,                                                                  { expected: 204521, example: false },
   ]);
 };
 
@@ -39,6 +39,6 @@ function puzzle02 (...args) {
 module.exports.puzzle02 = () => {
   puzzle('2019', '06', '02', puzzle02, [
     ['COM)B','B)C','C)D','D)E','E)F','B)G','G)H','D)I','E)J','J)K','K)L','K)YOU','I)SAN'],  { expected: 4 },
-    input,                                                                                  { expected: 307, test: false },
+    input,                                                                                  { expected: 307, example: false },
   ]);
 };

@@ -51,31 +51,4 @@ module.exports.run = function * run (prog, surface = {}) {
     }
 
   } while (!result.done);
-}
-
-// Draw trail as image
-module.exports.drawTrailAsImage = function drawTrailAsImage (trail) {
-  // Normalize trail
-  let dx = { min: null, max: null }, 
-      dy = { min: null, max: null };
-  for (const point of trail) {
-    if (dx.min === null || point.coords.x < dx.min) { dx.min = point.coords.x; }
-    if (dx.max === null || point.coords.x > dx.max) { dx.max = point.coords.x; }
-    if (dy.min === null || point.coords.y < dy.min) { dy.min = point.coords.y; }
-    if (dy.max === null || point.coords.y > dy.max) { dy.max = point.coords.y; }
-  }
-  for (const point of trail) {
-    if (dx.min < 0) { point.coords.x += (-1 * dx.min); }
-    if (dy.min < 0) { point.coords.y += (-1 * dy.min); }
-  }
-  // Initialize image
-  const image = [...Array(dy.max - dy.min + 1)].map(() => {
-    return [...Array(dx.max - dx.min + 1)].map(n => 2);
-  });
-  // Draw trail onto the image
-  for (const point of trail) {
-    image[point.coords.y][point.coords.x] = point.color;
-  }
-  // Return image
-  return image;
-}
+};

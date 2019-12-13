@@ -30,7 +30,7 @@ module.exports.puzzle01 = () => {
     [0, 100],   { expected: 9 },
     [0, 1000],  { expected: 90 },
     [0, 10000], { expected: 459 },
-    input,      { expected: 2050, test: false }
+    input,      { expected: 2050, example: false }
   ]);
 };
 
@@ -55,6 +55,6 @@ module.exports.puzzle02 = () => {
   puzzle('2019', '04', '02', puzzle02, [
     [0, 100],     { expected: 9 },
     [999, 1000],  { expected: 0 },
-    input,        { expected: 1390, test: false }
+    input,        { expected: 1390, example: false }
   ]);
 };

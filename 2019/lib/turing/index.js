@@ -65,7 +65,14 @@ module.exports.actions = {
   // Read from input
   turingInput: function turingInput ({ prog, instruction, args, inputs } = {}) {
     if (instruction.func === 'input') {
-      prog[args[0].index] = inputs.splice(0, 1)[0];
+      if (typeof inputs === 'object' && inputs.length !== undefined) {
+        prog[args[0].index] = inputs.splice(0, 1)[0];
+        return;
+      } else if (typeof inputs === 'function') {
+        prog[args[0].index] = inputs();
+        return;
+      }
+      throw new Error('Trying to read a non-existent input!');
     }
   },
   // Write to output

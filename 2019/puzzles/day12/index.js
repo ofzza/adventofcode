@@ -23,7 +23,7 @@ module.exports.puzzle01 = () => {
   puzzle('2019', '12', '01', puzzle01, [
     [[[-1,0,2],[2,-10,-7],[4,-8,8],[3,5,-1]], 10],    { expected: 179 },
     [[[-8,-10,0],[5,5,10],[2,-7,3],[9,-8,-3]], 100],  { expected: 1940 },
-    [input, 1000],                                    { expected: 9441, test: false }
+    [input, 1000],                                    { expected: 9441, example: false }
   ]);
 };
 
@@ -35,6 +35,6 @@ module.exports.puzzle02 = () => {
   puzzle('2019', '12', '02', puzzle02, [
     [[-1,0,2],[2,-10,-7],[4,-8,8],[3,5,-1]],  { expected: 2772 },
     [[-8,-10,0],[5,5,10],[2,-7,3],[9,-8,-3]], { expected: 4686774924 },
-    input,                                    { expected: 503560201099704, test: false }
+    input,                                    { expected: 503560201099704, example: false }
   ]);
 };
