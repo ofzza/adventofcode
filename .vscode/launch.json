@@ -13,7 +13,7 @@
       ],
       "program": "${workspaceFolder}\\index.js",
       // "args": ["--interactive"]
-      "args": ["--year=2019", "--day=13"]
+      "args": ["--year=2019", "--day=14"]
     }
   ]
 }

@@ -2,8 +2,8 @@
 // https://adventofcode.com/2019/day/13
 
 // Import dependencies
-const flags   = require('../../../lib').flags;
-      puzzle  = require('../../../lib').puzzle;
+const flags   = require('../../../lib').flags,
+      puzzle  = require('../../../lib').puzzle,
       arcade  = require('../../lib/arcade'),
       image   = require('../../lib/image');
 

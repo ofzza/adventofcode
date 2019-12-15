@@ -2,7 +2,7 @@
 // https://adventofcode.com/2019/day/12
 
 // Import dependencies
-const puzzle  = require('../../../lib').puzzle;
+const puzzle  = require('../../../lib').puzzle,
       newton  = require('../../lib/newton');
 
 // Set global inputs
