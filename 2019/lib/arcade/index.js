@@ -1,11 +1,16 @@
 // GAME ARCADE
 
 // Import dependencies
-const turing  = require('../turing')
-      image   = require('../image');
+const flags       = require('../../../lib').flags,
+      logProgress = require('../../../lib').logProgress,
+      turing      = require('../turing'),
+      image       = require('../image');
 
 // Runs and plays arcade game program
-module.exports.play = function * play (prog, inputs, { overlayFn = null } = {}) {
+module.exports.play = function * play (prog, inputs, { overlayFn = null, palette } = {}) {
+
+  // Ready renderer for logging progress
+  const render = (flags.PROGRESS && image.renderFieldFactory({ palette }));
 
   // Initialize screen and score
   let screen = {},
@@ -34,16 +39,25 @@ module.exports.play = function * play (prog, inputs, { overlayFn = null } = {}) 
     if (outputs.length !== 3) { continue; }
 
     // Update screen and score
-    if (outputs[0] === -1 && outputs[1] === 0) {    
+    if (outputs[0] === -1 && outputs[1] === 0) {   
+
       // Update score
       score = outputs[2];
+
     } else {
+
       // Add point to screen
       const point = {
         coords: { x: outputs[0], y: outputs[1] },
         color: outputs[2]
       };
       screen[`${ outputs[0] }x${ outputs[1] }`] = point;
+      
+      // If logging progress, draw screen and capture inputs
+      if (flags.PROGRESS) {
+        logProgress([...render(image.drawPointsAsImage(Object.values(screen), { transparentColor: 2 }))].join(''));
+      }
+
       // If ball updated, draw trail
       if (overlayFn) {
         const points = overlayFn(screen, overlay, point);
@@ -51,6 +65,7 @@ module.exports.play = function * play (prog, inputs, { overlayFn = null } = {}) 
           for (let point of points) { overlay.push(point); }
         }
       }
+
     }
 
     // Reset outputs

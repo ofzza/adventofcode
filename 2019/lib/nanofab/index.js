@@ -1,5 +1,9 @@
 // NANO-FACTORY RECIPES
 
+// Import dependencies
+const flags       = require('../../../lib').flags,
+      logProgress = require('../../../lib').logProgress;
+
 // Parses recipe syntax
 module.exports.parse = function parse (syntax) {
   const ins = syntax.trim().split('=>')[0].trim().split(','),
@@ -76,6 +80,15 @@ module.exports.getMaxQuantity = function compose (element, stock, recipes) {
 
     // Update output
     count++;
+
+    // Output percentage done if logging progress
+    if (flags.PROGRESS && (count % 10000 === 0)) {
+      for (let raw of Object.keys(stock)) {
+        logProgress(`... ${ element.padStart(8, ' ') } : ${ count.toString().padStart(10, ' ') }`
+                  + ` => ${ raw.padStart(8, ' ') } : ${ stock[raw].toString().padStart(15, ' ') } / ${ originalStock[raw].toString().padStart(15, ' ') }`
+                  + ` => ${ Math.ceil(10000 * (stock[raw] / originalStock[raw])) / 100 }%`);
+      }
+    }
 
     // If possible (all leftovers spent), accelerate based on found period
     if (!Object.keys(leftovers).find((key) => !!leftovers[key])) {

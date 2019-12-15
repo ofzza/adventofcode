@@ -3,7 +3,7 @@
 
 // Import dependencies
 const puzzle              = require('../../../lib').puzzle,
-      robot               = require('../../lib/ehprobot'),
+      robot               = require('../../lib/robots/ehpr').run,
       drawPointsAsImage   = require('../../lib/image').drawPointsAsImage,
       renderFieldFactory  = require('../../lib/image').renderFieldFactory;
 
@@ -13,7 +13,7 @@ const prog = require('fs').readFileSync(require('path').join(__dirname, './input
 // 1st puzzle of the day
 function puzzle01 (...args) {
   // Calculate trail
-  const trail = [...robot.run(args)],
+  const trail = [...robot(args)],
         surface = { };
   for (let point of trail) {
     const key = `${ point.coords.x }x${ point.coords.y }`; 
@@ -31,7 +31,7 @@ module.exports.puzzle01 = () => {
 // 2nd puzzle of the day
 function puzzle02 (...args) {
   // Calculate trail
-  const trail = [...robot.run(args, { ['0x0']: 1 })],
+  const trail = [...robot(args, { ['0x0']: 1 })],
         surface = { };
   for (let point of trail) {
     const key = `${ point.coords.x }x${ point.coords.y }`; 

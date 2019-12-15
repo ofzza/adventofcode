@@ -1,9 +1,9 @@
 // EMERGENCY HULL PAINTING ROBOT
 
 // Import dependencies
-const turing = require('../turing');
+const turing = require('../../turing');
 
-// Run robot
+// Run Emergency Hull Painting (EHP) robot
 module.exports.run = function * run (prog, surface = {}) {
   const coords = { x: 0, y: 0 },
         inputs = [],        

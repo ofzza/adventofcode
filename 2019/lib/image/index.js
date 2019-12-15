@@ -19,7 +19,9 @@ module.exports.processLayers = function processLayers (width, height, data) {
 }
 
 // Draw points as image
-module.exports.drawPointsAsImage = function drawPointsAsImage (points) {
+module.exports.drawPointsAsImage = function drawPointsAsImage (points, { transparentColor = 2 } = {}) {
+  // Copy points
+  points = JSON.parse(JSON.stringify(points));
   // Normalize trail
   let dx = { min: null, max: null }, 
       dy = { min: null, max: null };
@@ -35,7 +37,7 @@ module.exports.drawPointsAsImage = function drawPointsAsImage (points) {
   }
   // Initialize image
   const image = [...Array(dy.max - dy.min + 1)].map(() => {
-    return [...Array(dx.max - dx.min + 1)].map(n => 2);
+    return [...Array(dx.max - dx.min + 1)].map(n => transparentColor);
   });
   // Draw trail onto the image
   for (const point of points) {

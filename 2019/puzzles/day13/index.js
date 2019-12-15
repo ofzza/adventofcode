@@ -2,8 +2,7 @@
 // https://adventofcode.com/2019/day/13
 
 // Import dependencies
-const flags   = require('../../../lib').flags,
-      puzzle  = require('../../../lib').puzzle,
+const puzzle  = require('../../../lib').puzzle,
       arcade  = require('../../lib/arcade'),
       image   = require('../../lib/image');
 
@@ -23,7 +22,7 @@ const palette = {
 // 1st puzzle of the day
 function puzzle01 (...args) {
   // Initialize a game
-  const game = arcade.play(args, []);
+  const game = arcade.play(args, [], { palette });
   // Run game to the end
   let screen;
   while (true) {
@@ -50,18 +49,12 @@ module.exports.puzzle01 = () => {
 
 // 2nd puzzle of the day
 function puzzle02 (...args) {
-  // Ready renderer for interactive mode
-  const render = (flags.INTERACTIVE && image.renderFieldFactory({ palette }));
   // Initialize a game
   let screen,
       score;
   const game = arcade.play(
     args,
     () => {
-      // If interactive, draw screen and capture inputs
-      if (flags.INTERACTIVE) {
-        console.log([...render(image.drawPointsAsImage(screen))].join('').green);
-      }
       // Find ball on screen and follow with paddle
       const ball    = screen.find((p) => (p.color === 4)),
             paddle  = screen.find((p) => (p.color === 3));
@@ -78,7 +71,8 @@ function puzzle02 (...args) {
         } else {
           return [];
         }
-      }
+      },
+      palette
     }
   );
   // Run game to the end
