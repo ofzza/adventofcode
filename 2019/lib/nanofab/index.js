@@ -171,10 +171,13 @@ function breakdown ({ element, recipes, leftovers = {}, haltConditionFn, ingredi
     // Update deconstructed recipe
     delete recipe.ins[element];
     for (let i of Object.values(inRecipe.ins)) {
-      recipe.ins[i.element] = {
-        element: i.element,
-        quantity: (recipe.ins[i.element] !== undefined ? recipe.ins[i.element].quantity : 0) + i.quantity * usedBatches
-      };
+      const quantity = (recipe.ins[i.element] !== undefined ? recipe.ins[i.element].quantity : 0) + i.quantity * usedBatches;
+      if (quantity > 0) {
+        recipe.ins[i.element] = {
+          element: i.element,
+          quantity
+        };
+      }
     }
   }
   // Return deconstructed recipe
