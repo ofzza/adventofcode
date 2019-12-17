@@ -2,7 +2,9 @@
 // https://adventofcode.com/2019/day/13
 
 // Import dependencies
-const puzzle  = require('../../../lib').puzzle,
+const flags   = require('../../../lib').flags,
+      readKey = require('../../../lib').readKey,
+      puzzle  = require('../../../lib').puzzle,      
       arcade  = require('../../lib/arcade'),
       image   = require('../../lib/image');
 
@@ -55,11 +57,25 @@ function puzzle02 (...args) {
   const game = arcade.play(
     args,
     () => {
-      // Find ball on screen and follow with paddle
-      const ball    = screen.find((p) => (p.color === 4)),
-            paddle  = screen.find((p) => (p.color === 3));
-      if (ball && paddle) {
-        return [(paddle.coords.x === ball.coords.x ? 0 : (paddle.coords.x > ball.coords.x ? -1 : +1))];
+      // 
+      if (flags.PROGRESS && flags.INTERACTIVE) {
+        const key = readKey('Press "A" for left, "D" for right, "X" to quit and any other key to continue ...');
+        if (key === 'x') {
+          process.exit(0);
+        } else if (key === 'a') {
+          return [-1];
+        } else if (key === 'd') {
+          return [+1];
+        } else {
+          return [0];
+        }
+      } else {
+        // Find ball on screen and follow with paddle
+        const ball    = screen.find((p) => (p.color === 4)),
+              paddle  = screen.find((p) => (p.color === 3));
+        if (ball && paddle) {
+          return [(paddle.coords.x === ball.coords.x ? 0 : (paddle.coords.x > ball.coords.x ? -1 : +1))];
+        }
       }
     },
     {

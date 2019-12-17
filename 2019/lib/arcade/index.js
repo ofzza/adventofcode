@@ -52,19 +52,24 @@ module.exports.play = function * play (prog, inputs, { overlayFn = null, palette
         color: outputs[2]
       };
       screen[`${ outputs[0] }x${ outputs[1] }`] = point;
-      
-      // If logging progress, draw screen and capture inputs
-      if (flags.PROGRESS) {
-        logProgress([...render(image.drawPointsAsImage(Object.values(screen), { transparentColor: 2 }))].join(''));
-      }
 
-      // If ball updated, draw trail
-      if (overlayFn) {
-        const points = overlayFn(screen, overlay, point);
-        if (points && points.length) {
-          for (let point of points) { overlay.push(point); }
+      // If ball updated, draw
+      if (point.color === 4) {
+
+        // If ball updated, draw trail
+        if (overlayFn) {
+          const points = overlayFn(screen, overlay, point);
+          if (points && points.length) {
+            for (let point of points) { overlay.push(point); }
+          }
         }
-      }
+
+        // If logging progress, draw screen and capture inputs
+        if (flags.PROGRESS) {
+          logProgress([...render(image.drawPointsAsImage(Object.values(screen), { transparentColor: 2 }))].join(''));
+        }
+        
+      }    
 
     }
 

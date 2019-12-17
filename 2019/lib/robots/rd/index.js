@@ -3,6 +3,7 @@
 // Import dependencies
 const flags       = require('../../../../lib').flags,
       logProgress = require('../../../../lib').logProgress,
+      readKey     = require('../../../../lib').readKey,
       turing      = require('../../turing'),
       image       = require('../../image');
 
@@ -65,6 +66,11 @@ module.exports.explore = function explore (prog, world = {}, { palette } = {}) {
               image.drawPointsAsImage([ ...Object.values(world), ...Object.values(path) ], { transparentColor: 9 })
             )
           ].join(''));
+          // If interactive, pause for key presses
+          if (flags.INTERACTIVE) {
+            const key = readKey('Press any key to continue, or "x" to quit ...');
+            if (key === 'x') { process.exit(0); }
+          }
         }
         // If found destination, log trail
         if (status.value === 2) {
@@ -143,6 +149,11 @@ module.exports.fill = function fill (prog, world = {}, { palette }) {
           image.drawPointsAsImage(Object.values(world), { transparentColor: 9 })
         )
       ].join(''));
+      // If interactive, pause for key presses
+      if (flags.INTERACTIVE) {
+        const key = readKey('Press any key to continue, or "x" to quit ...');
+        if (key === 'x') { process.exit(0); }
+      }
     }
 
     // Update counter
