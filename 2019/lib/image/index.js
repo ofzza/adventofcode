@@ -1,5 +1,8 @@
 // IMAGE PROCESSING
 
+// Default palette
+module.exports.defaultPalette = { 0: '░', 1: '█', 2: ' ' };
+
 // Extract layers from image data
 module.exports.processLayers = function processLayers (width, height, data) {
   const layers = [];
@@ -32,8 +35,8 @@ module.exports.drawPointsAsImage = function drawPointsAsImage (points, { transpa
     if (dy.max === null || point.coords.y > dy.max) { dy.max = point.coords.y; }
   }
   for (const point of points) {
-    if (dx.min < 0) { point.coords.x += (-1 * dx.min); }
-    if (dy.min < 0) { point.coords.y += (-1 * dy.min); }
+    if (dx.min !== 0) { point.coords.x += (-1 * dx.min); }
+    if (dy.min !== 0) { point.coords.y += (-1 * dy.min); }
   }
   // Initialize image
   const image = [...Array(dy.max - dy.min + 1)].map(() => {
@@ -78,7 +81,7 @@ module.exports.renderFieldFactory = function renderFieldFactory ({ transform = n
 };
 
 // Draw a pixes as ASCII
-function drawPixel (pixel = null, palette = { 0: '░', 1: '█', 2: ' ' }) {
+function drawPixel (pixel = null, palette = module.exports.defaultPalette) {
   if (palette[pixel] !== undefined) {
     return palette[pixel];
   } else if (pixel === null) {
