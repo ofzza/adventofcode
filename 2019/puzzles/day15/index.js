@@ -3,7 +3,7 @@
 
 // Import dependencies
 const puzzle  = require('../../../lib').puzzle,
-      robot   = require('../../lib/robots/rd'),
+      robot   = require('../../lib/robots/repair-droid'),
       image   = require('../../lib/image');
 
 // Set global inputs

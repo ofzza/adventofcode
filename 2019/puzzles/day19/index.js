@@ -6,14 +6,14 @@ const flags       = require('../../../lib').flags,
       logProgress = require('../../../lib').logProgress,
       puzzle      = require('../../../lib').puzzle,
       image       = require('../../lib/image'),
-      sd          = require('../../lib/robots/sd');
+      robot       = require('../../lib/robots/tractor-inspector');
 
 // Set global inputs
 const prog = require('fs').readFileSync(require('path').join(__dirname, `./input.txt`)).toString().trim().split(',').map(a => parseInt(a));
 
 // 1st puzzle of the day
 function puzzle01 (...args) {
-  let scanner = sd.scanForTraction(args[0]),
+  let scanner = robot.scanForTraction(args[0]),
       result;
   while ((result = scanner.next()).value.radius < (args[1] - 1)) {}
   return result.value;
@@ -30,7 +30,7 @@ function puzzle02 (...args) {
   // Initialize renderer
   const render = (flags.PROGRESS && image.renderFieldFactory());
   // Initialize the scanner
-  let scanner = sd.scanForTraction(args[0]),
+  let scanner = robot.scanForTraction(args[0]),
       result;
   while (!(result = scanner.next()).done) {
     // Draw last line

@@ -3,7 +3,7 @@
 
 // Import dependencies
 const puzzle              = require('../../../lib').puzzle,
-      robot               = require('../../lib/robots/ehpr').run,
+      robot               = require('../../lib/robots/hull-paint').run,
       drawPointsAsImage   = require('../../lib/image').drawPointsAsImage,
       renderFieldFactory  = require('../../lib/image').renderFieldFactory;
 

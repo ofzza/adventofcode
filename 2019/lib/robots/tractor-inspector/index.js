@@ -1,4 +1,4 @@
-// SHIP DRONE
+// TRACTOR BEAM INSPECTING SHIP DRONE
 
 // Import dependencies
 const image       = require('../../image'),
