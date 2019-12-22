@@ -6,306 +6,557 @@ const flags       = require('../../../lib').flags,
       readKey     = require('../../../lib').readKey,
       image       = require('../image');
 
-// Solves a labyrinth
-module.exports.solve = function solve (labyrinth, { startChar = '@', keysRegexp = /[a-z]/, doorsRegExp = /[A-Z]/, mapKeyToDoor = (key) => key.toUpperCase(), distanceCorrection, palette = {...image.defaultPalette} } = {}) {
+// Defined palettes
+module.exports.readPalette = {
+  ' ': ' ',
+  '#': '#',
+  '.': '.',
+  '@': '@',
+  rail:     ':',
+  portal:   '°',
+  path:     '*',
+  location: '!',
+};
+module.exports.defaultPalette = {
+  ' ': '░',
+  '#': '█',
+  '.': ' ',
+  '@': '@',
+  [module.exports.readPalette.rail]:     module.exports.readPalette.rail,
+  [module.exports.readPalette.portal]:   module.exports.readPalette.portal,
+  [module.exports.readPalette.path]:     module.exports.readPalette.path,
+  [module.exports.readPalette.location]: module.exports.readPalette.location
+};
+
+// Define default point types' selectors
+module.exports.defaultTypes = { start: /@/, free: /[\.@\\:]/, wall: /[ #]/, door: /[A-Z]/, label: /[A-Z]/, portal: detectPortalType };
+
+// Return a configured labyrinth file reader
+module.exports.getReader = function fileReader (dirPath, { palette = module.exports.readPalette } = {}) {
+  // Read labyrinth from file
+  return (fileName) => {
+    const filePath = require('path').join(dirPath, `./${ fileName }.txt`);
+    return require('fs').readFileSync(filePath).toString().split('\n').reduce((points, l, y) => {
+      return l.split('').reduce((points, c, x) => {
+        points[`${ x }x${ y }`] = { coords: { x, y }, color: (palette[c] || c) };
+        return points;
+      }, points);
+    }, {});
+  };
+};
+
+// Analyzes a labyrinth and prepares it for solving
+module.exports.analyze = function analyze (
+  labyrinthPoints,
+  {
+    types           = module.exports.defaultTypes,
+    fillInDeadEnds  = true,
+    installRails    = true,
+    connectPortals  = true,
+    palette         = module.exports.defaultPalette
+  } = {}
+) {
 
   // If logging progress, ready renderer
   const render = (flags.PROGRESS && image.renderFieldFactory({ palette }));
+
+  // Make a copy of labyrinth points
+  const points = JSON.parse(JSON.stringify(labyrinthPoints));
   
-  // Initialize shared cache  
-  const cache = {};
-
-  // Find relevant objects
-  const start = Object.values(labyrinth).find(p => (p.color === startChar)),
-        keys  = Object.values(labyrinth).filter(p => p.color.toString().match(keysRegexp))
-                  .reduce((keys, p) => {
-                    keys[p.color] = p;
-                    return keys;
-                  }, {}),
-        doors = Object.values(labyrinth).filter(p => p.color.toString().match(doorsRegExp))
-                  .reduce((keys, p) => {
-                    keys[p.color] = p;
-                    return keys;
-                  }, {});
-
-  // Add starting position, keys and doors to palette
-  palette[startChar] = startChar;
-  for (let p of [...Object.values(keys), ...Object.values(doors)]) {
-    palette[p.color] = p.color;
+  // Initialize types and keys
+  for (let point of Object.values(points)) {
+    if (!point.key) { point.key = pkey(point); }
+    if (!point.type) { point.type = {}; }
   }
 
-  // Close all dead-ends
-  explore(labyrinth, start, {
-    keysRegexp,
-    doorsRegExp,
-    palette,
-    allowMovementFn:  (location) => true,
-    onMovementFn:     ({ empty, location, path }) => {
-      // Close up dead-end
-      if (empty) { location.color = '1'; }
-    },
-    PROGRESS: false,
-    INTERACTIVE: false
-  });
-  if (flags.PROGRESS) {
-    logProgress([...render(image.drawPointsAsImage(Object.values(labyrinth), { transparentColor: 0, palette }))].join(''));
+  // Fill in dead ends (modifying types, so needs to come before sorting)
+  if (fillInDeadEnds) {
+    module.exports.fillInDeadEnds(points, types);
   }
 
-  // Collect all keys locations and doors they are behind
-  explore(labyrinth, start, {
-    keysRegexp,
-    doorsRegExp,
-    palette,
-    allowMovementFn:  () => true,
-    onMovementFn:     ({ key, location, path }) => {
-      if (key) {
-        // Get doors (and keys as "automatic" doors) on the way
-        keys[location.color].doors = Object.values(path)
-          .filter((p) => (p.color.toString().match(doorsRegExp) || p.color.toString().match(keysRegexp)))
-          .map((p) => (p.color.toString().match(doorsRegExp) ? p.color : mapKeyToDoor(p.color)));
-      }
-    },
-    PROGRESS: false,
-    INTERACTIVE: false
-  });
-  for (let key of Object.values(keys)) {
-    key.directDoors = [...key.doors];
-  }
-  const sortedKeysByDirectDoorsCount = Object.values(keys).sort((a, b) => (a.directDoors.length === b.directDoors.length ? 0 : (a.directDoors.length < b.directDoors.length ? -1 : +1)));
-  if (flags.PROGRESS) {
-    logProgress(`Sorted keys by direct occlusion depth:`);
-    for (let key of sortedKeysByDirectDoorsCount) {
-      logProgress(`> KEY "${ key.color }" behind ${ key.directDoors.length ? key.directDoors.join(', ') : 'no doors' }`);
-    }
-    logProgress('');
+  // Install rails (modifying types, so needs to come before sorting)
+  if (installRails) {
+    module.exports.installRails(points, types);
   }
 
-  // For all doors, add implied doors (needed to get keys, needed to get doors, needed to get keys, ...)
-  for (let key of Object.values(keys)) {
-    key.totalDoors = [...key.directDoors];
+  // Sort points by color
+  const byColor = {};
+  for (let point of Object.values(points)) {
+    if (!byColor[point.color]) { byColor[point.color] = []; }
+    byColor[point.color].push(point);
   }
-  while (Object.values(keys).find(key => key.doors.length)) {
-    for (let parent of sortedKeysByDirectDoorsCount) {
-      if (!parent.doors.length) {
-        for (let child of sortedKeysByDirectDoorsCount) {
-          if ((child !== parent) && (child.doors.find(d => (d === mapKeyToDoor(parent.color))))) {
-            child.totalDoors = [...child.totalDoors, ...parent.totalDoors];
-            child.doors.splice(child.doors.findIndex(d => (d === mapKeyToDoor(parent.color))), 1);
+
+  // Sort points by type
+  const byType = {}
+  for (let type in types) {
+    if (!byType[type]) { byType[type] = []; }
+    for (let color in byColor) {
+      // Check type instanceof ...
+      if (types[type] instanceof Function) {
+
+        // Check if each point of a color matches a type
+        for (let point of byColor[color]) {
+          let matched = matchType(color, types[type], { types, point, points });
+          if (matched) {
+            // Register point to matched type
+            byType[type] = [...byType[type], point];
+            // Set point's type info
+            point.type[type] = matched;
           }
         }
+
+      } else {
+
+        // Check if color matches a type
+        let matched = matchType(color, types[type]);
+        if (matched) {
+          // Register all points of same color to matched type
+          byType[type] = [...byType[type], ...byColor[color]];
+          // Set all points' type info
+          for (let point of byColor[color]) {
+            point.type[type] = matched;
+          }
+        }
+
       }
     }
   }
-  for (let key of Object.values(keys)) {
-    key.totalDoors = Object.keys(
-      key.totalDoors.reduce((doors, d) => { doors[d] = true; return doors; }, {})
-    ).sort();
-  }
-  const sortedKeysByTotalDoorsCount = Object.values(keys).sort((a, b) => (a.totalDoors.length === b.totalDoors.length ? 0 : (a.totalDoors.length < b.totalDoors.length ? -1 : +1)));
-  if (flags.PROGRESS) {
-    logProgress(`Sorted keys by total occlusion depth:`);
-    for (let key of sortedKeysByTotalDoorsCount) {
-      logProgress(`> KEY "${ key.color }" behind ${ key.totalDoors.length ? key.totalDoors.join(', ') : 'nothing!' }`);
-    }
-    logProgress('');
+ 
+  // Connect portals
+  if (connectPortals && byType['portal']) {
+    module.exports.connectPortals(byType['portal']);
   }
 
-  // Calculate all ab distances
-  // logProgress(`Finding shortest path between any 2 keys ...`);
-  // const allKeys = [start, ...Object.values(keys)];
-  // for (let i in allKeys) {
-  //   for (let j in allKeys) {
-  //     findDistance (labyrinth, allKeys[i], allKeys[j], { cache, keysRegexp, doorsRegExp, distanceCorrection });
-  //   }
-  //   if (flags.PROGRESS) {
-  //     logProgress(`... done ${ ~~(100 * ((i * allKeys.length) + j) / (allKeys.length * allKeys.length)) / 100 }%`);
-  //   }
-  // }
-
-  // Measure all possible key permutations
+  // If logging progress, prompt analyzed
   if (flags.PROGRESS) {
-    logProgress(`Finding shortest path between keys:`);
+    // Render original
+    logProgress([...render(image.drawPointsAsImage(Object.values(labyrinthPoints), { transparentColor: module.exports.readPalette[' '] }))].join(''));
+    // Render processed
+    logProgress([...render(image.drawPointsAsImage(Object.values(points),          { transparentColor: module.exports.readPalette[' '] }))].join(''));
+    // Output found types
+    logProgress(`Types: ${ Object.keys(byType).map((type) => `${ type } (${ byType[type].length })`).join(', ') }`);
+    logProgress();
   }
-  return measureKeySequences(labyrinth, start, keys, { cache, keysRegexp, doorsRegExp, palette, mapKeyToDoor, distanceCorrection });
+
+  // Return analyzed labyrinth
+  return { points, byColor, byType };
 
 };
 
-// Explores the labyrinth
-function explore (labyrinth, location, { keysRegexp, doorsRegExp, palette, path = {}, pathIsEmpty = true, allowMovementFn = null, onMovementFn = null, PROGRESS = flags.PROGRESS, INTERACTIVE = flags.INTERACTIVE } = {}) {
+// Clears dead ends in a labyrinth
+module.exports.fillInDeadEnds = function fillInDeadEnds (
+  labyrinthPoints,
+  types = module.exports.defaultTypes
+) {
 
-  // If logging progress, ready renderer
-  const render = (PROGRESS && image.renderFieldFactory({ palette }));
-
-  // Check if standing on key or door
-  if (location.color.toString().match(keysRegexp)) {
-    pathIsEmpty = false;
-    if (onMovementFn) {
-      onMovementFn({ key: true, location, path });
-    }
-  } else if (location.color.toString().match(doorsRegExp)) {
-    pathIsEmpty = false;
-    if (onMovementFn) {
-      onMovementFn({ door: true, location, path });
-    }
-  }
-
-  // Add current location to trail
-  path[`${ location.coords.x }x${ location.coords.y }`] = { coords: location.coords, color: (location.color !== 2 ? location.color : 0) };
-
-  // If logging progress, draw world
-  if (PROGRESS) {
-    logProgress([
-      ...render(
-        image.drawPointsAsImage([ ...Object.values(labyrinth), ...Object.values(path) ], { transparentColor: 0, palette })
-      )
-    ].join(''));
-    // If interactive, pause for key presses
-    if (INTERACTIVE) {
-      const key = readKey('Press any key to continue, or "x" to quit ...');
-      if (key === 'x') { process.exit(0); }
-    }
-  }
-
-  // Move
-  pathIsEmpty = sampleNeighbouringPoint(labyrinth, location, 0, -1, { keysRegexp, doorsRegExp, palette, path: {...path}, allowMovementFn, onMovementFn, PROGRESS, INTERACTIVE }) && pathIsEmpty;
-  pathIsEmpty = sampleNeighbouringPoint(labyrinth, location, 0, +1, { keysRegexp, doorsRegExp, palette, path: {...path}, allowMovementFn, onMovementFn, PROGRESS, INTERACTIVE }) && pathIsEmpty;
-  pathIsEmpty = sampleNeighbouringPoint(labyrinth, location, +1, 0, { keysRegexp, doorsRegExp, palette, path: {...path}, allowMovementFn, onMovementFn, PROGRESS, INTERACTIVE }) && pathIsEmpty;
-  pathIsEmpty = sampleNeighbouringPoint(labyrinth, location, -1, 0, { keysRegexp, doorsRegExp, palette, path: {...path}, allowMovementFn, onMovementFn, PROGRESS, INTERACTIVE }) && pathIsEmpty;
-
-  // If path and all subpaths are empty, run callback
-  if (pathIsEmpty && onMovementFn) {
-    onMovementFn({ empty: true, location, path });
-  }
-
-  // Return if path and all subpaths are empty
-  return pathIsEmpty;
-
-}
-
-// Define neighbouring points sampling function
-function sampleNeighbouringPoint (labyrinth, location, rx, ry, { keysRegexp, doorsRegExp, palette, path = {}, pathIsEmpty = true, allowMovementFn = null, onMovementFn = null, PROGRESS = flags.PROGRESS, INTERACTIVE = flags.INTERACTIVE } = {}) {
-  // Check if direction is explorable
-  const key = `${ location.coords.x + rx }x${ location.coords.y + ry }`;
-  if ((path[key] === undefined) && (labyrinth[key] !== undefined) && (labyrinth[key].color !== 1)) {
-    // Check if allowed to enter
-    if ((!allowMovementFn || allowMovementFn(labyrinth[key]))) {
-      // Keep exploring
-      pathIsEmpty = explore(labyrinth, labyrinth[key], { keysRegexp, doorsRegExp, palette, path: {...path}, allowMovementFn, onMovementFn, PROGRESS, INTERACTIVE }) && pathIsEmpty;
-    } else {
-      // If not allowed, mark as not empty
-      pathIsEmpty = false;
-    }
-  }
-  // Return if path and all subpaths are empty
-  return pathIsEmpty;
-}
-
-// Compose all possible permutations/sequences for collecting all keys and find the one with shortest distance
-function measureKeySequences (labyrinth, start, keys, { distance = 0, minDistance = null, cache = {}, order = [], keysRegexp, doorsRegExp, palette, mapKeyToDoor, doors = [], distanceCorrection } = {}) {
-  // Get keys not used yet
-  const remainingKeys = Object.values(keys).filter(key => !order.find(c => (c === key.color)));
-  if (remainingKeys.length) {
-    // If remaining keys, continue generating permutations
-    const accessibleKeys = remainingKeys.filter(key => !key.totalDoors.filter(d => (doors.indexOf(d) === -1)).length);
-    for (let key of accessibleKeys) {
-      // Calculate optimistic distance to all other points and make sure it is not already too long
-      const optimisticTotalDistance = distance + findOptimisticDistance(labyrinth, (!order.length ? start : keys[order[order.length - 1]]), remainingKeys, { cache, keysRegexp, doorsRegExp, distanceCorrection, palette });
-      if ((minDistance !== null) && (optimisticTotalDistance > minDistance)) { continue; }
-      // Calculate distance to new point and make sure it is not already too long
-      const nextDistance = distance + findDistance(labyrinth, (!order.length ? start : keys[order[order.length - 1]]), key, { cache, keysRegexp, doorsRegExp, distanceCorrection, palette });
-      if ((minDistance !== null) && (nextDistance > minDistance)) { continue; }
-      // Continue composing path
-      minDistance = measureKeySequences(labyrinth, start, keys, { distance: nextDistance, minDistance, cache, order: [...order, key.color], keysRegexp, doorsRegExp, palette, mapKeyToDoor, doors: [...doors, mapKeyToDoor(key.color)], distanceCorrection});
-    }
-    return minDistance;
-  } else {
-    // If logging progress, prompt new minimum
-    if (flags.PROGRESS && ((minDistance === null) || (distance < minDistance))) {
-      logProgress(`Found new min distance: ${ distance } (${ order.join('') })`)
-    }
-    // If no more remaining keys, compare to current min distance
-    return ((minDistance === null) || (distance < minDistance) ? distance : minDistance);
-  }
-}
-
-// Finds shortest possible distance between current location and a number of other locations
-function findOptimisticDistance (labyrinth, a, keys, { cache = {}, keysRegexp, doorsRegExp, distanceCorrection, palette } = {}) {
-  // Initialize cache
-  if (!cache.optimisticDistance) { cache.optimisticDistance = {}; }
-  
-  // Generate unique key
-  const unique = `${ a.color }${ keys.map(k => k.color).sort().join('') }`;
-
-  // Check cache
-  if (cache.optimisticDistance[unique]) {
-
-    // Return cached value
-    return cache.optimisticDistance[unique]
-
-  } else {
-
-    // Calculate optimistic distance
-    let remainingKeys = [...keys],
-        optimisticDistance = 0;
-    while (remainingKeys.length) {
-      let minAbDistance = null,
-          minAbDistanceKeyIndex = null
-      for (let i = 0; i < remainingKeys.length; i++) {
-        let d = findDistance(labyrinth, a, remainingKeys[i], { cache, keysRegexp, doorsRegExp, distanceCorrection, palette})
-        if ((minAbDistance === null) || (d < minAbDistance)) {
-          minAbDistance = d;
-          minAbDistanceKeyIndex = i;
+  // Close all dead-ends
+  let foundDeadEnds;
+  do {
+    // Reset found flag
+    foundDeadEnds = false;
+    // Find dead ends
+    for (let p of Object.values(labyrinthPoints)) {
+      if (p.color.toString().match(types.free)) {
+        let count = 0,
+            nextPoints = [
+              labyrinthPoints[pkey(p, 0, -1)],
+              labyrinthPoints[pkey(p, 0, +1)],
+              labyrinthPoints[pkey(p, -1, 0)],
+              labyrinthPoints[pkey(p, +1, 0)]
+            ];
+        for (let nextPoint of nextPoints) {
+          if (nextPoint && nextPoint.color.toString().match(types.wall)) { count++ }
+        }
+        // Fill in dead end
+        if (count >= 3) {
+        foundDeadEnds = true;
+          // Update color
+          p.color = module.exports.readPalette['#'];
         }
       }
-      a = remainingKeys[minAbDistanceKeyIndex];
-      remainingKeys.splice(minAbDistanceKeyIndex, 1);
-      optimisticDistance += minAbDistance;
     }
+  } while (foundDeadEnds);
 
-    // Cache and return distance
-    return (cache.optimisticDistance[unique] = optimisticDistance);
+};
 
+module.exports.installRails = function installRails (
+  labyrinthPoints,
+  types = module.exports.defaultTypes
+) {
+
+  // Find neighbours of a point not belonging to a current rail
+  function findNeighbours (p, rail = []) {
+    const neighbours = [],
+          nextPoints = [
+            labyrinthPoints[pkey(p, 0, -1)],
+            labyrinthPoints[pkey(p, 0, +1)],
+            labyrinthPoints[pkey(p, -1, 0)],
+            labyrinthPoints[pkey(p, +1, 0)]
+          ];
+    for (let nextPoint of nextPoints) {
+      if (nextPoint && (nextPoint.color.toString().match(types.free)) && (rail.indexOf(nextPoint) === -1)) {
+        neighbours.push(nextPoint);
+      }
+    }
+    return neighbours;
   }
-}
-
-// Finds distance between 2 locations
-function findDistance (labyrinth, a, b, { cache = {}, keysRegexp, doorsRegExp, distanceCorrection, palette } = {}) {
-  // Check if same point
-  if (a === b) { return 0; }
   
-  // Initialize cache
-  if (!cache.abDistance) { cache.abDistance = {}; }
-  
-  // Check cache
-  if (cache.abDistance[`${ a.color }${ b.color }`] || cache.abDistance[`${ b.color }${ a.color }`]) {
-
-    // Return cached value
-    return cache.abDistance[`${ a.color }${ b.color }`] || cache.abDistance[`${ b.color }${ a.color }`];
-
-  } else {
-
-    // Calculate distance
-    let abPath;
-    explore(labyrinth, a, {
-      keysRegexp,
-      doorsRegExp,
-      palette,
-      allowMovementFn:  () => !abPath,
-      onMovementFn:     ({ key, location, path }) => {
-        // Check if done, and get path
-        if (key && (location.color === b.color)) {
-          abPath = path;
+  // Install rails
+  let foundRailLocation;
+  do {
+    // Reset found flag
+    foundRailLocation = false;
+    // Find a free location for a rail
+    for (let p of Object.values(labyrinthPoints)) {
+      if (!p.type.rail && p.color.toString().match(types.free)) {
+        let neighbours = findNeighbours(p);
+        if ((neighbours.length === 2) && (findNeighbours(neighbours[0]).length === 2) && (findNeighbours(neighbours[1]).length === 2)) {
+          foundRailLocation = {
+            seeds: [p],
+            endpoints:  [neighbours[0], neighbours[1]]
+          };
+          break;
         }
-      },
-      PROGRESS: false,
-      INTERACTIVE: false
-    });
+      }
+    }
+    // Install rail
+    if (foundRailLocation) {
+      // Find rail endpoints
+      foundRailLocation.seeds[0].color = module.exports.readPalette.rail;
+      foundRailLocation.seeds[0].type.rail = true;
+      let expanding = false;
+      do {
+        // Look for endpoints
+        expanding = false;
+        for (let i in foundRailLocation.endpoints) {
+          let endpointNeighbours = findNeighbours(foundRailLocation.endpoints[i], foundRailLocation.seeds);
+          if (endpointNeighbours.length === 1) {
+            expanding = true;
+            foundRailLocation.endpoints[i].color = module.exports.readPalette.rail;
+            foundRailLocation.endpoints[i].type.rail = true;
+            foundRailLocation.seeds.push(foundRailLocation.endpoints[i]);
+            foundRailLocation.endpoints.splice(i, 1, endpointNeighbours[0]);
+          }
+        }
+        // When found endpoints, connect them togeather
+        if (!expanding) {
+          let railPointA = findNeighbours(foundRailLocation.endpoints[0]).find(p => (foundRailLocation.seeds.indexOf(p) !== -1)),
+              railPointB = findNeighbours(foundRailLocation.endpoints[1]).find(p => (foundRailLocation.seeds.indexOf(p) !== -1));
+          // railPointA.color = '!';
+          railPointA.type.rail = {
+            from:   foundRailLocation.endpoints[0].key,
+            to:     railPointB.key,
+            points: foundRailLocation.seeds.map(p => p.key)
+          };
+          // railPointB.color = '!';
+          railPointB.type.rail = {
+            from:   foundRailLocation.endpoints[1].key,
+            to:     railPointA.key,
+            points: foundRailLocation.seeds.map(p => p.key)
+          };
+        }
+      } while (expanding);
+    }
+  } while (foundRailLocation);
 
-    // Check distance corrections
-    const pathDistance = Object.keys(abPath).length + (distanceCorrection ? distanceCorrection(a, b) : 0) - 1;
+};
 
-    // Cache and return distance
-    return (cache.abDistance[`${ a.color }${ b.color }`] = pathDistance);
-
+// Connect pairs of portals
+module.exports.connectPortals = function connectPortals (labyrinthPoints) {
+  for (let source of Object.values(labyrinthPoints)) {
+    if (!source.type['portal'].target) {
+      for (let target of Object.values(labyrinthPoints)) {
+        if ((source !== target) && !target.type['portal'].target && (source.type['portal'].key === target.type['portal'].key)) {
+          source.color = module.exports.readPalette.portal;
+          source.type['portal'].target = target.key;
+          target.color = module.exports.readPalette.portal;
+          target.type['portal'].target = source.key;
+        }
+      }
+    }
   }
-}
+};
+
+// Free roam and explore all paths available
+module.exports.freeRoam = function * freeRoam (
+  point,
+  analysis,
+  types = module.exports.defaultTypes,
+  {
+    beforeYield = null,
+    allowMove   = (point) => (point.type && !point.type.wall && !point.type.door && !point.type.label),
+  } = {},
+  {
+    palette     = module.exports.defaultPalette,
+    pathLevel   = 0,
+    pathPoints  = {}
+  } = {}
+) {
+
+  // Render current state
+  function renderProgress (level) {
+    // Render progress
+    const render = (flags.PROGRESS && image.renderFieldFactory({ palette }));
+    if (flags.PROGRESS) {
+      logProgress(`Level: ${ level || pathLevel }`);
+      logProgress([...render(image.drawPointsAsImage([
+        ...Object.values(analysis.points),
+        ...Object.values(pathPoints[level || pathLevel]).map(p => colorPoint(p, module.exports.readPalette.path)),
+        ...(pathLevel === (level || pathLevel) ? [point].map(p => colorPoint(p, module.exports.readPalette.location)) : [])
+      ], { transparentColor: module.exports.readPalette[' '] }))].join(''));
+      // If interactive, pause for key presses
+      if (flags.INTERACTIVE) {
+        const key = readKey('Press any key to continue, or "x" to quit ...');
+        if (key === 'x') { process.exit(0); }
+      }
+    }  
+  }
+
+  // Before yield callback calling function
+  function callBeforeYield (point, { portaled = false } = {}) {
+    // Check if callback defined
+    if (beforeYield) {
+      // Initialize event
+      const e = {
+        point,
+        pathLevel,
+        pathPoints,
+        renderProgress
+      };
+      // Execute callback
+      beforeYield(e, { portaled })
+      // Ingest changed event values      
+      if (!pathPoints[pathLevel = e.pathLevel]) { pathPoints[pathLevel] =  {}; }
+    }
+    // Return point to yield
+    return { point, level: pathLevel };
+  }
+
+  // Initialize path level
+  if (!pathPoints[pathLevel]) { pathPoints[pathLevel] =  {}; }
+
+  // Check if point is a portal
+  let portaled = false;
+  if (point.type.portal && point.type.portal.target) {
+    // Add next point to path, yield it and teleport
+    yield callBeforeYield(pathPoints[pathLevel][point.key] = point);
+    point = analysis.points[point.type.portal.target];
+    portaled = true;
+    // Render progress
+    renderProgress();
+  }
+
+  // Check if point is a rail
+  if (point.type.rail) {
+    // Add all rail points and proceed to end of rail
+    for (let p of point.type.rail.points.map(key => analysis.points[key])) {
+      pathPoints[pathLevel][p.key] = p;
+    }
+    point = analysis.points[point.type.rail.to];
+    // Render progress
+    renderProgress();
+  }
+
+  // Add current location to path
+  pathPoints[pathLevel][point.key] = point;
+
+  // Yield current location
+  yield callBeforeYield(point, { portaled });
+  // Render progress
+  renderProgress();
+
+  // Check options to move
+  const nextPoints = [
+    analysis.points[pkey(point, 0, -1)],
+    analysis.points[pkey(point, 0, +1)],
+    analysis.points[pkey(point, +1, 0)],
+    analysis.points[pkey(point, -1, 0)]
+  ];
+  for (let nextPoint of nextPoints) {
+    if (nextPoint && !pathPoints[pathLevel][nextPoint.key] && allowMove(nextPoint, pathLevel, pathPoints)) {
+      // Continue roaming from next point
+      let pathPointsCopy = Object.keys(pathPoints).reduce((pathPointsCopy, level) => {
+            pathPointsCopy[level] = Object.keys(pathPoints[level]).reduce((pathPointsLevelCopy, key) => {
+              pathPointsLevelCopy[key] = pathPoints[level][key];
+              return pathPointsLevelCopy;
+            }, {});
+            return pathPointsCopy;
+          }, {}),
+          roam = freeRoam(nextPoint, analysis, types, { beforeYield, allowMove }, { pathLevel, pathPoints: pathPointsCopy }),
+          result;
+      while (!(result = roam.next()).done) {
+        yield result.value;
+      }      
+    }
+  }
+
+};
+
+// Finds a path between 2 points
+module.exports.findPath = function (
+  startPoint,
+  endPoint,
+  analysis,
+  types = module.exports.defaultTypes,
+  {
+    beforeYield = null,
+    allowMove   = (point) => (point.type && !point.type.wall),
+  } = {},
+  {
+    palette = module.exports.defaultPalette
+  } = {}
+) {
+  // Explore until finding the end
+  let path,
+      explore = module.exports.freeRoam(startPoint, analysis, types, {
+        beforeYield: (e) => {
+          // Run callback if set
+          if (beforeYield) { beforeYield(e); }
+          // Store path
+          path = e.pathPoints;
+        },
+        allowMove
+      }),
+      result;
+  while (!(result = explore.next()).done) {
+    if ((result.value.point === endPoint) && (result.value.level === 0)) {
+
+      // Compose full path
+      let fullPath = Object.keys(path).reduce((fullPath, level) => {
+        return [...fullPath, ...Object.values(path[level]).map(point => {
+          return { level, point };
+        })];
+      }, []);
+
+      // Render progress
+      const render = (flags.PROGRESS && image.renderFieldFactory({ palette }));
+      if (flags.PROGRESS) {
+        logProgress([...render(image.drawPointsAsImage([
+          ...Object.values(analysis.points),
+          ...Object.values(path[0]).map(p => colorPoint(p, module.exports.readPalette.path)),
+          ...[result.value.point].map(p => colorPoint(p, module.exports.readPalette.location))
+        ], { transparentColor: module.exports.readPalette[' '] }))].join(''));
+      }  
+      logProgress(`Path length: ${ fullPath.length - 1 }`);
+      logProgress();
+
+      // Return full path
+      return fullPath;
+    }
+  }
+
+};
+
+// Finds shortest path between 2 points
+module.exports.findShortestPath = function (
+  startPoint,
+  endPoint,
+  analysis,
+  types = module.exports.defaultTypes,
+  {
+    beforeYield = null,
+    allowMove   = (point) => (point.type && !point.type.wall),
+  } = {},
+  {
+    palette = module.exports.defaultPalette
+  } = {}
+) {
+  // Explore until explored everything
+  let minPath = null,
+      explore = module.exports.freeRoam(startPoint, analysis, types, {
+        beforeYield: (e, { portaled = false } = {}) => {
+          // Run callback if set
+          if (beforeYield) { beforeYield(e, { portaled }); }
+          // Store path
+          path = e.pathPoints;
+        },
+        allowMove
+      }),
+      result;
+  while (!(result = explore.next()).done) {
+    if ((result.value.point === endPoint) && (result.value.level === 0)) {
+
+      // Compose full path
+      let fullPath = Object.keys(path).reduce((fullPath, level) => {
+        return [...fullPath, ...Object.values(path[level]).map(point => {
+          return { level, point };
+        })];
+      }, []);
+
+      // Check if path shorter than current shortest
+      if ((minPath === null) || (minPath.length > fullPath.length)) {
+        minPath = fullPath;
+      }
+
+      // Render progress
+      const render = (flags.PROGRESS && image.renderFieldFactory({ palette }));
+      if (flags.PROGRESS) {
+        for (let level in path) {
+          logProgress(`Level: ${ level }`);
+          logProgress([...render(image.drawPointsAsImage([
+            ...Object.values(analysis.points),
+            ...Object.values(path[level]).map(p => colorPoint(p, module.exports.readPalette.path)),
+            ...(level === '0' ? [result.value.point].map(p => colorPoint(p, module.exports.readPalette.location)) : [])
+          ], { transparentColor: module.exports.readPalette[' '] }))].join(''));
+        }
+        logProgress(`Path length: ${ fullPath.length - 1 } / ${ minPath.length - 1 }`);
+        logProgress();
+      }  
+
+    }
+  }
+  // Return shortest found path
+  return minPath;
+};
+
+// Point key generator
+const pkey = (p, dx = 0, dy = 0) => (`${ p.coords.x + dx }x${ p .coords.y + dy }`);
+// Returns a colored copy of a point
+const colorPoint = (p, color) => { return { color, coords: p.coords, type: p.type }; };
+
+// Checks if color matches a type
+function matchType (color, type, options = {}) {
+  if (type instanceof RegExp) {
+    return !!color.toString().match(type);
+  } else if (type instanceof Function) {
+    return type(color.toString(), options);
+  } else {
+    return !!(type === color.toString());
+  }
+};
+
+// Portal type detection function
+function detectPortalType (color, { types, point, points } = {}) {
+  // Find all portals
+  if (point.color.toString().match(types.free)) {
+    // Check neighbouring points for portal markings
+    let matched,
+        location;
+    if (points[pkey(point, 0, -1)] && points[pkey(point, 0, -1)].color.toString().match(/[A-Z]/)
+     && points[pkey(point, 0, -2)] && points[pkey(point, 0, -2)].color.toString().match(/[A-Z]/)) {
+      matched = (points[pkey(point, 0, -2)] && points[pkey(point, 0, -2)].color)
+              + (points[pkey(point, 0, -1)] && points[pkey(point, 0, -1)].color);
+      location = (points[pkey(point, 0, -3)] === undefined ? 'outside' : 'inside');
+    }
+    if (points[pkey(point, 0, +1)] && points[pkey(point, 0, +1)].color.toString().match(/[A-Z]/)
+     && points[pkey(point, 0, +2)] && points[pkey(point, 0, +2)].color.toString().match(/[A-Z]/)) {
+      matched = (points[pkey(point, 0, +1)] && points[pkey(point, 0, +1)].color)
+              + (points[pkey(point, 0, +2)] && points[pkey(point, 0, +2)].color);
+      location = (points[pkey(point, 0, +3)] === undefined ? 'outside' : 'inside');
+    }
+    if (points[pkey(point, -1, 0)] && points[pkey(point, -1, 0)].color.toString().match(/[A-Z]/)
+     && points[pkey(point, -2, 0)] && points[pkey(point, -2, 0)].color.toString().match(/[A-Z]/)) {
+      matched = (points[pkey(point, -2, 0)] && points[pkey(point, -2, 0)].color)
+              + (points[pkey(point, -1, 0)] && points[pkey(point, -1, 0)].color);
+      location = (points[pkey(point, -3, 0)] === undefined ? 'outside' : 'inside');
+    }
+    if (points[pkey(point, +1, 0)] && points[pkey(point, +1, 0)].color.toString().match(/[A-Z]/)
+     && points[pkey(point, +2, 0)] && points[pkey(point, +2, 0)].color.toString().match(/[A-Z]/)) {
+      matched = (points[pkey(point, +1, 0)] && points[pkey(point, +1, 0)].color)
+              + (points[pkey(point, +2, 0)] && points[pkey(point, +2, 0)].color);
+      location = (points[pkey(point, +3, 0)] === undefined ? 'outside' : 'inside');
+    }
+    // Return portal matched
+    return (matched ? { key: matched, location } : false);
+  }
+};

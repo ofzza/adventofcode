@@ -56,9 +56,10 @@ function puzzle02 (...args) {
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '19', '02', puzzle02, [
-    [prog, 2],    { expected: 110015,   transform: r => r.count },
-    [prog, 3],    { expected: 220030,   transform: r => r.count },
-    [prog, 10],   { expected: 870118,   transform: r => r.count },
-    [prog, 100],  { expected: 9441282,  transform: r => r.count, example: false }
+    [prog, 2],    { expected: 110015 },
+    [prog, 3],    { expected: 220030 },
+    [prog, 10],   { expected: 870118 },
+    [prog, 100],  { expected: 9441282, example: false,
+                    warning: 'Slow! Needs some way to optimize?!' }
   ]);
 };

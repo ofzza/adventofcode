@@ -46,9 +46,10 @@ module.exports.fft = function * fft (input, { repeatInput = 1, startIndex, endIn
             if (j >= 0) {
               const limitLoc  = i + 1,
                     limitGlob = input.length - j;
-                    limit     = (limitLoc < limitGlob ? limitLoc : limitGlob); 
-              for (let k = 0; k < limit; k++) { outputValueA += input[j + k]; }
-              outputValueA *= pf;
+                    limit     = (limitLoc < limitGlob ? limitLoc : limitGlob);
+              let sum = 0;
+              for (let k = 0; k < limit; k++) { sum += input[j + k]; }
+              outputValueA += sum * pf;
             }
           }
         }

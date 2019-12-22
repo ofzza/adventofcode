@@ -52,6 +52,8 @@ if (!yargs) {
 // Search and run all tests
 function runTests ({ year, day, puzzle, progress, interactive } = {}) {
 
+  // Set startup arguments
+  flags.argv = { year, day, puzzle, progress, interactive };
   // Set logging progress flag
   flags.PROGRESS = progress;
   // Set interactive mode flag

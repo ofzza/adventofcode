@@ -61,6 +61,7 @@ module.exports.puzzle02 = () => {
     '13 WPTQ, 10 LTCX, 3 RJRHP, 14 XMNCP, 2 MZWV, 1 ZLQW => 1 ZDVW','5 BMBT => 4 WPTQ','189 ORE => 9 KTJDG',
     '1 MZWV, 17 XDBXC, 3 XCVML => 2 XMNCP','12 VRPVC, 27 CNZTR => 2 XDBXC','15 KTJDG, 12 BHXH => 5 XCVML',
     '3 BHXH, 2 VRPVC => 7 MZWV','121 ORE => 7 VRPVC','7 XCVML => 6 RJRHP','5 BHXH, 4 VRPVC => 5 LTCX'],             { expected: 460664 },
-    input,                                                                                                          { expected: 1639374, example: false }
+    input,                                                                                                          { expected: 1639374, example: false,
+                                                                                    warning: 'Slow! Needs some way to optimize?!' }
   ]);
 };

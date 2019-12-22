@@ -82,9 +82,9 @@ module.exports.renderFieldFactory = function renderFieldFactory ({ transform = n
 
 // Draw a pixes as ASCII
 function drawPixel (pixel = null, palette = module.exports.defaultPalette) {
-  if (palette[pixel] !== undefined) {
-    return palette[pixel];
-  } else if (pixel === null) {
+  if (pixel !== null) {
+    return palette[pixel] || pixel;
+  } else  {
     return '\n';
   }
 }
