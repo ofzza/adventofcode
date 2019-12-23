@@ -18,17 +18,7 @@ module.exports.play = function * play (prog, inputs, { overlayFn = null, palette
       score = 0;
 
   // Initialize a computer
-  const computer = turing.run(prog, inputs, [
-    turing.actions.turingAdd,
-    turing.actions.turingMultiply,
-    turing.actions.turingInput,
-    turing.actions.turingOutput,
-    turing.actions.turingJumpTrue,
-    turing.actions.turingJumpFalse,
-    turing.actions.turingLessThan,
-    turing.actions.turingEquals,
-    turing.actions.turingSetRelativeBase
-  ]);
+  const computer = turing.run(prog, inputs);
 
   // Run game
   let output, outputs = [];

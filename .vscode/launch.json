@@ -13,7 +13,7 @@
       ],
       "program": "${workspaceFolder}\\index.js",
       // "args": ["--progress", "--interactive"]
-      "args": ["--year=2019", "--day=21", "--progress"]
+      "args": ["--year=2019", "--day=23", "--progress"]
     }
   ]
 }

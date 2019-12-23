@@ -27,17 +27,7 @@ const palette = {
 // 1st puzzle of the day
 function puzzle01 (...args) {
   // Initialize robot
-  const robot = turing.run(args, [], [
-          turing.actions.turingAdd,
-          turing.actions.turingMultiply,
-          turing.actions.turingInput,
-          turing.actions.turingOutput,
-          turing.actions.turingJumpTrue,
-          turing.actions.turingJumpFalse,
-          turing.actions.turingLessThan,
-          turing.actions.turingEquals,
-          turing.actions.turingSetRelativeBase
-        ]);
+  const robot = turing.run(args, []);
   // Pipe robot output to camera
   const points      = camera.shoot([...robot]),
         calibration = camera.calibrate(points);
@@ -73,17 +63,7 @@ function puzzle02 (...args) {
     .map(c => c.charCodeAt(0));
 
   // Initialize robot
-  const robot = turing.run(args, inputs, [
-    turing.actions.turingAdd,
-    turing.actions.turingMultiply,
-    turing.actions.turingInput,
-    turing.actions.turingOutput,
-    turing.actions.turingJumpTrue,
-    turing.actions.turingJumpFalse,
-    turing.actions.turingLessThan,
-    turing.actions.turingEquals,
-    turing.actions.turingSetRelativeBase
-  ]);
+  const robot = turing.run(args, inputs);
 
   // Run robot
   let points = [],

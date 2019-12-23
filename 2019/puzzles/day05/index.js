@@ -13,12 +13,14 @@ function puzzle01 (...args) {
   const prog = args[0],
         inputs = args[1];
   return [
-    ...turing.run(prog, inputs, [
-      turing.actions.turingAdd,
-      turing.actions.turingMultiply,
-      turing.actions.turingInput,
-      turing.actions.turingOutput
-    ])
+    ...turing.run(prog, inputs, {
+      actions: [
+        turing.actions.turingAdd,
+        turing.actions.turingMultiply,
+        turing.actions.turingInput,
+        turing.actions.turingOutput
+      ]
+    })
   ];
 }
 module.exports.puzzle01 = () => {
@@ -35,16 +37,18 @@ function puzzle02 (...args) {
   const prog = args[0],
         inputs = args[1];
   return [
-    ...turing.run(prog, inputs, [
-      turing.actions.turingAdd,
-      turing.actions.turingMultiply,
-      turing.actions.turingInput,
-      turing.actions.turingOutput,
-      turing.actions.turingJumpTrue,
-      turing.actions.turingJumpFalse,
-      turing.actions.turingLessThan,
-      turing.actions.turingEquals
-    ])
+    ...turing.run(prog, inputs, {
+      actions: [
+        turing.actions.turingAdd,
+        turing.actions.turingMultiply,
+        turing.actions.turingInput,
+        turing.actions.turingOutput,
+        turing.actions.turingJumpTrue,
+        turing.actions.turingJumpFalse,
+        turing.actions.turingLessThan,
+        turing.actions.turingEquals
+      ]
+    })
   ];
 }
 module.exports.puzzle02 = () => {

@@ -15,17 +15,7 @@ module.exports.explore = function explore (prog, world = {}, { palette } = {}) {
 
   // Initialize robot
   const inputs = [],        
-        robot = turing.run(prog, inputs, [
-          turing.actions.turingAdd,
-          turing.actions.turingMultiply,
-          turing.actions.turingInput,
-          turing.actions.turingOutput,
-          turing.actions.turingJumpTrue,
-          turing.actions.turingJumpFalse,
-          turing.actions.turingLessThan,
-          turing.actions.turingEquals,
-          turing.actions.turingSetRelativeBase
-        ]);
+        robot = turing.run(prog, inputs);
   let trail = {},
       distance = null;
 

@@ -11,10 +11,12 @@ const program = require('fs').readFileSync(require('path').join(__dirname, './in
 // 1st puzzle of the day
 function puzzle01 (...program) {
   [
-    ...turing.run(program, [], [
-      turing.actions.turingAdd,
-      turing.actions.turingMultiply
-    ])
+    ...turing.run(program, [], {
+      actions: [
+        turing.actions.turingAdd,
+        turing.actions.turingMultiply
+      ]
+    })
   ];
   return program[0];
 };

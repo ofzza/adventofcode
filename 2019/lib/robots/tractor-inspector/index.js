@@ -42,17 +42,7 @@ module.exports.scanForTraction = function * scanForTraction (prog) {
 // Got to a requested coordinates
 function checkTraction (prog, x, y) {
   // Initialize robot
-  const robot = turing.run(prog, [x, y], [
-    turing.actions.turingAdd,
-    turing.actions.turingMultiply,
-    turing.actions.turingInput,
-    turing.actions.turingOutput,
-    turing.actions.turingJumpTrue,
-    turing.actions.turingJumpFalse,
-    turing.actions.turingLessThan,
-    turing.actions.turingEquals,
-    turing.actions.turingSetRelativeBase
-  ]);
+  const robot = turing.run(prog, [x, y]);
   // Get robot output
   return [...robot][0];
 };

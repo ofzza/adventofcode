@@ -15,7 +15,7 @@ const instructions = [
 ];
 
 // Computer as output generator implementation
-module.exports.run = function * run (prog, inputs = [], actions = []) {
+module.exports.run = function * run (prog, inputs = [], { actions = module.exports.actions.all, fastForwardUntilOutput = true } = {}) {
   // Set relative-base pointer value
   let relbase = 0;
   // Run program
@@ -43,6 +43,8 @@ module.exports.run = function * run (prog, inputs = [], actions = []) {
         }
       }
     }
+    // Yield no output if not fast-forwarding
+    if (!fastForwardUntilOutput) { yield; }
     // Move to next opcode
     i += 1 + instruction.params;
   }
@@ -50,6 +52,22 @@ module.exports.run = function * run (prog, inputs = [], actions = []) {
 
 // Turing actions
 module.exports.actions = {
+  
+  // Gets all turing actions
+  get all () {
+    return [
+      module.exports.actions.turingAdd,
+      module.exports.actions.turingMultiply,
+      module.exports.actions.turingInput,
+      module.exports.actions.turingOutput,
+      module.exports.actions.turingJumpTrue,
+      module.exports.actions.turingJumpFalse,
+      module.exports.actions.turingLessThan,
+      module.exports.actions.turingEquals,
+      module.exports.actions.turingSetRelativeBase
+    ];
+  },
+
   // Add
   turingAdd: function turingAdd ({ prog, instruction, args } = {}) {
     if (instruction.func === 'add') {
@@ -115,6 +133,7 @@ module.exports.actions = {
       return { relbase: args[0].value };
     }
   }
+
 };
 
 // Get argument values

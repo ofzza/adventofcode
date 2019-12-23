@@ -7,17 +7,7 @@ const turing = require('../../turing');
 module.exports.run = function * run (prog, surface = {}) {
   const coords = { x: 0, y: 0 },
         inputs = [],        
-        robot = turing.run(prog, inputs, [
-          turing.actions.turingAdd,
-          turing.actions.turingMultiply,
-          turing.actions.turingInput,
-          turing.actions.turingOutput,
-          turing.actions.turingJumpTrue,
-          turing.actions.turingJumpFalse,
-          turing.actions.turingLessThan,
-          turing.actions.turingEquals,
-          turing.actions.turingSetRelativeBase
-        ]);
+        robot = turing.run(prog, inputs);
   let direction = 0,
       result;
   do {

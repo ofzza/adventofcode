@@ -24,7 +24,7 @@ module.exports.primefact = function primefact (n) {
         }
       } else {
         // Done testing, haven't found all factors - error
-        throw new Error(`Didn't find all factors while searching entire [0, sqrt(n)] space - math is broken!`);
+        throw new Error(`Didn't find all factors while searching entire [0, 0.5 * n] space - math is broken!`);
       }
     }
   }

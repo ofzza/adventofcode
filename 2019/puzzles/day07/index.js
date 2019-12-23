@@ -19,16 +19,18 @@ function puzzle01 (...args) {
     let value = 0;
     for (let setting of settings) {
       const output = [
-        ...turing.run([...prog], [setting, value], [
-          turing.actions.turingAdd,
-          turing.actions.turingMultiply,
-          turing.actions.turingInput,
-          turing.actions.turingOutput,
-          turing.actions.turingJumpTrue,
-          turing.actions.turingJumpFalse,
-          turing.actions.turingLessThan,
-          turing.actions.turingEquals
-        ])
+        ...turing.run([...prog], [setting, value], {
+          actions: [
+            turing.actions.turingAdd,
+            turing.actions.turingMultiply,
+            turing.actions.turingInput,
+            turing.actions.turingOutput,
+            turing.actions.turingJumpTrue,
+            turing.actions.turingJumpFalse,
+            turing.actions.turingLessThan,
+            turing.actions.turingEquals
+          ]
+        })
       ];
       value = output[0];
     }
@@ -57,16 +59,18 @@ function puzzle02 (...args) {
   for (const settings of settingsPermutations) {
     // Initialize generators and generator inputs for this settings permutation
     const inputs = [...Array(5)].map((x, i) => [settings[i]]),
-          amplifiers = [...Array(5)].map((x, i) => turing.run([...prog], inputs[i], [
-            turing.actions.turingAdd,
-            turing.actions.turingMultiply,
-            turing.actions.turingInput,
-            turing.actions.turingOutput,
-            turing.actions.turingJumpTrue,
-            turing.actions.turingJumpFalse,
-            turing.actions.turingLessThan,
-            turing.actions.turingEquals
-          ]));
+          amplifiers = [...Array(5)].map((x, i) => turing.run([...prog], inputs[i], {
+            actions: [
+              turing.actions.turingAdd,
+              turing.actions.turingMultiply,
+              turing.actions.turingInput,
+              turing.actions.turingOutput,
+              turing.actions.turingJumpTrue,
+              turing.actions.turingJumpFalse,
+              turing.actions.turingLessThan,
+              turing.actions.turingEquals
+            ]
+          }));
     // Run for settings permutation
     let output = 0,
         i = 0,

@@ -20,17 +20,7 @@ module.exports.run = function run (prog, code, { palette } = {}) {
   // Initialize robot
   const assembler = [...code, 'WALK\n'],
         inputs    = assembler.join('\n').split('').map(c => c.charCodeAt(0)),
-        robot     = turing.run(prog, inputs, [
-          turing.actions.turingAdd,
-          turing.actions.turingMultiply,
-          turing.actions.turingInput,
-          turing.actions.turingOutput,
-          turing.actions.turingJumpTrue,
-          turing.actions.turingJumpFalse,
-          turing.actions.turingLessThan,
-          turing.actions.turingEquals,
-          turing.actions.turingSetRelativeBase
-        ]);
+        robot     = turing.run(prog, inputs);
 
   // Run robot
   let output = [],
