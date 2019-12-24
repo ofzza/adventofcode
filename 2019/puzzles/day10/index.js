@@ -11,8 +11,8 @@ const input = require('fs').readFileSync(require('path').join(__dirname, './inpu
 });
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  const result = lineofsight.getBestVantagePoint(args);
+function puzzle01 (...map) {
+  const result = lineofsight.getBestVantagePoint(map);
   return [result.point, result.visible];
 }
 module.exports.puzzle01 = () => {
@@ -34,9 +34,9 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  const enumerated = [...lineofsight.enumerateFromVantagePoint(args[0], args[1])],
-        point = enumerated[args[2]];
+function puzzle02 (map, vp, p) {
+  const enumerated  = [...lineofsight.enumerateFromVantagePoint(map, vp)],
+        point       = enumerated[p];
   return (100 * point.x + point.y);
 }
 module.exports.puzzle02 = () => {

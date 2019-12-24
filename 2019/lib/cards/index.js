@@ -26,28 +26,24 @@ module.exports.track = function * track (n, card, instructions, backwards = fals
     yield (card = tracking[!backwards ? 'forward' : 'backward'][instruction.method](...[n, card, ...instruction.params]));
   }
 };
-// // Track single card through multiple shuffles
-// module.exports.repeatTrack = function * track (repetitions, n, card, instructions, backwards = false) {
-//   // Track through shuffles looking for repetitions
-//   let position = card;
-//   for (let i = 0; i < repetitions; i++) {
-//     // Track through a single shuffle
-//     let track = module.exports.track(n, position, instructions, backwards),
-//         result;
-//     while (!(result = track.next()).done) {
-//       position = result.value;
-//     }
-//     // Check if repeated position
-//     if (position === card) {
-//       break;
-//     }
-//   }
-// };
-
-// // Gets repetition period of an instruction
-// module.exports.getRepetitionPeriod = function getRepetitionPeriod (cards, instruction) {
-//   return repetitionPeriod[instruction.method](...[cards, ...instruction.params]);
-// };
+// Track single card through multiple shuffles
+module.exports.repeatTrack = function * track (repetitions, n, card, instructions, backwards = false) {
+  // Track through shuffles looking for repetitions
+  let position = card;
+  for (let i = 0; i < repetitions; i++) {
+    // Track through a single shuffle
+    let track = module.exports.track(n, position, instructions, backwards),
+        result;
+    while (!(result = track.next()).done) {
+      console.log(position = result.value);
+    }
+    // Check if repeated position
+    if (position === card) {
+      break;
+    }
+  }
+  yield position;
+};
 
 // Shuffles
 const shuffles = {
@@ -128,94 +124,3 @@ tracking.backward = {
     }    
   }
 };
-
-// Calculate repetition period for a shuffle
-// const repetitionPeriod = {
-//   // Shuffle cards by dealing into a new deck
-//   dealIntoNewDeck: function dealIntoNewDeck (cards) {
-//     // Empirically test repetition
-//     let period;
-//     const history = {};
-//     for (let i = 0; true; i++) {
-//       // Check for repetition
-//       const key = cards.join(',');
-//       if (!history[key]) {
-//         history[key] = { i };
-//       } else {
-//         period = i;
-//         break;
-//       }
-//       // Shuffle
-//       cards = [...shuffles.dealIntoNewDeck(cards)];
-//     }
-//     // Return calculated repetition period
-//     if (period === 2) {
-//       return 2;
-//     } else {
-//       throw new Error('Calculation broken!');
-//     }
-//   },
-//   // Cut cards to given depth (negative depth is counted from the bottom)
-//   cutCards: function cutCards (cards, depth) {
-//     // Empirically test repetition
-//     let period;
-//     const history = {};
-//     for (let i = 0; true; i++) {
-//       // Check for repetition
-//       const key = cards.join(',');
-//       if (!history[key]) {
-//         history[key] = { i };
-//       } else {
-//         period = i;
-//         break;
-//       }
-//       // Shuffle
-//       cards = [...shuffles.dealIntoNewDeck(cards)];
-//     }
-//     // Return calculated repetition period
-//     if (period === 2) {
-//       return 2;
-//     } else {
-//       throw new Error('Calculation broken!');
-//     }
-//   },
-//   // Deal onto the table with given increment
-//   dealWithIncrement: function dealWithIncrement (cards, increment) {
-//     // Calculate repetition period
-//     const n = cards.length,
-//           every = (n / increment),
-//           movesRight = increment - (n % increment);
-//     let x = (n % increment === 2 ? (n - 1) : Math.floor(n / 2));
-//     // Find how many times moved
-//     // for (let i = 1; true; i++) {
-//     //   if ((i * movesRight) % increment === 0) {
-//     //     // Original number?!
-//     //     x = (i * every) % increment;
-//     //     break;
-//     //   }
-//     // }
-//     // Empirically test repetition
-//     let period;
-//     const history = {};
-//     for (let i = 0; true; i++) {
-//       // Check for repetition
-//       const key = cards.join(',');
-//       if (!history[key]) {
-//         history[key] = { i };
-//       } else {
-//         period = i;
-//         break;
-//       }
-//       // Shuffle
-//       cards = [...shuffles.dealWithIncrement(cards, increment)];
-//     }
-//     // Return calculated repetition period
-//     if (period === x) {
-//       console.log(`'> PERIOD: max ${n} inc ${increment} mod ${n % increment} -> period: ${period} (calculated: ${x})`);
-//       return x;
-//     } else {
-//       console.log(`'> PERIOD: max ${n} inc ${increment} mod ${n % increment} -> period: ${period} (calculated: ${x})`);
-//       throw new Error('Calculation broken!');
-//     }
-//   }
-// };

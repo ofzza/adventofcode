@@ -22,9 +22,9 @@ const palette = {
 };
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (...prog) {
   // Initialize a game
-  const game = arcade.play(args, [], { palette });
+  const game = arcade.play(prog, [], { palette });
   // Run game to the end
   let screen;
   while (true) {
@@ -50,12 +50,12 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (...prog) {
   // Initialize a game
   let screen,
       score;
   const game = arcade.play(
-    args,
+    prog,
     () => {
       // 
       if (flags.PROGRESS && flags.INTERACTIVE) {

@@ -37,11 +37,8 @@ function inputModificationDistanceCorrection (a, b) {
 };
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  return collectAllKeys(args[0], {
-    questionableShortcuts:  args[1],
-    distanceCorrection:     args[2]
-  });
+function puzzle01 (labyrinth, questionableShortcuts, distanceCorrection) {
+  return collectAllKeys(labyrinth, { questionableShortcuts, distanceCorrection });
 }
 module.exports.puzzle01 = () => {
   puzzle('2019', '18', '01', puzzle01, [
@@ -59,10 +56,8 @@ input02['40x40'].color = input02['39x40'].color = input02['41x40'].color = input
 input02['39x39'].color = input02['39x41'].color = input02['41x39'].color = input02['41x41'].color = '@';
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  return collectAllKeys(args[0], {
-    questionableShortcuts: args[1]
-  });
+function puzzle02 (labyrinth, questionableShortcuts) {
+  return collectAllKeys(labyrinth, { questionableShortcuts });
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '18', '02', puzzle02, [

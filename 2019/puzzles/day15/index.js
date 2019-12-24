@@ -23,8 +23,8 @@ const palette = {
 let world = {};
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  return robot.explore(args, world, { palette });
+function puzzle01 (...prog) {
+  return robot.explore(prog, world, { palette });
 }
 module.exports.puzzle01 = () => {
   puzzle('2019', '15', '01', puzzle01, [
@@ -33,8 +33,8 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  return robot.fill(args, world, { palette });
+function puzzle02 (...prog) {
+  return robot.fill(prog, world, { palette });
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '15', '02', puzzle02, [

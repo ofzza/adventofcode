@@ -9,10 +9,10 @@ const puzzle  = require('../../../lib').puzzle,
 const input = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split('').map(a => parseInt(a));
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  let processing = fft(args[0], { startIndex: 0, endIndex: 8 }),
+function puzzle01 (input, n) {
+  let processing = fft(input, { startIndex: 0, endIndex: 8 }),
       output;
-  for (let i = 0 ; i < args[1]; i++) {
+  for (let i = 0 ; i < n; i++) {
     output = processing.next();
   }
   return output.value;
@@ -29,12 +29,12 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  let startIndex  = parseInt(args[0].slice(0, 7).join('')),
+function puzzle02 (input, repetitions, n) {
+  let startIndex  = parseInt(input.slice(0, 7).join('')),
       endIndex    = startIndex + 8,
-      processing  = fft(args[0], { repeatInput: args[1], startIndex, endIndex }),
+      processing  = fft(input, { repeatInput: repetitions, startIndex, endIndex }),
       output;
-  for (let i = 0 ; i < args[2]; i++) {
+  for (let i = 0 ; i < n; i++) {
     output = processing.next();
   }
   return output.value.slice(startIndex, endIndex);

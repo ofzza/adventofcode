@@ -12,10 +12,10 @@ const flags       = require('../../../lib').flags,
 const prog = require('fs').readFileSync(require('path').join(__dirname, `./input.txt`)).toString().trim().split(',').map(a => parseInt(a));
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  let scanner = robot.scanForTraction(args[0]),
+function puzzle01 (prog, limit) {
+  let scanner = robot.scanForTraction(prog),
       result;
-  while ((result = scanner.next()).value.radius < (args[1] - 1)) {}
+  while ((result = scanner.next()).value.radius < (limit - 1)) {}
   return result.value;
 }
 module.exports.puzzle01 = () => {
@@ -26,11 +26,11 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (prog, limit) {
   // Initialize renderer
   const render = (flags.PROGRESS && image.renderFieldFactory());
   // Initialize the scanner
-  let scanner = robot.scanForTraction(args[0]),
+  let scanner = robot.scanForTraction(prog),
       result;
   while (!(result = scanner.next()).done) {
     // Draw last line
@@ -46,9 +46,9 @@ function puzzle02 (...args) {
     }
     // Check if target area fits
     const blPoint = result.value.points[`${ result.value.offset }x${ result.value.radius }`],
-          brPoint = result.value.points[`${ result.value.offset + (args[1] - 1) }x${ result.value.radius }`],
-          tlPoint = result.value.points[`${ result.value.offset }x${ result.value.radius - (args[1] - 1) }`],
-          trPoint = result.value.points[`${ result.value.offset + (args[1] - 1) }x${ result.value.radius - (args[1] - 1) }`];
+          brPoint = result.value.points[`${ result.value.offset + (limit - 1) }x${ result.value.radius }`],
+          tlPoint = result.value.points[`${ result.value.offset }x${ result.value.radius - (limit - 1) }`],
+          trPoint = result.value.points[`${ result.value.offset + (limit - 1) }x${ result.value.radius - (limit - 1) }`];
     if (blPoint && blPoint.color && brPoint && brPoint.color && tlPoint && tlPoint.color && trPoint && trPoint.color) {
       return (10000 * tlPoint.coords.x + tlPoint.coords.y);
     }

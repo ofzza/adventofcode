@@ -9,9 +9,7 @@ const puzzle  = require('../../../lib').puzzle,
 const prog = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map(a => parseInt(a));
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  const prog = args[0],
-        inputs = args[1];
+function puzzle01 (prog, inputs) {
   return [
     ...turing.run(prog, inputs, {
       actions: [
@@ -33,9 +31,7 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  const prog = args[0],
-        inputs = args[1];
+function puzzle02 (prog, inputs) {
   return [
     ...turing.run(prog, inputs, {
       actions: [

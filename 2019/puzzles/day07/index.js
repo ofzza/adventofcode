@@ -10,9 +10,8 @@ const puzzle        = require('../../../lib').puzzle,
 const prog = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map(a => parseInt(a));;
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  const prog = args,
-        settingsPermutations = permutations([0, 1, 2, 3, 4]);
+function puzzle01 (...prog) {
+  const settingsPermutations = permutations([0, 1, 2, 3, 4]);
   let maxThrust = null,
       maxSettings = null;
   for (let settings of settingsPermutations) {
@@ -51,9 +50,8 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  const prog = args,
-        settingsPermutations = permutations([5, 6, 7, 8, 9]);
+function puzzle02 (...prog) {
+  const settingsPermutations = permutations([5, 6, 7, 8, 9]);
   let maxThrust = null,
       maxSettings = null;
   for (const settings of settingsPermutations) {

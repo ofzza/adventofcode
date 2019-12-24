@@ -28,10 +28,8 @@ function read (name) {
 }
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (n, instructions) {
   // Ready new deck
-  const n             = args[0],
-        instructions  = args[1];
   let deck    = cards.newDeck(n),
       shuffle = cards.shuffle(deck, instructions),
       order,
@@ -50,44 +48,29 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  const repetitions   = args[0],
-        n             = args[1],
-        instructions  = args[2],
-        positions     = args[3],
-        backwards     = args[4];
-
-  // Find repetition periods for every instruction
-  // let periods = {},
-  //     deck = [...cards.newDeck(n)];
-  // for (let i in instructions) {
-  //   periods[i] = {
-  //     instruction:  instructions[i],
-  //     period:       cards.getRepetitionPeriod(deck, instructions[i])
-  //   };
-  // }
-
-  // Ready new deck
+function puzzle02 (repetitions, n, instructions, positions, backwards) {
   return positions.map(position => {
-    let track = cards.track(n, position, instructions, backwards),
+    let track = cards.repeatTrack(repetitions, n, position, instructions, backwards),
         next,
         result;
-    while (!(result = track.next()).done) { next = result.value; };
+    while (!(result = track.next()).done) {
+      next = result.value;
+    };
     return next;
   });
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '22', '02', puzzle02, [
-    [1,               10,               read('example101'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [0, 7, 4, 1, 8, 5, 2, 9, 6, 3] },
-    [1,               10,               read('example101'), [0, 7, 4, 1, 8, 5, 2, 9, 6, 3], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
-    [1,               10,               read('example102'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [1, 4, 7, 0, 3, 6, 9, 2, 5, 8] },
-    [1,               10,               read('example102'), [1, 4, 7, 0, 3, 6, 9, 2, 5, 8], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
-    [1,               10,               read('example103'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [2, 5, 8, 1, 4, 7, 0, 3, 6, 9] },
-    [1,               10,               read('example103'), [2, 5, 8, 1, 4, 7, 0, 3, 6, 9], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
-    [1,               10,               read('example104'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [7, 4, 1, 8, 5, 2, 9, 6, 3, 0] },
-    [1,               10,               read('example104'), [7, 4, 1, 8, 5, 2, 9, 6, 3, 0], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
-    [1,                  10007,         read('input'),      [2019],                         false], { expected: [3377] },
-    [1,                  10007,         read('input'),      [3377],                         true],  { expected: [2019] },
+    // [1,               10,               read('example101'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [0, 7, 4, 1, 8, 5, 2, 9, 6, 3] },
+    // [1,               10,               read('example101'), [0, 7, 4, 1, 8, 5, 2, 9, 6, 3], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    // [1,               10,               read('example102'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [1, 4, 7, 0, 3, 6, 9, 2, 5, 8] },
+    // [1,               10,               read('example102'), [1, 4, 7, 0, 3, 6, 9, 2, 5, 8], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    // [1,               10,               read('example103'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [2, 5, 8, 1, 4, 7, 0, 3, 6, 9] },
+    // [1,               10,               read('example103'), [2, 5, 8, 1, 4, 7, 0, 3, 6, 9], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    // [1,               10,               read('example104'), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false], { expected: [7, 4, 1, 8, 5, 2, 9, 6, 3, 0] },
+    // [1,               10,               read('example104'), [7, 4, 1, 8, 5, 2, 9, 6, 3, 0], true],  { expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    // [1,               10007,            read('input'),      [2019],                         false], { expected: [3377] },
+    // [1,               10007,            read('input'),      [3377],                         true],  { expected: [2019] },
     // [101741582076661, 119315717514047,  read('input'),      [2020],                         true],  { expected: undefined, example: false }
   ]);
 };

@@ -9,12 +9,8 @@ const puzzle = require('../../../lib').puzzle,
 const prog = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map(a => parseInt(a));;
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  const prog = args[0],
-        inputs = args[1];
-  return [
-    ...turing.run(prog, inputs)
-  ];
+function puzzle01 (prog, inputs) {
+  return [...turing.run(prog, inputs)];
 }
 module.exports.puzzle01 = () => {
   puzzle('2019', '09', '01', puzzle01, [
@@ -26,8 +22,8 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  return puzzle01(...args);
+function puzzle02 (prog, inputs) {
+  return puzzle01(prog, inputs);
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '09', '02', puzzle02, [

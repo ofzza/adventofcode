@@ -25,9 +25,9 @@ const palette = {
 };
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (...prog) {
   // Initialize robot
-  const robot = turing.run(args, []);
+  const robot = turing.run(prog, []);
   // Pipe robot output to camera
   const points      = camera.shoot([...robot]),
         calibration = camera.calibrate(points);
@@ -46,7 +46,7 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (...prog) {
 
   // Initialize robot input  
   // R12,R4,R10,R12,R6,L8,R10,R12,R4,R10,R12,L8,R4,R4,R6,R12,R4,R10,R12,R6,L8,R10,L8,R4,R4,R6,R12,R4,R10,R12,R6,L8,R10,L8,R4,R4,R6
@@ -63,7 +63,7 @@ function puzzle02 (...args) {
     .map(c => c.charCodeAt(0));
 
   // Initialize robot
-  const robot = turing.run(args, inputs);
+  const robot = turing.run(prog, inputs);
 
   // Run robot
   let points = [],

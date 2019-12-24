@@ -16,9 +16,9 @@ const input = [
 // ];
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (lineAInstructions, lineBInstructions) {
   let distance;
-  for (let intersection of intersections.find(...args)) {
+  for (let intersection of intersections.find(lineAInstructions, lineBInstructions)) {
     if (!distance || (Math.abs(intersection.x) + Math.abs(intersection.y) < distance)) {
       distance = Math.abs(intersection.x) + Math.abs(intersection.y);
     }
@@ -35,9 +35,9 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (lineAInstructions, lineBInstructions) {
   let distance;
-  for (let intersection of intersections.find(...args)) {
+  for (let intersection of intersections.find(lineAInstructions, lineBInstructions)) {
     if (!distance || (intersection.distances[0] + intersection.distances[1] < distance)) {
       distance = intersection.distances[0] + intersection.distances[1];
     }

@@ -9,9 +9,9 @@ const puzzle  = require('../../../lib').puzzle,
 const input = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split('\n').map((r) => r.trim());
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (...recipes) {
   const raw = 'ORE',
-        ingredients = nanofab.getRawIngredients('FUEL', args.map(r => nanofab.parse(r)));
+        ingredients = nanofab.getRawIngredients('FUEL', recipes.map(r => nanofab.parse(r)));
   return ingredients[raw].quantity;
 }
 module.exports.puzzle01 = () => {
@@ -39,10 +39,10 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (...recipes) {
   const raw = 'ORE',
         stock     = { [raw]: 1000000000000 },
-        quantity  = nanofab.getMaxQuantity('FUEL', stock, args.map(r => nanofab.parse(r)));
+        quantity  = nanofab.getMaxQuantity('FUEL', stock, recipes.map(r => nanofab.parse(r)));
   return quantity;
 }
 module.exports.puzzle02 = () => {

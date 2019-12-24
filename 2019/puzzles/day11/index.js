@@ -11,9 +11,9 @@ const puzzle              = require('../../../lib').puzzle,
 const prog = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map(a => parseInt(a));
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (...prog) {
   // Calculate trail
-  const trail = [...robot(args)],
+  const trail = [...robot(prog)],
         surface = { };
   for (let point of trail) {
     const key = `${ point.coords.x }x${ point.coords.y }`; 
@@ -29,9 +29,9 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (...prog) {
   // Calculate trail
-  const trail = [...robot(args, { ['0x0']: 1 })],
+  const trail = [...robot(prog, { ['0x0']: 1 })],
         surface = { };
   for (let point of trail) {
     const key = `${ point.coords.x }x${ point.coords.y }`; 

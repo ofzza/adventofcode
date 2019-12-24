@@ -13,10 +13,10 @@ const input = require('fs').readFileSync(require('path').join(__dirname, './inpu
 });
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  let simulation = newton.nbody(args[0], { coords: [0, 1, 2] }),
+function puzzle01 (bodies, n) {
+  let simulation = newton.nbody(bodies, { coords: [0, 1, 2] }),
       state;
-  for (let i = 0; i < args[1]; i++) { state = simulation.next(); }
+  for (let i = 0; i < n; i++) { state = simulation.next(); }
   return state.value.reduce((E, a) => (E + a.E), 0);
 }
 module.exports.puzzle01 = () => {
@@ -28,8 +28,8 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  return newton.nbodyFindPeriod(args, { coords: [0, 1, 2] });
+function puzzle02 (...bodies) {
+  return newton.nbodyFindPeriod(bodies, { coords: [0, 1, 2] });
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '12', '02', puzzle02, [

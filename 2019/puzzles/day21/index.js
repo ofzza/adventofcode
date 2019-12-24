@@ -9,13 +9,10 @@ const puzzle  = require('../../../lib').puzzle,
 const input = require('fs').readFileSync(require('path').join(__dirname, './input.txt')).toString().trim().split(',').map((a) => parseInt(a));
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (...prog) {
   // Run robot with custom assembler code
   // J = (!A || !B || !C) && D
-  return robot(args, [
-    // ... reset: T = 0
-    'NOT A T',
-    'AND A T',
+  return robot(prog, [
     // ... (!A || !B || !C) && D
     'NOT A T',
     'OR  T J',
@@ -36,7 +33,7 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (...prog) {
   // Run robot with custom assembler code
   // J =     D && H && (
   //               (!A)
@@ -47,10 +44,7 @@ function puzzle02 (...args) {
   //   = (!A || (!B && !(E && I)) || (B && !C && !(F && E && I))        && D && H
   //   = (!A || !(B || (E && I)) || (B && !(C || (F && E && I)))        && D && H
   //   = ((!(C || (F && E && I)) && B && H) || !((E && I) || B) || !A)  && D && H
-  return robot(args, [
-    // ... reset: T = 0
-    // 'NOT A T',
-    // 'AND A T',
+  return robot(prog, [
     // (B && !(C || (F && E && I))
     'OR  F J',
     'AND E J',
@@ -76,6 +70,6 @@ function puzzle02 (...args) {
 }
 module.exports.puzzle02 = () => {
   puzzle('2019', '21', '02', puzzle02, [
-    input,  { expected: undefined, example: false }
+    input,  { expected: 1141457530, example: false }
   ]);
 };

@@ -9,11 +9,11 @@ const puzzle        = require('../../../lib').puzzle,
 const input = [128392, 643281];
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
+function puzzle01 (min, max) {
   return [
     ...ascendingDigits({
-      min: args[0],
-      max: args[1],
+      min,
+      max,
       validationFn: (n, digits) => {
         // Check for double-digits
         if (digits.length <= 1) { return false; }
@@ -35,11 +35,11 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
+function puzzle02 (min, max) {
   return [
     ...ascendingDigits({
-      min: args[0],
-      max: args[1],
+      min,
+      max,
       validationFn: (n, digits) => {
         // Check for double-only digits (triples or more don't count ...)
         if (digits.length <= 1) { return false; }

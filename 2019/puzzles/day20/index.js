@@ -9,8 +9,8 @@ const puzzle              = require('../../../lib').puzzle,
 const read = labyrinth.getReader(__dirname);
 
 // 1st puzzle of the day
-function puzzle01 (...args) {
-  const analysis    = labyrinth.analyze(args[0]),
+function puzzle01 (map) {
+  const analysis    = labyrinth.analyze(map),
         startPoint  = analysis.byType.portal.find(p => p.type.portal.key == 'AA'),
         endPoint    = analysis.byType.portal.find(p => p.type.portal.key == 'ZZ');
   return Object.values(
@@ -26,8 +26,8 @@ module.exports.puzzle01 = () => {
 };
 
 // 2nd puzzle of the day
-function puzzle02 (...args) {
-  const analysis    = labyrinth.analyze(args[0]),
+function puzzle02 (map) {
+  const analysis    = labyrinth.analyze(map),
         startPoint  = analysis.byType.portal.find(p => p.type.portal.key == 'AA'),
         endPoint    = analysis.byType.portal.find(p => p.type.portal.key == 'ZZ');
   function searchToDepth (depth) {
