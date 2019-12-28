@@ -1,126 +1,108 @@
 // DECK OF SPACE CARDS
+// --------------------------------------------------------
+// Card positions change with each shuffle:
+// - DEAL INTO NEW STACK     --> -1 x N - 1  | stack.length
+// - CUT X                   --> N - X       | stack.length
+// - DEAL WITH INCREMENT X   --> X x N       | stack.length
 
 // Import dependencies
-const flags       = require('../../../lib').flags,
-      logProgress = require('../../../lib').logProgress,
-      turing      = require('../turing'),
-      image       = require('../image');
+const modnorm = require('../math').modNormalize,
+      modmult = require('../math').modMultiply,
+      moddiv  = require('../math').modDivide;
+      modpow  = require('../math').modPower;
 
-// Generates a new deck of cards
-module.exports.newDeck = function * newDeck (n) {
-  for (let i = 0; i < n; i++) {
-    yield i;
-  }
-};
+// Process shuffle instructions into a function giving the end position of each card after shuffling
+module.exports.processShuffleInstructions = function processShuffleInstructions (instructions, n) {
 
-// Shuffle deck
-module.exports.shuffle = function * shuffle (cards, instructions) {
+  // Calculate shuffle parameters:
+  // x' = a * x + b | deck.length
+  let a = 1,
+      b = 0;
+  // Process instructions
   for (let instruction of instructions) {
-    yield (cards = [...(shuffles[instruction.method](...[cards, ...instruction.params]))]);
+    // Process instructions
+    if (instruction.substr(0, 19) === 'deal into new stack') {
+      a = modnorm((-1 * a), n);
+      b = modnorm((-1 * b) - 1, n);
+    } else if (instruction.substr(0, 3) === 'cut') {
+      const x = parseInt(instruction.substr(3).trim());
+      b = modnorm(b - x, n);
+    } else if (instruction.substr(0, 19) === 'deal with increment') {
+      const x = parseInt(instruction.substr(19).trim());
+      a = modnorm(modmult(x, a, n), n);
+      b = modnorm(modmult(x, b, n), n);
+    }
   }
-};
 
-// Track single card through a shuffle
-module.exports.track = function * track (n, card, instructions, backwards = false) {
-  for (let instruction of (!backwards ? [...instructions] : [...instructions].reverse())) {
-    yield (card = tracking[!backwards ? 'forward' : 'backward'][instruction.method](...[n, card, ...instruction.params]));
+  // Calculate repeating shuffle parameters
+  // x' = A * x + B | deck.length
+  function calculateRepeatingParams (reps) {
+    // Calculate A
+    let A;
+    A = modpow(a, reps, n);
+    // Calculate B and c
+    let B = modnorm(
+              modmult(
+                b,
+                moddiv(
+                  modpow(a, reps, n ) - 1,
+                  (a - 1),
+                  n
+                ),
+                n
+              ),
+              n
+            );
+    // Return params
+    return { A, B };
   }
-};
-// Track single card through multiple shuffles
-module.exports.repeatTrack = function * track (repetitions, n, card, instructions, backwards = false) {
-  // Track through shuffles looking for repetitions
-  let position = card;
-  for (let i = 0; i < repetitions; i++) {
-    // Track through a single shuffle
-    let track = module.exports.track(n, position, instructions, backwards),
-        result;
-    while (!(result = track.next()).done) {
-      console.log(position = result.value);
-    }
-    // Check if repeated position
-    if (position === card) {
-      break;
-    }
-  }
-  yield position;
-};
 
-// Shuffles
-const shuffles = {
-  // Shuffle cards by dealing into a new deck
-  dealIntoNewDeck: function * dealIntoNewDeck (cards) {
-    cards = [...cards];
-    for (let i = (cards.length - 1); i >= 0; i--) {
-      yield cards[i];
-    }
-  },
-  // Cut cards to given depth (negative depth is counted from the bottom)
-  cutCards: function * cutCards (cards, depth) {
-    cards = [...cards];
-    for (let card of [...cards.splice(depth), ...cards]) {
-      yield card;
-    }
-  },
-  // Deal onto the table with given increment
-  dealWithIncrement: function * dealWithIncrement(cards, increment) {
-    cards = [...cards];
-    let table = [],
-          i = 0;
-    for (let card of cards) {
-      table[i % cards.length] = card;
-      i += increment;
-    }
-    for (let card of table) {
-      yield card;
-    }
-  }
-};
+  // Card shuffle function
+  function shuffleAnalytically (x, reps = 1) {
+    // Get parameters
+    const { A, B } = calculateRepeatingParams(reps);
+    // Calculate shuffle
+    return modnorm(modmult(A, x, n) + B, n);
+  };
 
-// Track card through shuffles
-const tracking = {};
-// Track forwards through shuffles
-tracking.forward = {
-  // Shuffle cards by dealing into a new deck
-  dealIntoNewDeck: function dealIntoNewDeck (n, card) {
-    return ((n - 1) - card);
-  },
-  // Cut cards to given depth (negative depth is counted from the bottom)
-  cutCards: function cutCards (n, card, depth) {
-    depth = (depth > 0 ? depth : (n + depth));
-    return (card < depth ? (card + (n - depth)) : (card - depth));
-  },
-  // Deal onto the table with given increment
-  dealWithIncrement: function dealWithIncrement (n, card, increment) {
-    return ((card * increment) % n);
-  }
-};
-// Trace back through shuffles
-tracking.backward = {
-  // Shuffle cards by dealing into a new deck
-  dealIntoNewDeck: (n, card) => tracking.forward.dealIntoNewDeck(n, card),
-  // Cut cards to given depth (negative depth is counted from the bottom)
-  cutCards: (n, card, depth) => tracking.forward.cutCards(n, card, (-1 * depth)),
-  // Deal onto the table with given increment
-  dealWithIncrement: function dealWithIncrement (n, card, increment) {
-    // Find movement on every wrap-around
-    const every = (n / increment),
-          movesRight = increment - (n % increment);
-    let x;
-    // Find how many times moved
-    for (let i = 0; true; i++) {
-      if ((i * movesRight) % increment === (card % increment)) {
-        // Original number?!
-        x = Math.floor(i * every + (card / increment));
-        break;
-      }
+  // Iterative card shuffle function
+  function shuffleIteratively (x, reps = 1) {
+    for (let i = 0; i < reps; i++) {
+      x = (a * x + b) % n;
+      x = (x >= 0 ? x : (x % n) + n)
     }
-    for (let i = 0; true; i++) {
-      if ((((x + i) * increment) % n) === card) {
-        return x + i;
+    return x;
+  };
+
+  // Card unshuffle function
+  function unshuffleAnalytically (x, reps = 1) {
+    // Get parameters
+    const { A, B } = calculateRepeatingParams(reps);
+    // Calculate unshuffle
+    return modnorm(moddiv(modnorm(x - B, n), A, n), n);
+  };
+
+  // Iterative card unshuffle function
+  function unshuffleIteratively (x, reps = 1) {
+    reps: for (let i = 0; i < reps; i++) {
+      for (let c = 0; c < a; c++) {
+        const y = (x + (c * n) - b) / a;
+        if (y === Math.trunc(y)) {
+          x = (y >= 0 ? y : (y % n) + n) % n;
+          continue reps;
+        }
       }
-      if ((((x - i) * increment) % n) === card) {
-        return x - i;
-      }
-    }    
+      throw new Error('Failed unshuffling!');
+    }
+    return x;
   }
-};
+
+  // Return shuffle/unshuffle functions
+  return {
+    shuffleAnalytically,
+    unshuffleAnalytically,
+    shuffleIteratively,
+    unshuffleIteratively
+  };
+
+}

@@ -47,7 +47,7 @@ module.exports.puzzle01 = () => {
     [read('example103'), true],                           { expected: 136 },
     [read('example104'), true],                           { expected: 81 },
     [input01, true, inputModificationDistanceCorrection], { expected: 6286, example: false,  // dtsnojqxregpzklmicwyuvabhf
-                                                            warning: 'Slow! Needs to be reimplemented using the labyrinth lib ...' }
+      warning: 'Slow! Needs to be reimplemented using the labyrinth lib ...' }
   ]);
 };
 
@@ -66,6 +66,6 @@ module.exports.puzzle02 = () => {
     [read('example203'), true],  { expected: 32 },
     [read('example204'), true],  { expected: 72 },
     [input02, false],            { expected: 2140, example: false,  // (tdgsnoqxplzjmhicwyuerkvfab)
-                                   warning: 'Slow! Needs to be reimplemented using the labyrinth lib ...' }
+      warning: 'Slow! Needs to be reimplemented using the labyrinth lib ...' }
   ]);
 };

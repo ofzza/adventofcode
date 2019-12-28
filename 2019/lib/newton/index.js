@@ -94,7 +94,7 @@ module.exports.nbodyFindPeriod = function nbodyFindPeriod (bodies, { coords = ['
 
   // Factor periods
   const factoredPeriods = Object.keys(periods).reduce((factoredPeriods, coord) => {
-    factoredPeriods[coord] = math.primefact(periods[coord]);
+    factoredPeriods[coord] = math.primeFactor(periods[coord]);
     return factoredPeriods;
   }, {});
 

@@ -60,6 +60,6 @@ module.exports.puzzle02 = () => {
     [prog, 3],    { expected: 220030 },
     [prog, 10],   { expected: 870118 },
     [prog, 100],  { expected: 9441282, example: false,
-                    warning: 'Slow! Needs some way to optimize?!' }
+      warning: 'Slow! Needs some way to optimize?!' }
   ]);
 };
