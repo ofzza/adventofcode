@@ -5,15 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "Launch",
+      "type": "lldb",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}\\index.js",
-      // "args": ["--progress", "--interactive"]
-      "args": ["--year=2019"]
+      "program": "${workspaceRoot}/target/debug/adventofcode",
+      "args": ["--year", "2019", "--day", "1", "--puzzle", "1"],
+      "cwd": "${workspaceRoot}"
     }
   ]
 }

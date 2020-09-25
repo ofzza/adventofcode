@@ -1,22 +1,15 @@
 # adventofcode
 
-### Before running
-
-Install (optional) dependencies by running
-```bash
-$ npm install
-```
-
 ### Run
 Run by executing
 ```bash
-$ node ./
+$ cargo run
 ```
 
-... or, with dependencies installed, run more complex actions:
+... or run only specific puzzles:
 ```bash
-$ node ./ --year=2019
-$ node ./ --year=2019 --day=1
-$ node ./ --year=2019 --day=1 --puzzle=1
-$ node ./ --help
+$ cargo run -- --year 2019 
+$ cargo run -- --year 2019 --day 1
+$ cargo run -- --year 2019 --day 1 --index 1
+$ cargo run -- --year 2019 --day 1 --index 1 --verbose
 ```
