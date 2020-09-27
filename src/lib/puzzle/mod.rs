@@ -4,13 +4,13 @@
 // -----------------------------------------------------------------------------
 
 // (re)Export modules
-pub mod struct_puzzle;
-pub use struct_puzzle::*;
-pub mod struct_puzzle_config;
-pub use struct_puzzle_config::*;
-pub mod struct_puzzle_input;
-pub use struct_puzzle_input::*;
-pub mod trait_puzzle_runnable;
-pub use trait_puzzle_runnable::*;
-pub mod factory;
-pub use factory::*;
+pub mod puzzle;
+pub use puzzle::*;
+pub mod puzzle_config;
+pub use puzzle_config::*;
+pub mod puzzle_input;
+pub use puzzle_input::*;
+pub mod puzzle_runnable;
+pub use puzzle_runnable::*;
+pub mod puzzle_factory;
+pub use puzzle_factory::*;

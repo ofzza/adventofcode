@@ -3,14 +3,15 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
+  "configurations": [    
     {
       "name": "Launch",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceRoot}/target/debug/adventofcode",
-      "args": ["--year", "2019", "--day", "1", "--puzzle", "1"],
-      "cwd": "${workspaceRoot}"
+      "args": ["--year", "2019", "--day", "0", "--index", "0", "--verbose"],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "build"
     }
   ]
 }

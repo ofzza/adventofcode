@@ -11,5 +11,6 @@ $ cargo run
 $ cargo run -- --year 2019 
 $ cargo run -- --year 2019 --day 1
 $ cargo run -- --year 2019 --day 1 --index 1
-$ cargo run -- --year 2019 --day 1 --index 1 --verbose
+$ cargo run -- --year 2019 --day 1 --index 1 --key test --verbose
+$ cargo run -- --year 2019 --day 1 --index 1 --key solution --verbose
 ```

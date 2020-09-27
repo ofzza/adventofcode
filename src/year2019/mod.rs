@@ -3,14 +3,21 @@
 //! https://adventofcode.com/2019
 // -----------------------------------------------------------------------------
 
+// (re)Export modules
+pub mod lib;
+pub use lib::*;
+
 // Include dependencies
-use super::lib::puzzle::*;
-
-// Import puzzle modules
 mod day01;
+mod day02;
 
-/// Register all 2019 puzzles
-pub fn register (puzzles: &mut Vec<Puzzle>) {
-  day01::register(puzzles);
+/// Run all 2019 days's puzzles
+pub fn run (day: u32, index: u32, key: &str, verbose: bool) {
+  if (day == 0) || (day == 1) {
+    day01::run(index, key, verbose);
+  }
+  if (day == 0) || (day == 2) {
+    day02::run(index, key, verbose);
+  }
 }
 

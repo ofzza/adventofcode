@@ -5,7 +5,6 @@
 // Include dependencies
 use std::env;
 pub mod lib;
-use lib::puzzle::*;
 mod year2019;
 
 /// Program entry point
@@ -51,20 +50,9 @@ fn main() {
     }
   }
 
-  // Register all puzzles
-  let mut puzzles: Vec<Puzzle> = Vec::new();
-  year2019::register(&mut puzzles);
-
-  // Execute puzzles
-  for puzzle in puzzles.iter_mut() {
-    // Check if puzzle matches requested parameters
-    let match_year  = (year  == 0)                 || (puzzle.year == year);
-    let match_day   = (day   == 0)                 || (puzzle.day == day);
-    let match_index = (index == 0)                 || (puzzle.index == index);
-    let match_key   = (key   == String::default()) || (puzzle.key.eq(&key));
-    if match_year && match_day && match_index && match_key {
-      puzzle.run(verbose);
-    }
+  // Run all years' puzzles
+  if (year == 0) || (year == 2019) {
+    year2019::run(day, index, key.as_str(), verbose);
   }
 
 }

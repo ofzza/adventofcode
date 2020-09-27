@@ -1,7 +1,6 @@
-//! Common library module
+//! 2019 commin library module
 // -----------------------------------------------------------------------------
 
 // (re)Export modules
-pub mod console;
-pub mod inputs;
-pub mod puzzle;
+pub mod intcode;
+pub use intcode::*;

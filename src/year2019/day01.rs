@@ -4,53 +4,88 @@
 // -----------------------------------------------------------------------------
 
 // Include dependencies
+use super::super::lib::inputs::*;
 use super::super::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn register (puzzles: &mut Vec<Puzzle>) {
+pub fn run (index: u32, key: &str, _verbose: bool) {
 
-  // Register daily puzzle #1 (test 01)
-  puzzles.push(create_intvec_from_value(2019, 1, 1, String::from("test"), String::from("12"), String::from("2"), implementation1));
-  // Register daily puzzle #1 (test 02)
-  puzzles.push(create_intvec_from_value(2019, 1, 1, String::from("test"), String::from("14"), String::from("2"), implementation1));
-  // Register daily puzzle #1 (test 03)
-  puzzles.push(create_intvec_from_value(2019, 1, 1, String::from("test"), String::from("1969"), String::from("654"), implementation1));
-  // Register daily puzzle #1 (test 04)
-  puzzles.push(create_intvec_from_value(2019, 1, 1, String::from("test"), String::from("100756"), String::from("33583"), implementation1));
-  // Register daily puzzle #1
-  puzzles.push(create_intvec_from_path(2019, 1, 1, String::from("solution"), String::from("./src/year2019/data/day01input.txt"), String::from("3262358"), implementation1));
+  // Run 1st puzzle
+  if (index == 0) || (index == 1) {
+    // Run tests
+    if (key == String::default()) || (key == "test") {
+      // Test
+      let input = vec![12];
+      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+        .run(false);
+      // Test
+      let input = vec![14];
+      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+        .run(false);
+      // Test
+      let input = vec![1969];
+      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(654)))
+        .run(false);
+      // Test
+      let input = vec![100756];
+      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(33583)))
+        .run(false);
+    }
+    // Run solution
+    if (key == String::default()) || (key == "solution") {
+      // Solution
+      let input = load_input::<i32>("./src/year2019/data/day01input.txt", '\n');
+      create_vec(2019, 1, 1, "solution", input, implementation1, |r| (r, Some(3262358)))
+        .run(false);
+    }
+  }
 
-  // Register daily puzzle #2 (test 01)
-  puzzles.push(create_intvec_from_value(2019, 1, 2, String::from("test"), String::from("14"), String::from("2"), implementation2));
-  // Register daily puzzle #2 (test 02)
-  puzzles.push(create_intvec_from_value(2019, 1, 2, String::from("test"), String::from("1969"), String::from("966"), implementation2));
-  // Register daily puzzle #2 (test 03)
-  puzzles.push(create_intvec_from_value(2019, 1, 2, String::from("test"), String::from("100756"), String::from("50346"), implementation2));
-  // Register daily puzzle #2
-  puzzles.push(create_intvec_from_path(2019, 1, 2, String::from("solution"), String::from("./src/year2019/data/day01input.txt"), String::from("4890696"), implementation2));
+  // Run 2nd puzzle
+  if (index == 0) || (index == 2) {
+    // Run tests
+    if (key == String::default()) || (key == "test") {
+      // Test
+      let input = vec![14];
+      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(2)))
+        .run(false);
+      // Test
+      let input = vec![1969];
+      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(966)))
+        .run(false);
+      // Test
+      let input = vec![100756];
+      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(50346)))
+        .run(false);
+    }
+    // Run solution
+    if (key == String::default()) || (key == "solution") {
+      // Solution
+      let input = load_input::<i32>("./src/year2019/data/day01input.txt", '\n');
+      create_vec(2019, 1, 2, "solution", input, implementation2, |r| (r, Some(4890696)))
+        .run(false);
+    }
+  }
 }
 
-fn implementation1 (puzzle: &Puzzle, verbose: bool) -> String {
-  let mut fuel: u32 = 0;
-  for module in puzzle.input.value_int_vec.iter() {
+fn implementation1 (puzzle: &Puzzle<i32, i32, i32>, _verbose: bool) -> Result<i32, &str> {
+  let mut fuel: i32 = 0;
+  for module in puzzle.input.value_vec.iter() {
     fuel += calculate_fuel_per_mass(*module);
   }
-  if verbose == true { println!("I'm working here!!!"); }
-  return String::from(fuel.to_string());
+  return Ok(fuel);
 }
 
-fn implementation2 (puzzle: &Puzzle, verbose: bool) -> String {
-  let mut fuel: u32 = 0;
-  for module in puzzle.input.value_int_vec.iter() {
+fn implementation2 (puzzle: &Puzzle<i32, i32, i32>, _verbose: bool) -> Result<i32, &str> {
+  let mut fuel: i32 = 0;
+  for module in puzzle.input.value_vec.iter() {
     fuel += calculate_fuel_per_total_mass(*module);
   }
-  if verbose == true { println!("I'm working here too!!!"); }
-  return String::from(fuel.to_string());
+  return Ok(fuel);
 }
 
-fn calculate_fuel_per_total_mass (mass: u32) -> u32 {
-  let mut fuel: u32 = 0;
-  let mut fuel_additional: u32 = mass;
+fn calculate_fuel_per_total_mass (mass: i32) -> i32 {
+  let mut fuel: i32 = 0;
+  let mut fuel_additional: i32 = mass;
   loop {
     fuel_additional = calculate_fuel_per_mass(fuel_additional);
     fuel += &fuel_additional;
@@ -60,7 +95,7 @@ fn calculate_fuel_per_total_mass (mass: u32) -> u32 {
   }
 }
 
-fn calculate_fuel_per_mass (mass: u32) -> u32 {
+fn calculate_fuel_per_mass (mass: i32) -> i32 {
   let fuel = mass / 3;
   return if fuel > 2 { fuel - 2 } else { 0 };
 }
