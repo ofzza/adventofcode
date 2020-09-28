@@ -86,15 +86,15 @@ fn implementation1 (puzzle: &Puzzle<Vec<String>, u32, u32>, _verbose: bool) -> R
   // Initialize wiring
   let wiring = Wiring::new(puzzle.input.value_vec.clone());
   // // Find closest intersection
-  let mut closest: u32 = std::u32::MAX;
+  let mut closest_intersection_distance: u32 = std::u32::MAX;
   for coordinates in wiring.intersections.keys() {
     let manhattan_distance: u32 = coordinates.x.abs() as u32 + coordinates.y.abs() as u32;
-    if manhattan_distance < closest {
-      closest = manhattan_distance;
+    if manhattan_distance < closest_intersection_distance {
+      closest_intersection_distance = manhattan_distance;
     }
   }
   // Return closest intersection
-  return Ok(closest);
+  return Ok(closest_intersection_distance);
 }
 
 fn implementation2 (puzzle: &Puzzle<Vec<String>, u32, u32>, _verbose: bool) -> Result<u32, &str> {
