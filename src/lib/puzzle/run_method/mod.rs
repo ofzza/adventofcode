@@ -1,4 +1,4 @@
-//! Puzzle PuzzleRunnable trait
+//! Puzzle .run() implementation
 //! 
 //! Allows owner to be run by calling the .run(verbose: bool) method
 // -----------------------------------------------------------------------------
@@ -9,16 +9,10 @@ use std::time::Instant;
 use super::*;
 use super::super::console::*;
 
-/// PuzzleRunnable trait definition
+/// Puzzle .run() implementation
 /// 
 /// Allows owner to be run by calling the .run(verbose: bool) method
-pub trait PuzzleRunnable  {
-  // Puzzle run method
-  fn run (&mut self, verbose: bool);
-}
-
-/// Puzzle's PuzzleRunnable trait implementation
-impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> PuzzleRunnable for Puzzle<TInput, TOutput, TResult> {
+impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput, TResult> {
   
   /// Loads input data if configured and runs puzzle implementation
   /// 
@@ -29,7 +23,7 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> PuzzleRunnable for Puz
   /// # Remarks
   /// 
   /// * While processing, outputs puzzle processing status to console
-  fn run (&mut self, verbose: bool) {
+  pub fn run (&mut self, verbose: bool) {
     
     // Initialize puzzle
     println!();
@@ -38,15 +32,20 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> PuzzleRunnable for Puz
       CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG, format!("{}", self.key),
       CONSOLE_RESET);
 
-    // Print puzzle input
+    // Concat puzzle input
     let input_values = if self.input.value_vec.len() > 0 {
         // Concat vector input type
-        let len = if self.input.value_vec.len() < CONSOLE_ITEM_COUNT { self.input.value_vec.len() } else { CONSOLE_ITEM_COUNT };  
-        format!("{:?}", &self.input.value_vec[0..len])
+        let concat_items = self.input.value_vec.len() > CONSOLE_CONCAT_ITEM_COUNT;
+        let len_items = if concat_items == false { self.input.value_vec.len() } else { CONSOLE_CONCAT_ITEM_COUNT };  
+        format!("{:?}{}", &self.input.value_vec[0..len_items], if concat_items { " ..." } else { "" })
       } else {
         // Concat unknown input type
         format!("-")
       };
+    let concat_string = input_values.len() > CONSOLE_CONCAT_STRING_LENGTH;
+    let len_string = if concat_string == false { input_values.len() } else { CONSOLE_CONCAT_STRING_LENGTH };
+    let input_values = format!("{:?}{}", &input_values[0..len_string], if concat_string { " ..." } else { "" });
+    // Print puzzle input
     println!("  {}{}{}{}",
       CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!("INPUT (partial): {}", input_values),
       CONSOLE_RESET);
@@ -90,7 +89,7 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> PuzzleRunnable for Puz
       };
     println!("  {}{}:{}{}{}{}",
       result_label, CONSOLE_RESET,
-      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!(" {:?} (in {} ms)", result.0, execution_duration),
+      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!(" {:?} (in {} sec)", result.0, execution_duration),
       CONSOLE_RESET);
   }
 

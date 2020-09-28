@@ -10,58 +10,58 @@ use super::super::lib::puzzle::*;
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, _verbose: bool) {
 
-  // Run 1st puzzle
+  // Run puzzle
   if (index == 0) || (index == 1) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
       let input = vec![12];
-      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
         .run(false);
       // Test
       let input = vec![14];
-      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
         .run(false);
       // Test
       let input = vec![1969];
-      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(654)))
+      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(654)))
         .run(false);
       // Test
       let input = vec![100756];
-      create_vec(2019, 1, 1, "test", input, implementation1, |r| (r, Some(33583)))
+      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(33583)))
         .run(false);
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = load_input::<i32>("./src/year2019/data/day01input.txt", '\n');
-      create_vec(2019, 1, 1, "solution", input, implementation1, |r| (r, Some(3262358)))
+      let input = parse_1d::<i32>(load_input("./src/year2019/data/day01input.txt"), '\n');
+      Puzzle::new(2019, 1, 1, "solution", input, implementation1, |r| (r, Some(3262358)))
         .run(false);
     }
   }
 
-  // Run 2nd puzzle
+  // Run puzzle
   if (index == 0) || (index == 2) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
       let input = vec![14];
-      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(2)))
+      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(2)))
         .run(false);
       // Test
       let input = vec![1969];
-      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(966)))
+      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(966)))
         .run(false);
       // Test
       let input = vec![100756];
-      create_vec(2019, 1, 2, "test", input, implementation2, |r| (r, Some(50346)))
+      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(50346)))
         .run(false);
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = load_input::<i32>("./src/year2019/data/day01input.txt", '\n');
-      create_vec(2019, 1, 2, "solution", input, implementation2, |r| (r, Some(4890696)))
+      let input = parse_1d::<i32>(load_input("./src/year2019/data/day01input.txt"), '\n');
+      Puzzle::new(2019, 1, 2, "solution", input, implementation2, |r| (r, Some(4890696)))
         .run(false);
     }
   }

@@ -1,22 +1,17 @@
-//! IntCode IntCodeGenerator trait
+//! IntCode .next() implementation
 //! 
-//! Implements a generator working on top of the IntCode instance performing
+//! Implements a generator pattern working on top of the IntCode instance performing
 //! the actual processing of the implemented Touring machine
 // -----------------------------------------------------------------------------
 
 // Include dependencies
 use super::*;
 
-/// IntCodeGenerator trait definition
+/// IntCode .next() implementation
 /// 
-/// Implements a generator working on top of the IntCode instance performing
+/// Implements a generator pattern working on top of the IntCode instance performing
 /// the actual processing of the implemented Touring machine
-pub trait IntCodeGenerator  {
-  fn next (&mut self, verbose: bool) -> Option<i32>;
-}
-
-/// IntCode's IntCodeGenerator trait implementation
-impl IntCodeGenerator for IntCode {
+impl IntCode {
   
   /// Executes next Touring machine step and returns that step's output value after storing it
   /// 
@@ -31,10 +26,9 @@ impl IntCodeGenerator for IntCode {
   /// - `1`  - Addition by reference:       `*(IP + 1) + *(IP + 2) -> *(IP + 3); IP += 3;`
   /// - `2`  - Multiplication by reference: `*(IP + 1) x *(IP + 2) -> *(IP + 3); IP += 3;`
   /// - `99` - End execution
-  /// 
-  fn next (&mut self, verbose: bool) -> Option<i32> {
+  pub fn next (&mut self, verbose: bool) -> Option<i32> {
     // Decode instruction (Check if out of bounds)
-    let result: Option<i32> = match self.memory.get(self.ip) {
+    let result: Option<i32> = match self.memory.get(self._ip) {
       // Opcode decoded
       Some(opcode) => {
 
@@ -44,16 +38,16 @@ impl IntCodeGenerator for IntCode {
           // Addition by reference opcode
           1  => {
             // Get inputs
-            let input1_address = self.memory[(self.ip + 1) as usize] as usize;
+            let input1_address = self.memory[(self._ip + 1) as usize] as usize;
             let input1 = self.memory[input1_address];
-            let input2_address = self.memory[(self.ip + 2) as usize] as usize;
+            let input2_address = self.memory[(self._ip + 2) as usize] as usize;
             let input2 = self.memory[input2_address];
             // Calculate and store output
-            let output_address = self.memory[(self.ip + 3) as usize] as usize;
+            let output_address = self.memory[(self._ip + 3) as usize] as usize;
             self.output = input1 + input2;
             self.memory[output_address] = self.output;
             // Move instruction pointer
-            self.ip += 4;
+            self._ip += 4;
             // If verbose, output calculation
             if verbose == true {
               println!("[&{} => {}] + [&{} => {}] = {} => &{}", input1_address, input1, input2_address, input2, self.output, output_address);
@@ -65,16 +59,16 @@ impl IntCodeGenerator for IntCode {
           // Multiplication by reference opcode
           2  => {
             // Get inputs
-            let input1_address = self.memory[(self.ip + 1) as usize] as usize;
+            let input1_address = self.memory[(self._ip + 1) as usize] as usize;
             let input1 = self.memory[input1_address];
-            let input2_address = self.memory[(self.ip + 2) as usize] as usize;
+            let input2_address = self.memory[(self._ip + 2) as usize] as usize;
             let input2 = self.memory[input2_address];
             // Calculate and store output
-            let output_address = self.memory[(self.ip + 3) as usize] as usize;
+            let output_address = self.memory[(self._ip + 3) as usize] as usize;
             self.output = input1 * input2;
             self.memory[output_address] = self.output;
             // Move instruction pointer
-            self.ip += 4;
+            self._ip += 4;
             // If verbose, output calculation
             if verbose == true {
               println!("[&{} => {}] x [&{} => {}] = {} => &{}", input1_address, input1, input2_address, input2, self.output, output_address);

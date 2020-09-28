@@ -10,8 +10,10 @@ use termion::{color, style};
 /// Console RESET style
 pub const CONSOLE_RESET: style::Reset = style::Reset;
 
-/// Maximun item count to be putputted to the console when cropping output nummeric array
-pub const CONSOLE_ITEM_COUNT: usize = 16;
+/// Maximun item count to be outputted to the console when cropping output nummeric array
+pub const CONSOLE_CONCAT_ITEM_COUNT: usize = 16;
+/// Maximun string length to be outputted to the console when cropping output nummeric array
+pub const CONSOLE_CONCAT_STRING_LENGTH: usize = 128;
 
 /// Console TITLE BG style
 pub const CONSOLE_TITLE_BG: style::Reset              = style::Reset;
