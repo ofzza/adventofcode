@@ -8,6 +8,7 @@ use std::fmt::Debug;
 use std::time::Instant;
 use super::*;
 use super::super::console::*;
+use super::super::inputs::*;
 
 /// Puzzle .run() implementation
 /// 
@@ -23,8 +24,13 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
   /// # Remarks
   /// 
   /// * While processing, outputs puzzle processing status to console
-  pub fn run (&mut self, verbose: bool) {
+  pub fn run (&mut self, verbose: bool) -> PuzzleExecutionStatitics {
     
+    // Inizialize stats
+    let mut stats = PuzzleExecutionStatitics{
+      ..Default::default()
+    };
+
     // Initialize puzzle
     println!();
     println!("{}{}{}{}{}{}{}",
@@ -32,26 +38,13 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
       CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG, format!("{}", self.key),
       CONSOLE_RESET);
 
-    // Concat puzzle input
-    let input_values = if self.input.value_vec.len() > 0 {
-        // Concat vector input type
-        let concat_items = self.input.value_vec.len() > CONSOLE_CONCAT_ITEM_COUNT;
-        let len_items = if concat_items == false { self.input.value_vec.len() } else { CONSOLE_CONCAT_ITEM_COUNT };  
-        format!("{:?}{}", &self.input.value_vec[0..len_items], if concat_items { " ..." } else { "" })
-      } else {
-        // Concat unknown input type
-        format!("-")
-      };
-    let concat_string = input_values.len() > CONSOLE_CONCAT_STRING_LENGTH;
-    let len_string = if concat_string == false { input_values.len() } else { CONSOLE_CONCAT_STRING_LENGTH };
-    let input_values = format!("{:?}{}", &input_values[0..len_string], if concat_string { " ..." } else { "" });
     // Print puzzle input
     println!("  {}{}{}{}",
-      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!("INPUT (partial): {}", input_values),
+      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!("INPUT (partial): {}", format_puzzle_input(&self.input)),
       CONSOLE_RESET);
 
     // Padding if verbose
-    if verbose == true {
+    if verbose {
       println!("  {}{}Executing:{}", CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, CONSOLE_RESET);
       println!("{}{}", CONSOLE_EXECUTION_BG, CONSOLE_EXECUTION_FG);
     }
@@ -65,32 +58,41 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
         Err(e) => {
           println!("  {}{}ERROR: {}!{}",
             CONSOLE_ERROR_BG, CONSOLE_ERROR_FG, e, CONSOLE_RESET);
-          return;
+          return stats;
         }
       };
     // End timing execution
-    let execution_duration = now.elapsed().as_secs_f32();
+    let execution_time = now.elapsed().as_secs_f32();
+    stats.execution_time = execution_time;
     // Padding if verbose
-    if verbose == true {
+    if verbose {
       println!("{}", CONSOLE_RESET);
     }
 
     // Print puzzle result
-    let result = (self.config.expected)(output);
+    let result = (self.expected)(output);
     let result_label = match result.1 {
         None => {
+          stats.total_count += 1;
           format!("{}{}RESULT", CONSOLE_RESULT_BG, CONSOLE_RESULT_FG)
         },
         Some(expected) => if result.0 == expected {
+          stats.total_count += 1;
+          stats.successful_count += 1;
           format!("{}{}RESULT [OK]", CONSOLE_SUCCESS_BG, CONSOLE_SUCCESS_FG)
         } else {
+          stats.total_count += 1;
+          stats.failed_count += 1;
           format!("{}{}RESULT [FAIL != {:?}]", CONSOLE_FAIL_BG, CONSOLE_FAIL_FG, expected)
         }
       };
     println!("  {}{}:{}{}{}{}",
       result_label, CONSOLE_RESET,
-      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!(" {:?} (in {} sec)", result.0, execution_duration),
+      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!(" {:?} (in {} sec)", result.0, execution_time),
       CONSOLE_RESET);
+
+    // Return collected execution stats
+    return stats;
   }
 
 }

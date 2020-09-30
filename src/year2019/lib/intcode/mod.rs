@@ -20,6 +20,7 @@ pub use next_method::*;
 pub struct IntCode {
   _ip: usize,
   pub memory: Vec<i32>,
-  pub output: i32,
+  pub input: Option<i32>,
+  pub output: Option<i32>,
   pub flag_err: bool
 }

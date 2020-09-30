@@ -8,35 +8,50 @@ use super::super::lib::inputs::*;
 use super::super::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, _verbose: bool) {
+pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {
 
+  // Initialize stats
+  let mut stats = PuzzleExecutionStatitics{
+    ..Default::default()
+  };
+  
   // Run puzzle
   if (index == 0) || (index == 1) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
-      let input = vec![12];
-      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![12]);
+      stats.update(
+        Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+          .run(false)
+      );
       // Test
-      let input = vec![14];
-      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![14]);
+      stats.update(
+        Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(2)))
+          .run(false)
+      );
       // Test
-      let input = vec![1969];
-      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(654)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![1969]);
+      stats.update(
+        Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(654)))
+          .run(false)
+      );
       // Test
-      let input = vec![100756];
-      Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(33583)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![100756]);
+      stats.update(
+        Puzzle::new(2019, 1, 1, "test", input, implementation1, |r| (r, Some(33583)))
+          .run(false)
+      );
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
       let input = parse_1d::<i32>(load_input("./src/year2019/data/day01input.txt"), '\n');
-      Puzzle::new(2019, 1, 1, "solution", input, implementation1, |r| (r, Some(3262358)))
-        .run(false);
+      stats.update(
+        Puzzle::new(2019, 1, 1, "solution", input, implementation1, |r| (r, Some(3262358)))
+          .run(false)
+      );
     }
   }
 
@@ -45,42 +60,65 @@ pub fn run (index: u32, key: &str, _verbose: bool) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
-      let input = vec![14];
-      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(2)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![14]);
+      stats.update(
+        Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(2)))
+          .run(false)
+      );
       // Test
-      let input = vec![1969];
-      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(966)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![1969]);
+      stats.update(
+        Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(966)))
+          .run(false)
+      );
       // Test
-      let input = vec![100756];
-      Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(50346)))
-        .run(false);
+      let input = PuzzleInput::Vector1D(vec![100756]);
+      stats.update(
+        Puzzle::new(2019, 1, 2, "test", input, implementation2, |r| (r, Some(50346)))
+          .run(false)
+      );
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
       let input = parse_1d::<i32>(load_input("./src/year2019/data/day01input.txt"), '\n');
-      Puzzle::new(2019, 1, 2, "solution", input, implementation2, |r| (r, Some(4890696)))
-        .run(false);
+      stats.update(
+        Puzzle::new(2019, 1, 2, "solution", input, implementation2, |r| (r, Some(4890696)))
+          .run(false)
+      );
     }
   }
+
+  // Return composed stats
+  return stats;
+
 }
 
 fn implementation1 (puzzle: &Puzzle<i32, i32, i32>, _verbose: bool) -> Result<i32, &str> {
-  let mut fuel: i32 = 0;
-  for module in puzzle.input.value_vec.iter() {
-    fuel += calculate_fuel_per_mass(*module);
+  match &puzzle.input {
+    PuzzleInput::Vector1D(parts) => {
+      let mut fuel: i32 = 0;
+      for module in parts.iter() {
+        fuel += calculate_fuel_per_mass(*module);
+      }
+      return Ok(fuel);
+    },
+    _ => panic!("This shouldn't ever happen!")
   }
-  return Ok(fuel);
 }
 
 fn implementation2 (puzzle: &Puzzle<i32, i32, i32>, _verbose: bool) -> Result<i32, &str> {
-  let mut fuel: i32 = 0;
-  for module in puzzle.input.value_vec.iter() {
-    fuel += calculate_fuel_per_total_mass(*module);
+  match &puzzle.input {
+    PuzzleInput::Vector1D(parts) => {
+      let mut fuel: i32 = 0;
+      for module in parts.iter() {
+        fuel += calculate_fuel_per_total_mass(*module);
+      }
+      return Ok(fuel);
+    },
+    _ => panic!("This shouldn't ever happen!")
   }
-  return Ok(fuel);
+
 }
 
 fn calculate_fuel_per_total_mass (mass: i32) -> i32 {

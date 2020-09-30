@@ -7,16 +7,23 @@
 use super::super::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, _verbose: bool) {
+pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {
 
+  // Initialize stats
+  let mut stats = PuzzleExecutionStatitics{
+    ..Default::default()
+  };
+  
   // Run puzzle
   if (index == 0) || (index == 1) {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = vec![128392, 643281];
-      Puzzle::new(2019, 4, 1, "solution", input, implementation1, |d| (d, Some(2050)))
-        .run(false);
+      let input = PuzzleInput::Params(vec![128392, 643281]);
+      stats.update(
+        Puzzle::new(2019, 4, 1, "solution", input, implementation1, |d| (d, Some(2050)))
+          .run(false)
+      );
     }
   }
 
@@ -25,49 +32,65 @@ pub fn run (index: u32, key: &str, _verbose: bool) {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = vec![128392, 643281];
-      Puzzle::new(2019, 4, 2, "solution", input, implementation2, |d| (d, Some(1390)))
-        .run(false);
+      let input = PuzzleInput::Params(vec![128392, 643281]);
+      stats.update(
+        Puzzle::new(2019, 4, 2, "solution", input, implementation2, |d| (d, Some(1390)))
+          .run(false)
+      );
     }
   }
+
+  // Return composed stats
+  return stats;
+
 }
 
 fn implementation1 (puzzle: &Puzzle<u32, u32, u32>, _verbose: bool) -> Result<u32, &str> {
-  // Initialize
-  let mut n: u32 = puzzle.input.value_vec[0];
-  let mut count: u32 = 0;
-  // Find all numbers in scope matching conditions
-  loop {
-    // Get next number matching confitions
-    n = compose_equal_or_larger(n, false);
-    // Count if not outside interval
-    if n <= puzzle.input.value_vec[1] { count += 1; } else { break; }
-    // Next candidate
-    n += 1;
+  match &puzzle.input {
+    PuzzleInput::Params(limits) => {
+      // Initialize
+      let mut n: u32 = limits[0];
+      let mut count: u32 = 0;
+      // Find all numbers in scope matching conditions
+      loop {
+        // Get next number matching confitions
+        n = compose_equal_or_larger(n, false);
+        // Count if not outside interval
+        if n <= limits[1] { count += 1; } else { break; }
+        // Next candidate
+        n += 1;
+      }
+      // Return count
+      return Ok(count);
+    },
+    _ => panic!("This shouldn't ever happen!")
   }
-  // Return count
-  return Ok(count);
 }
 
 fn implementation2 (puzzle: &Puzzle<u32, u32, u32>, _verbose: bool) -> Result<u32, &str> {
-  // Initialize
-  let mut n: u32 = puzzle.input.value_vec[0];
-  let mut count: u32 = 0;
-  // Find all numbers in scope matching conditions
-  loop {
-    // Get next number matching confitions
-    n = compose_equal_or_larger(n, true);
-    // Count if not outside interval
-    if n <= puzzle.input.value_vec[1] {
-      count += 1;
-    } else {
-      break;
-    }
-    // Next candidate
-    n += 1;
+  match &puzzle.input {
+    PuzzleInput::Params(limits) => {
+      // Initialize
+      let mut n: u32 = limits[0];
+      let mut count: u32 = 0;
+      // Find all numbers in scope matching conditions
+      loop {
+        // Get next number matching confitions
+        n = compose_equal_or_larger(n, true);
+        // Count if not outside interval
+        if n <= limits[1] {
+          count += 1;
+        } else {
+          break;
+        }
+        // Next candidate
+        n += 1;
+      }
+      // Return count
+      return Ok(count);
+    },
+    _ => panic!("This shouldn't ever happen!")
   }
-  // Return count
-  return Ok(count);
 }
 
 fn compose_equal_or_larger (n: u32, exact_doubles: bool) -> u32 {

@@ -2,10 +2,14 @@
 // https://adventofcode.com/
 // -----------------------------------------------------------------------------
 
-// Include dependencies
-use std::env;
+// Import child modules
 pub mod lib;
 mod year2019;
+
+// Include dependencies
+use std::env;
+use lib::puzzle::*;
+use lib::console::*;
 
 /// Program entry point
 /// 
@@ -51,8 +55,44 @@ fn main() {
   }
 
   // Run all years' puzzles
+  let mut stats = PuzzleExecutionStatitics{
+    ..Default::default()
+  };
   if (year == 0) || (year == 2019) {
-    year2019::run(day, index, key.as_str(), verbose);
+    stats.update(year2019::run(day, index, key.as_str(), verbose));
   }
+
+  // Output collected stats
+  println!();
+  println!("{}{}---------------------------------------------------{}",
+    CONSOLE_TITLE_BG, CONSOLE_TITLE_FG, CONSOLE_RESET);
+  
+  if stats.successful_count == stats.total_count {
+    println!("{}{}STATISTICS [SUCCESS]{}",
+    CONSOLE_SUCCESS_BG, CONSOLE_SUCCESS_FG, CONSOLE_RESET);
+  } else if stats.failed_count != stats.total_count {
+    println!("{}{}STATISTICS [FAIL]{}",
+    CONSOLE_FAIL_BG, CONSOLE_FAIL_FG, CONSOLE_RESET);
+  } else {
+    println!("{}{}STATISTICS{}",
+    CONSOLE_RESULT_BG, CONSOLE_RESULT_FG, CONSOLE_RESET);
+  }
+
+  println!("{}{}Successful   puzzles: {}/{}{}",
+    CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG,
+    stats.successful_count, stats.total_count,
+    CONSOLE_RESET);
+  println!("{}{}Failed       puzzles: {}/{}{}",
+    CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG,
+    stats.failed_count, stats.total_count,
+    CONSOLE_RESET);
+  println!("{}{}Undetermined puzzles: {}/{}{}",
+    CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG,
+    stats.total_count - (stats.successful_count + stats.failed_count), stats.total_count,
+    CONSOLE_RESET);
+  println!("{}{}Total execution time: {} sec{}",
+    CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG,
+    stats.execution_time,
+    CONSOLE_RESET);
 
 }
