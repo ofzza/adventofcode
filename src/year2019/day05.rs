@@ -29,7 +29,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
               .run(verbose)
           );
         },
-        _ => panic!("This shouldn't ever happen!")
+        _ => panic!("This should never, ever happen!")
       }
     }
   }
@@ -146,7 +146,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
               .run(verbose)
           );
         },
-        _ => panic!("This shouldn't ever happen!")
+        _ => panic!("This should never, ever happen!")
       }
     }
   }
@@ -189,6 +189,6 @@ fn implementation (puzzle: &Puzzle<i32, IntCode, i32>, verbose: bool) -> Result<
         }
       }
     },
-    _ => panic!("This shouldn't ever happen!")
+    _ => panic!("This should never, ever happen!")
   }
 }

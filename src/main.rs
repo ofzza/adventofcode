@@ -68,13 +68,13 @@ fn main() {
     CONSOLE_TITLE_BG, CONSOLE_TITLE_FG, CONSOLE_RESET);
   
   if stats.successful_count == stats.total_count {
-    println!("{}{}STATISTICS [SUCCESS]{}",
+    println!("{}{}STATISTICS [SUCCESS]:{}",
     CONSOLE_SUCCESS_BG, CONSOLE_SUCCESS_FG, CONSOLE_RESET);
-  } else if stats.failed_count != stats.total_count {
-    println!("{}{}STATISTICS [FAIL]{}",
+  } else if stats.failed_count != 0 {
+    println!("{}{}STATISTICS [FAIL]:{}",
     CONSOLE_FAIL_BG, CONSOLE_FAIL_FG, CONSOLE_RESET);
   } else {
-    println!("{}{}STATISTICS{}",
+    println!("{}{}STATISTICS:{}",
     CONSOLE_RESULT_BG, CONSOLE_RESULT_FG, CONSOLE_RESET);
   }
 
