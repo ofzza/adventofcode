@@ -92,7 +92,7 @@ fn implementation1 (puzzle: &Puzzle<String, u32, u32>, verbose: bool) -> Result<
             parent_names.push(parent.borrow().name.clone());
           }
           // Print orbit nad parents
-          println!("{} => ({}){}", orbit_name, parents.len(), format_puzzle_input(&PuzzleInput::Vector1D(vec![..parent_names])));
+          println!("{} => ({}){}", orbit_name, parents.len(), PuzzleInput::format_puzzle_input(&PuzzleInput::Vector1D(vec![..parent_names])));
         }
         // Add parents count
         total += parents.len();

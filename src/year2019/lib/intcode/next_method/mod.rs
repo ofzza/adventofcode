@@ -124,6 +124,8 @@ impl IntCode {
             match self.input {
               // Store input value
               Some(input) => {
+                // Clear input
+                self.input = None;
                 // Write input to memory
                 let input_write_address = self.get_argument_address(0, param_mode[0]);
                 self.memory[input_write_address] = input;

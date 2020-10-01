@@ -18,11 +18,11 @@ pub const CONSOLE_CONCAT_STRING_LENGTH: usize = 128;
 /// Console TITLE BG style
 pub const CONSOLE_TITLE_BG: style::Reset              = style::Reset;
 /// Console TITLE FG style
-pub const CONSOLE_TITLE_FG: color::Fg<color::Rgb>     = color::Fg(color::Rgb(0, 0, 255));
+pub const CONSOLE_TITLE_FG: color::Fg<color::Rgb>     = color::Fg(color::Rgb(255, 255, 0));
 /// Console SUBTITLE BG style
 pub const CONSOLE_SUBTITLE_BG: style::Reset           = style::Reset ;
 /// Console SUBTITLE FG style
-pub const CONSOLE_SUBTITLE_FG: color::Fg<color::Rgb>  = color::Fg(color::Rgb(255, 255, 0));
+pub const CONSOLE_SUBTITLE_FG: color::Fg<color::Rgb>  = color::Fg(color::Rgb(0, 0, 255));
 /// Console COMMENT BG style
 pub const CONSOLE_COMMENT_BG: style::Reset            = style::Reset;
 /// Console COMMENT FG style
