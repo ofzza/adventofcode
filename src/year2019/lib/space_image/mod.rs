@@ -77,7 +77,7 @@ impl SpaceImage {
   /// - `layer` - Layer to read from
   /// - `x`     - X coordinate on the layer to read from
   /// - `y`     - > coordinate on the layer to read from
-  pub fn read_by_coordinates (&self, layer: usize, x: usize, y: usize) -> u8 {
+  pub fn _read_by_coordinates (&self, layer: usize, x: usize, y: usize) -> u8 {
     self._data[(layer * self._height * self._width) + (y * self._width) + x]
   }
   /// Gets layer's data

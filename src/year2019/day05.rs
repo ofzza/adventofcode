@@ -21,16 +21,14 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      match parse_1d::<i32>(load_input("./src/year2019/data/day05input.txt"), ',') {
-        PuzzleInput::Vector1D(code) => {
-          let input = PuzzleInput::ParamVector1D(1, code);
-          stats.update(
-            Puzzle::new(2019, 5, 1, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(7286649)))
-              .run(verbose)
-          );
-        },
+      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day05input.txt"), ',') {
+        PuzzleInput::Vector1D(code) => PuzzleInput::ParamVector1D(1, code),
         _ => panic!("This should never, ever happen!")
-      }
+      };
+      stats.update(
+        Puzzle::new(2019, 5, 1, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(7286649)))
+          .run(verbose)
+      );
     }
   }
 
@@ -138,16 +136,14 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      match parse_1d::<i32>(load_input("./src/year2019/data/day05input.txt"), ',') {
-        PuzzleInput::Vector1D(code) => {
-          let input = PuzzleInput::ParamVector1D(5, code);
-          stats.update(
-            Puzzle::new(2019, 5, 2, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(15724522)))
-              .run(verbose)
-          );
-        },
+      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day05input.txt"), ',') {
+        PuzzleInput::Vector1D(code) => PuzzleInput::ParamVector1D(5, code),
         _ => panic!("This should never, ever happen!")
-      }
+      };
+      stats.update(
+        Puzzle::new(2019, 5, 2, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(15724522)))
+          .run(verbose)
+      );
     }
   }
 
@@ -156,7 +152,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
 
 }
 
-fn implementation (puzzle: &Puzzle<i32, IntCode, i32>, verbose: bool) -> Result<IntCode, &str> {
+fn implementation (puzzle: &Puzzle<i64, IntCode, i64>, verbose: bool) -> Result<IntCode, &str> {
   match &puzzle.input {
     PuzzleInput::ParamVector1D(input, code) => {
       // Initialize IntCode

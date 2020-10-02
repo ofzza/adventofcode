@@ -18,7 +18,7 @@ use super::*;
 /// - `OpCode::Error(String)`                - Execution error
 pub enum OpCodeResult {
   ExecutedWithoutOutput,
-  ExecutionProducedOutput(i32),
+  ExecutionProducedOutput(i64),
   ExecutionRequestedInput,
   End,
   Error(String)
@@ -53,7 +53,7 @@ impl IntCode {
         // Parse instruction code into opcode and parameter modes
         let opcode = instruction_code % 100;
         let param_modes = instruction_code / 100;
-        let param_mode: Vec<i32> = vec![
+        let param_mode: Vec<i64> = vec![
           (param_modes / 1)   % 10,
           (param_modes / 10)  % 10,
           (param_modes / 100) % 10,
@@ -70,19 +70,19 @@ impl IntCode {
           1  => {
             // Get inputs
             let input1_address = self.get_argument_address(0, param_mode[0]);
-            let input1 = self.memory[input1_address];            
+            let input1 = self.read_from_memory(input1_address);            
             let input2_address = self.get_argument_address(1, param_mode[1]);
-            let input2 = self.memory[input2_address];
+            let input2 = self.read_from_memory(input2_address);
             // Calculate and store output
             let output_address = self.get_argument_address(2, param_mode[2]);
             let output = input1 + input2;
-            self.memory[output_address as usize] = output;
+            self.write_to_memory(output_address as usize, output);
             // Move instruction pointer
             self._ip += 4;
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] + [&{}:{}] = [&{};{}]",
+                "ADD  [&{}:{}] + [&{}:{}] = [&{};{}]",
                 input1_address, input1,
                 input2_address, input2,
                 output_address, output
@@ -96,19 +96,19 @@ impl IntCode {
           2  => {
             // Get inputs
             let input1_address = self.get_argument_address(0, param_mode[0]);
-            let input1 = self.memory[input1_address];            
+            let input1 = self.read_from_memory(input1_address);            
             let input2_address = self.get_argument_address(1, param_mode[1]);
-            let input2 = self.memory[input2_address];
+            let input2 = self.read_from_memory(input2_address);
             // Calculate and store output
             let output_address = self.get_argument_address(2, param_mode[2]);
             let output = input1 * input2;
-            self.memory[output_address as usize] = output;
+            self.write_to_memory(output_address as usize, output);
             // Move instruction pointer
             self._ip += 4;
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] x [&{}:{}] = [&{};{}]",
+                "MULT [&{}:{}] x [&{}:{}] = [&{};{}]",
                 input1_address, input1,
                 input2_address, input2,
                 output_address, output
@@ -118,7 +118,7 @@ impl IntCode {
             OpCodeResult::ExecutedWithoutOutput
           },
 
-          // Read input opcode
+          // Input to memory input opcode
           3 => {
             // Check if input is available
             match self.input {
@@ -128,12 +128,12 @@ impl IntCode {
                 self.input = None;
                 // Write input to memory
                 let input_write_address = self.get_argument_address(0, param_mode[0]);
-                self.memory[input_write_address] = input;
+                self.write_to_memory(input_write_address, input);
                 // Move instruction pointer
                 self._ip += 2;
                 // If verbose, output operation description
                 if verbose {
-                  println!("[input {} => &({})]", input, input_write_address);
+                  println!("IN   [input {} => &({})]", input, input_write_address);
                 }
                 // Return execution done
                 OpCodeResult::ExecutedWithoutOutput
@@ -150,18 +150,18 @@ impl IntCode {
             }
           },
 
-          // Write output opcode
+          // Output from memory opcode
           4 => {
             // Read output value
             let output_read_address = self.get_argument_address(0, param_mode[0]);
-            let output = self.memory[output_read_address];
+            let output = self.read_from_memory(output_read_address);
             // Store output value
             self.output = Some(output);
             // Move instruction pointer
             self._ip += 2;
             // If verbose, output operation description
             if verbose {
-              println!("[output &({}) => {}]", output_read_address, output);
+              println!("OUT  [output &({}) => {}]", output_read_address, output);
             }
             // Return output value
             OpCodeResult::ExecutionProducedOutput(output)
@@ -171,10 +171,10 @@ impl IntCode {
           5 => {
             // Read condition value
             let condition_address = self.get_argument_address(0, param_mode[0]);
-            let condition_value = self.memory[condition_address];
+            let condition_value = self.read_from_memory(condition_address);
             // Read conditional pointer value
             let ip_address = self.get_argument_address(1, param_mode[1]);
-            let ip_value = self.memory[ip_address];
+            let ip_value = self.read_from_memory(ip_address);
             // Check jump condition
             if condition_value != 0 {
               // Jump; update instruction pointer
@@ -186,7 +186,7 @@ impl IntCode {
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] ---[{}]---> [&{};{}]",
+                "JMP  [&{}:{}] ---[{}]---> [&{};{}]",
                 condition_address, condition_value,
                 if condition_value != 0 { "true" } else { "false" },
                 ip_address, ip_value
@@ -200,10 +200,10 @@ impl IntCode {
           6 => {
             // Read condition value
             let condition_address = self.get_argument_address(0, param_mode[0]);
-            let condition_value = self.memory[condition_address];
+            let condition_value = self.read_from_memory(condition_address);
             // Read conditional pointer value
             let ip_address = self.get_argument_address(1, param_mode[1]);
-            let ip_value = self.memory[ip_address];
+            let ip_value = self.read_from_memory(ip_address);
             // Check jump condition
             if condition_value == 0 {
               // Jump; update instruction pointer
@@ -215,7 +215,7 @@ impl IntCode {
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] ---[{}]---> [&{};{}]",
+                "JMP  [&{}:{}] ---[{}]---> [&{};{}]",
                 condition_address, condition_value,
                 if condition_value == 0 { "true" } else { "false" },
                 ip_address, ip_value
@@ -229,19 +229,19 @@ impl IntCode {
           7  => {
             // Get inputs
             let input1_address = self.get_argument_address(0, param_mode[0]);
-            let input1 = self.memory[input1_address];            
+            let input1 = self.read_from_memory(input1_address);            
             let input2_address = self.get_argument_address(1, param_mode[1]);
-            let input2 = self.memory[input2_address];
+            let input2 = self.read_from_memory(input2_address);
             // Calculate and store output
             let output_address = self.get_argument_address(2, param_mode[2]);
             let output = if input1 < input2 { 1 } else { 0 };
-            self.memory[output_address as usize] = output;
+            self.write_to_memory(output_address as usize, output);
             // Move instruction pointer
             self._ip += 4;
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] < [&{}:{}] = [&{};{}]",
+                "LT   [&{}:{}] < [&{}:{}] = [&{};{}]",
                 input1_address, input1,
                 input2_address, input2,
                 output_address, output
@@ -255,22 +255,42 @@ impl IntCode {
           8  => {
             // Get inputs
             let input1_address = self.get_argument_address(0, param_mode[0]);
-            let input1 = self.memory[input1_address];            
+            let input1 = self.read_from_memory(input1_address);            
             let input2_address = self.get_argument_address(1, param_mode[1]);
-            let input2 = self.memory[input2_address];
+            let input2 = self.read_from_memory(input2_address);
             // Calculate and store output
             let output_address = self.get_argument_address(2, param_mode[2]);
             let output = if input1 == input2 { 1 } else { 0 };
-            self.memory[output_address as usize] = output;
+            self.write_to_memory(output_address as usize, output);
             // Move instruction pointer
             self._ip += 4;
             // If verbose, output operation description
             if verbose {
               println!(
-                "[&{}:{}] == [&{}:{}] = [&{};{}]",
+                "EQ   [&{}:{}] == [&{}:{}] = [&{};{}]",
                 input1_address, input1,
                 input2_address, input2,
                 output_address, output
+              );
+            }
+            // Return execution done
+            OpCodeResult::ExecutedWithoutOutput
+          },
+
+          // Update relative base opcode
+          9  => {
+            // Get inputs
+            let input_address = self.get_argument_address(0, param_mode[0]);
+            let input = self.read_from_memory(input_address);            
+            // Update relative base
+            self._relative_base += input as i64;
+            // Move instruction pointer
+            self._ip += 2;
+            // If verbose, output operation description
+            if verbose {
+              println!(
+                "REL  [&{}:{}]",
+                input_address, input
               );
             }
             // Return execution done
@@ -318,14 +338,52 @@ impl IntCode {
   /// 
   /// - `param_index` - Index of the instruction parameter being referenced
   /// - `param_mode`  - Parameter fecth mode (1: direct, 0: indirected)
-  fn get_argument_address (&self, param_index: usize, param_mode: i32) -> usize {
-    if param_mode == 1 {
-      // Return argument offset as direct argument address
-      (&self._ip + 1 + param_index) as usize
-    } else {
+  fn get_argument_address (&self, param_index: usize, param_mode: i64) -> usize {
+    if param_mode == 0 {
       // Return argument offset value as argument address
       self.memory[(&self._ip + 1 + param_index) as usize] as usize
+    } else if param_mode == 1 {
+      // Return argument offset as direct argument address
+      (&self._ip + 1 + param_index) as usize
+    } else if param_mode == 2 {
+      // Return relative value of the argument as argument address
+      (self._relative_base as i64 + self.memory[(&self._ip + 1 + param_index) as usize] as i64) as usize
+    } else {
+      // Unknown param mode
+      panic!("IntCode received unknown param mode: {}!", param_mode);
     }
+  }
+
+  /// Reads from memory address
+  /// 
+  /// # Arguments
+  /// 
+  /// - `address` - Memory address to read from
+  fn read_from_memory (&self, address: usize) -> i64 {
+    // Attempt reading form memory
+    match self.memory.get(address) {
+      // Return read value
+      Some(value) => value,
+      // Default to 0
+      _ => &0
+    }.clone()
+  }
+
+  /// Writes to memory address
+  /// 
+  /// # Arguments
+  /// 
+  /// - `address` - Memory address to write to
+  /// - `value`   - Value to write to memory
+  fn write_to_memory (&mut self, address: usize, value: i64) {    
+    // Expand memory if needed
+    if (address + 1) > self.memory.len() {
+      for _ in 0..((address + 1) - self.memory.len()) {
+        self.memory.push(0);
+      }
+    }
+    // Write to memory
+    self.memory[address] = value;
   }
 
 }

@@ -19,8 +19,9 @@ pub use next_method::*;
 #[derive(Default)]
 pub struct IntCode {
   _ip: usize,
-  pub memory: Vec<i32>,
-  pub input: Option<i32>,
-  pub output: Option<i32>,
+  _relative_base: i64,
+  pub memory: Vec<i64>,
+  pub input: Option<i64>,
+  pub output: Option<i64>,
   pub flag_err: bool
 }

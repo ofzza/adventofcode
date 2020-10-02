@@ -42,7 +42,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<i32>(load_input("./src/year2019/data/day07input.txt"), ',');
+      let input = parse_1d::<i64>(load_input("./src/year2019/data/day07input.txt"), ',');
       stats.update(
         Puzzle::new(2019, 7, 1, "solution", input, implementation1, |n| (n, Some(34686)))
           .run(verbose)
@@ -74,7 +74,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<i32>(load_input("./src/year2019/data/day07input.txt"), ',');
+      let input = parse_1d::<i64>(load_input("./src/year2019/data/day07input.txt"), ',');
       stats.update(
         Puzzle::new(2019, 7, 2, "solution", input, implementation2, |n| (n, Some(36384144)))
           .run(verbose)
@@ -87,21 +87,21 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
 
 }
 
-fn implementation1 (puzzle: &Puzzle<i32, i32, i32>, verbose: bool) -> Result<i32, &str> {
+fn implementation1 (puzzle: &Puzzle<i64, i64, i64>, verbose: bool) -> Result<i64, &str> {
   match &puzzle.input {
     PuzzleInput::Vector1D(code) => find_max_phase(code, 0, 5, false, verbose),
     _ => panic!("This shouldn't ever happen!")
   }
 }
 
-fn implementation2 (puzzle: &Puzzle<i32, i32, i32>, verbose: bool) -> Result<i32, &str> {
+fn implementation2 (puzzle: &Puzzle<i64, i64, i64>, verbose: bool) -> Result<i64, &str> {
   match &puzzle.input {
     PuzzleInput::Vector1D(code) => find_max_phase(code, 5, 10, true, verbose),
     _ => panic!("This shouldn't ever happen!")
   }
 }
 
-fn find_max_phase (code: &Vec<i32>, min_phase: i32, max_phase: i32, feedback: bool, verbose: bool) -> Result<i32, &str> {
+fn find_max_phase (code: &Vec<i64>, min_phase: i64, max_phase: i64, feedback: bool, verbose: bool) -> Result<i64, &str> {
   // Initialize max value
   let mut max_value = 0;
   // Find max value
@@ -142,10 +142,10 @@ fn find_max_phase (code: &Vec<i32>, min_phase: i32, max_phase: i32, feedback: bo
   return Ok(max_value);
 }
 
-fn run_cascade (code: &Vec<i32>, phases: Vec<i32>, feedback: bool, verbose: bool) -> Result<i32, &str> {
+fn run_cascade (code: &Vec<i64>, phases: Vec<i64>, feedback: bool, verbose: bool) -> Result<i64, &str> {
   // Initialize IntCode computers and inputs
   let mut computers: Vec<IntCode> = Vec::new();
-  let mut input_stacks: Vec<Vec<i32>> = Vec::new();
+  let mut input_stacks: Vec<Vec<i64>> = Vec::new();
   for i in 0..5 {
     computers.push(IntCode::new(code.clone()));
     input_stacks.push(vec![phases[i]]);

@@ -16,7 +16,7 @@ impl IntCode {
   /// # Arguments
   /// 
   /// * `memory` - Initial memory setup
-  pub fn new (memory: Vec<i32>) -> IntCode {
+  pub fn new (memory: Vec<i64>) -> IntCode {
     IntCode{
       _ip: 0,
       memory,
