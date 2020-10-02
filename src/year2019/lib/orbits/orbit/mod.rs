@@ -18,6 +18,7 @@ pub struct Orbit {
   _parents_cache: Option<Vec<Rc<RefCell<Orbit>>>>,
 }
 
+/// Orbit implementation
 impl Orbit {
 
   /// Instantiates a new ORbit instance and returns a clonable, counted reference to it

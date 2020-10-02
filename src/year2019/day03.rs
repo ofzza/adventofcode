@@ -4,8 +4,8 @@
 // -----------------------------------------------------------------------------
 
 // Include dependencies
-use super::super::lib::inputs::*;
-use super::super::lib::puzzle::*;
+use crate::lib::inputs::*;
+use crate::lib::puzzle::*;
 use super::lib::wiring::*;
 
 /// Registers puzzles for the day

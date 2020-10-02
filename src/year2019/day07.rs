@@ -1,11 +1,11 @@
 //! 2019/07 puzzle
 //! 
-//! https://adventofcode.com/2019/day/5
+//! https://adventofcode.com/2019/day/7
 // -----------------------------------------------------------------------------
 
 // Include dependencies
-use super::super::lib::inputs::*;
-use super::super::lib::puzzle::*;
+use crate::lib::inputs::*;
+use crate::lib::puzzle::*;
 use super::intcode::*;
 
 /// Registers puzzles for the day

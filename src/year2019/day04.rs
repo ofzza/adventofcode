@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------
 
 // Include dependencies
-use super::super::lib::puzzle::*;
+use crate::lib::puzzle::*;
 
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {

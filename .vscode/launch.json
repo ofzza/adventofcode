@@ -19,7 +19,7 @@
           "kind": "bin"
         }
       },
-      "args": ["--verbose"],
+      "args": ["--year", "2019", "--day", "8", "--index", "2", "--verbose"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole"
     }

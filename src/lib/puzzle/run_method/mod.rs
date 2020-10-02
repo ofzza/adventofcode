@@ -6,8 +6,8 @@
 // Include dependencies
 use std::fmt::Debug;
 use std::time::Instant;
+use crate::lib::console::*;
 use super::*;
-use super::super::console::*;
 
 /// Puzzle .run() implementation
 /// 

@@ -6,7 +6,7 @@
 // Include dependencies
 use std::fs;
 use std::str::FromStr;
-use super::puzzle::*;
+use crate::lib::puzzle::*;
 
 /// Loads puzzle input data
 /// 

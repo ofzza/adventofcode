@@ -3,7 +3,7 @@
 
 // Include dependencies
 use std::fmt::Debug;
-use super::super::console::*;
+use crate::lib::console::*;
 
 /// Puzzle input enum
 /// 
