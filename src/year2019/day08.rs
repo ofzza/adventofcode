@@ -87,7 +87,7 @@ fn implementation1 (puzzle: &Puzzle<u8, i32, i32>, verbose: bool) -> Result<i32,
           // Read pixel
           let pixel = image.read_by_index(layer, index);
           // Count pixel
-          counts[(pixel - 48) as usize] += 1;
+          counts[(pixel - ('0' as u8)) as usize] += 1;
         }
         // Compare to current min count
         if counts[0] < min_zeros_counts[0] {
