@@ -6,7 +6,7 @@
 // Include dependencies
 use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
-use super::space_image::*;
+use super::image::*;
 
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
@@ -116,7 +116,7 @@ fn implementation2 (puzzle: &Puzzle<u8, SpaceImage, u64>, verbose: bool) -> Resu
         }
       }
       // Collapse image
-      let collapsed_image = image.collapse(50);
+      let collapsed_image = image.collapse_layers(50);
       // If verbose, print collapsed image layers
       if verbose {
         println!("Collapsed:");

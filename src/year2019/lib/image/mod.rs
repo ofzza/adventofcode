@@ -94,7 +94,7 @@ impl SpaceImage {
   /// # Arguments
   /// 
   /// - `transparent_byte` - Value of pixel to be considered transparent
-  pub fn collapse (&self, transparent_byte: u8) -> SpaceImage {
+  pub fn collapse_layers (&self, transparent_byte: u8) -> SpaceImage {
     // Initialize collapsed data
     let mut data: Vec<u8> = vec![];
     // Initialize collapsed data and tracking of still transparent parts of the image

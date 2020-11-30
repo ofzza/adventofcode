@@ -5,6 +5,7 @@
 // Import child modules
 pub mod lib;
 mod year2019;
+mod year2020;
 
 // Include dependencies
 use std::env;
@@ -60,6 +61,9 @@ fn main() {
   };
   if (year == 0) || (year == 2019) {
     stats.update(year2019::run(day, index, key.as_str(), verbose));
+  }
+  if (year == 0) || (year == 2020) {
+    stats.update(year2020::run(day, index, key.as_str(), verbose));
   }
 
   // Output collected stats

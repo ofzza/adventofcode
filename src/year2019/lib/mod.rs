@@ -1,14 +1,14 @@
-//! 2019 commin library module
+//! 2019 common library module
 // -----------------------------------------------------------------------------
 
 // Import modules
 pub mod intcode;
 pub mod orbits;
-pub mod space_image;
+pub mod image;
 pub mod wiring;
 
 // (re)Export modules
 pub use intcode::*;
 pub use orbits::*;
-pub use space_image::*;
+pub use image::*;
 pub use wiring::*;

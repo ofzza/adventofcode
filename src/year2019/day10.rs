@@ -1,13 +1,13 @@
 //! 2019/10 puzzle
 //! 
-//! https://adventofcode.com/2019/day/9
+//! https://adventofcode.com/2019/day/10
 // -----------------------------------------------------------------------------
 
 // Include dependencies
 use std::collections::HashMap;
 use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
-use super::space_image::*;
+use super::image::*;
 
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
