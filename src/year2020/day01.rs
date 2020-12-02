@@ -110,7 +110,7 @@ fn implementation2 (puzzle: &Puzzle<u32, u32, u32>, verbose: bool) -> Result<u32
   }
 }
 
-/// Searches for a sum of N options methcing a target value
+/// Searches for a sum of N options matching a target value and returns a vector of matched options or None if no combination was found
 /// 
 /// # Arguments
 ///

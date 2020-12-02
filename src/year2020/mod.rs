@@ -9,6 +9,7 @@ pub use lib::*;
 
 // Import child modules
 mod day01;
+mod day02;
 
 // Include dependencies
 use super::lib::puzzle::*;
@@ -21,6 +22,7 @@ pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionSt
   };
   // Run puzzles
   if (day == 0) || (day ==  1) { stats.update(day01::run(index, key, verbose)); }
+  if (day == 0) || (day ==  2) { stats.update(day02::run(index, key, verbose)); }
   // Return composed stats
   return stats;
 }
