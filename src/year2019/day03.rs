@@ -51,7 +51,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), '\n', ',');
+      let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), "\n", ",");
       stats.update(
         Puzzle::new(2019, 3, 1, "solution", input, implementation1, |d| (d, Some(1626)))
           .run(false)
@@ -94,7 +94,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), '\n', ',');
+      let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), "\n", ",");
       stats.update(
         Puzzle::new(2019, 3, 2, "solution", input, implementation2, |d| (d, Some(27330)))
           .run(false)

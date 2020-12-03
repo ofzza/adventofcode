@@ -44,7 +44,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<String>(load_input("./src/year2020/data/day03input.txt"), '\n');
+      let input = parse_1d::<String>(load_input("./src/year2020/data/day03input.txt"), "\n");
       stats.update(
         Puzzle::new(2020, 3, 1, "solution", input, implementation1, |r| (r, Some(289)))
           .run(verbose)
@@ -66,7 +66,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<String>(load_input("./src/year2020/data/day03input.txt"), '\n');
+      let input = parse_1d::<String>(load_input("./src/year2020/data/day03input.txt"), "\n");
       stats.update(
         Puzzle::new(2020, 3, 2, "solution", input, implementation2, |r| (r, Some(5522401584)))
           .run(verbose)
@@ -112,7 +112,7 @@ fn count_trees (map: &Vec<String>, right: usize, down: usize) -> usize {
 
   // Run a slope
   let map_width: usize = map[0].as_bytes().len();
-  for i in 0..(map.len() / down) {
+  for i in 1..(map.len() / down) {
     // Check if tree
     let y = i * down;
     let x = (i * right) % map_width;

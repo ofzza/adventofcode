@@ -42,7 +42,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day09input.txt"), ',') {
+      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day09input.txt"), ",") {
         PuzzleInput::Vector1D(code) => PuzzleInput::ParamsVector1D(vec![1], code),
         _ => panic!("This should never, ever happen!")
       };
@@ -58,7 +58,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day09input.txt"), ',') {
+      let input = match parse_1d::<i64>(load_input("./src/year2019/data/day09input.txt"), ",") {
         PuzzleInput::Vector1D(code) => PuzzleInput::ParamsVector1D(vec![2], code),
         _ => panic!("This should never, ever happen!")
       };

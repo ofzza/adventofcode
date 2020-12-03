@@ -54,7 +54,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = match &mut parse_1d::<i64>(load_input("./src/year2019/data/day02input.txt"), ',') {
+      let input = match &mut parse_1d::<i64>(load_input("./src/year2019/data/day02input.txt"), ",") {
         PuzzleInput::Vector1D(input) => {
           input[1] = 12;
           input[2] = 2;
@@ -74,7 +74,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<i64>(load_input("./src/year2019/data/day02input.txt"), ',');
+      let input = parse_1d::<i64>(load_input("./src/year2019/data/day02input.txt"), ",");
       stats.update(
         Puzzle::new(2019, 2, 2, "solution", input, implementation2, |c| ((100 * c.memory[1] + c.memory[2]), Some(8444)))
           .run(false)

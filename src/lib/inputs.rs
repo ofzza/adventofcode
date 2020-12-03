@@ -26,8 +26,8 @@ pub fn load_input (path: &str) -> String {
 /// # Arguments
 /// 
 /// - `path`      - File path to read input data from
-/// - `delimiter` - Character to split the data around
-pub fn parse_1d<T: FromStr> (input: String, delimiter: char) -> PuzzleInput<T> {
+/// - `delimiter` - String to split the data around
+pub fn parse_1d<T: FromStr> (input: String, delimiter: &str) -> PuzzleInput<T> {
 
   // Parse input (as integer array)
   let mut result: Vec<T> = Vec::new();
@@ -51,9 +51,9 @@ pub fn parse_1d<T: FromStr> (input: String, delimiter: char) -> PuzzleInput<T> {
 /// # Arguments
 /// 
 /// - `path`       - File path to read input data from
-/// - `delimiter1` - Character to split the data around (1st level)
-/// - `delimiter2` - Character to split the data around (2nd level)
-pub fn parse_2d<T: FromStr> (input: String, delimiter1: char, delimiter2: char) -> PuzzleInput<T> {
+/// - `delimiter1` - String to split the data around (1st level)
+/// - `delimiter2` - String to split the data around (2nd level)
+pub fn parse_2d<T: FromStr> (input: String, delimiter1: &str, delimiter2: &str) -> PuzzleInput<T> {
 
   // Parse input (as integer array)
   let mut result: Vec<Vec<T>> = Vec::new();

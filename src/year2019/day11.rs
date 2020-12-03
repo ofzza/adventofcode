@@ -29,7 +29,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<i64>(load_input("./src/year2019/data/day11input.txt"), ',');
+      let input = parse_1d::<i64>(load_input("./src/year2019/data/day11input.txt"), ",");
       stats.update(
         Puzzle::new(2019, 11, 1, "solution", input, implementation1, |n| (n, None))
           .run(verbose)
@@ -51,7 +51,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
-      let input = parse_1d::<i64>(load_input("./src/year2019/data/day11input.txt"), ',');
+      let input = parse_1d::<i64>(load_input("./src/year2019/data/day11input.txt"), ",");
       stats.update(
         Puzzle::new(2019, 11, 2, "solution", input, implementation2, |n| (n, None))
           .run(verbose)
