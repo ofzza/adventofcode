@@ -60,7 +60,6 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
           .run(verbose)
       );
     }
-    // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
       let input = PuzzleInput::Vector1D(vec![
@@ -152,19 +151,19 @@ fn simple_validate_passport (passport: HashMap<String, String>) -> bool {
 fn advanced_validate_passport (passport: HashMap<String, String>, color_regex: &Regex, passport_id_regex: &Regex) -> bool {
   // Check byr
   if !passport.contains_key("byr") { return false; }
-  let byr: u32 = passport.get_key_value("byr").expect("Failed parsing 'byr'!").1.parse::<u32>().expect("Failed parsing 'byr'!");
+  let byr: u32 = passport.get_key_value("byr").expect("Failed finding 'byr'!").1.parse::<u32>().expect("Failed parsing 'byr'!");
   if byr < 1920 || byr > 2002 { return false; }
   // Check iyr
   if !passport.contains_key("iyr") { return false; }
-  let iyr: u32 = passport.get_key_value("iyr").expect("Failed parsing 'iyr'!").1.parse::<u32>().expect("Failed parsing 'iyr'!");
+  let iyr: u32 = passport.get_key_value("iyr").expect("Failed finding 'iyr'!").1.parse::<u32>().expect("Failed parsing 'iyr'!");
   if iyr < 2010 || iyr > 2020 { return false; }
   // Check eyr
   if !passport.contains_key("eyr") { return false; }
-  let eyr: u32 = passport.get_key_value("eyr").expect("Failed parsing 'eyr'!").1.parse::<u32>().expect("Failed parsing 'eyr'!");
+  let eyr: u32 = passport.get_key_value("eyr").expect("Failed finding 'eyr'!").1.parse::<u32>().expect("Failed parsing 'eyr'!");
   if eyr < 2020 || eyr > 2030 { return false; }
   // Check hgt
   if !passport.contains_key("hgt") { return false; }
-  let hgt: &str = passport.get_key_value("hgt").expect("Failed parsing 'hgt'!").1;
+  let hgt: &str = passport.get_key_value("hgt").expect("Failed finding 'hgt'!").1;
   let hgt_units: String = String::from(&hgt[(hgt.len() - 2)..]);
   let hgt_value: u32 = String::from(&hgt[..(hgt.len() - 2)]).parse::<u32>().expect("Failed parsing 'hgt'!");
   if hgt_units != "cm" && hgt_units != "in" { return false; }
@@ -172,15 +171,15 @@ fn advanced_validate_passport (passport: HashMap<String, String>, color_regex: &
   if hgt_units == "in" && (hgt_value < 59 || hgt_value > 76) { return false; }
   // Check hcl
   if !passport.contains_key("hcl") { return false; }
-  let hcl: &str = passport.get_key_value("hcl").expect("Failed parsing 'hcl'!").1;
+  let hcl: &str = passport.get_key_value("hcl").expect("Failed finding 'hcl'!").1;
   if !color_regex.is_match(hcl) { return false; }
   // Check ecl
   if !passport.contains_key("ecl") { return false; }
-  let ecl: &str = passport.get_key_value("ecl").expect("Failed parsing 'ecl'!").1;
+  let ecl: &str = passport.get_key_value("ecl").expect("Failed finding 'ecl'!").1;
   if ecl != "amb" && ecl !=  "blu" && ecl !=  "brn" && ecl !=  "gry" && ecl !=  "grn" && ecl !=  "hzl" && ecl !=  "oth" { return false; }
   // Check pid
   if !passport.contains_key("pid") { return false; }
-  let pid: &str = passport.get_key_value("pid").expect("Failed parsing 'pid'!").1;
+  let pid: &str = passport.get_key_value("pid").expect("Failed finding 'pid'!").1;
   if !passport_id_regex.is_match(pid) { return false; }
 
   // Return default
