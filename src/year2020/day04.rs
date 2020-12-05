@@ -4,7 +4,6 @@
 // -----------------------------------------------------------------------------
 
 // Include dependencies
-use std::collections::HashMap;
 use regex::Regex;
 use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
@@ -131,15 +130,15 @@ fn implementation2 (puzzle: &Puzzle<String, usize, usize>, _verbose: bool) -> Re
 /// 
 /// # Arguments
 /// * `passport` - Hashmap with passport fields and values
-fn simple_validate_passport (passport: HashMap<String, String>) -> bool {
+fn simple_validate_passport (passport: Passport) -> bool {
   // Check values
-  return passport.contains_key("byr")
-      && passport.contains_key("iyr")
-      && passport.contains_key("eyr")
-      && passport.contains_key("hgt")
-      && passport.contains_key("hcl")
-      && passport.contains_key("ecl")
-      && passport.contains_key("pid");
+  return match passport.byr { Some(_) => true, None => false }
+      && match passport.iyr { Some(_) => true, None => false }
+      && match passport.eyr { Some(_) => true, None => false }
+      && match passport.hgt { Some(_) => true, None => false }
+      && match passport.hcl { Some(_) => true, None => false }
+      && match passport.ecl { Some(_) => true, None => false }
+      && match passport.pid { Some(_) => true, None => false }
 }
 
 /// Validates a password by checking for existance of mandatory fields and the validity of their values
@@ -148,40 +147,63 @@ fn simple_validate_passport (passport: HashMap<String, String>) -> bool {
 /// * `passport` - Hashmap with passport fields and values
 /// * `color_regex` - Regular expression for checking if value is a valid color
 /// * `passport_id_regex` - Regular expression for checking if value is a valid passpord ID number
-fn advanced_validate_passport (passport: HashMap<String, String>, color_regex: &Regex, passport_id_regex: &Regex) -> bool {
+fn advanced_validate_passport (passport: Passport, color_regex: &Regex, passport_id_regex: &Regex) -> bool {
   // Check byr
-  if !passport.contains_key("byr") { return false; }
-  let byr: u32 = passport.get_key_value("byr").expect("Failed finding 'byr'!").1.parse::<u32>().expect("Failed parsing 'byr'!");
-  if byr < 1920 || byr > 2002 { return false; }
+  match passport.byr {
+    Some(value) => {
+      let byr: u32 = value.parse::<u32>().expect("Failed parsing 'byr'!");
+      if byr < 1920 || byr > 2002 { return false; }
+    },
+    None => { return false; }
+  }
   // Check iyr
-  if !passport.contains_key("iyr") { return false; }
-  let iyr: u32 = passport.get_key_value("iyr").expect("Failed finding 'iyr'!").1.parse::<u32>().expect("Failed parsing 'iyr'!");
-  if iyr < 2010 || iyr > 2020 { return false; }
+  match passport.iyr {
+    Some(value) => {
+      let iyr: u32 = value.parse::<u32>().expect("Failed parsing 'iyr'!");
+      if iyr < 2010 || iyr > 2020 { return false; }
+    },
+    None => { return false; }
+  }
   // Check eyr
-  if !passport.contains_key("eyr") { return false; }
-  let eyr: u32 = passport.get_key_value("eyr").expect("Failed finding 'eyr'!").1.parse::<u32>().expect("Failed parsing 'eyr'!");
-  if eyr < 2020 || eyr > 2030 { return false; }
+  match passport.eyr {
+    Some(value) => {
+      let eyr: u32 = value.parse::<u32>().expect("Failed parsing 'eyr'!");
+      if eyr < 2020 || eyr > 2030 { return false; }
+    },
+    None => { return false; }
+  }
   // Check hgt
-  if !passport.contains_key("hgt") { return false; }
-  let hgt: &str = passport.get_key_value("hgt").expect("Failed finding 'hgt'!").1;
-  let hgt_units: String = String::from(&hgt[(hgt.len() - 2)..]);
-  let hgt_value: u32 = String::from(&hgt[..(hgt.len() - 2)]).parse::<u32>().expect("Failed parsing 'hgt'!");
-  if hgt_units != "cm" && hgt_units != "in" { return false; }
-  if hgt_units == "cm" && (hgt_value < 150 || hgt_value > 193) { return false; }
-  if hgt_units == "in" && (hgt_value < 59 || hgt_value > 76) { return false; }
+  match passport.hgt {
+    Some(value) => {
+      let hgt_units: String = String::from(&value[(value.len() - 2)..]);
+      let hgt_value: u32 = String::from(&value[..(value.len() - 2)]).parse::<u32>().expect("Failed parsing 'hgt'!");
+      if hgt_units != "cm" && hgt_units != "in" { return false; }
+      if hgt_units == "cm" && (hgt_value < 150 || hgt_value > 193) { return false; }
+      if hgt_units == "in" && (hgt_value < 59 || hgt_value > 76) { return false; }
+    },
+    None => { return false; }
+  }
   // Check hcl
-  if !passport.contains_key("hcl") { return false; }
-  let hcl: &str = passport.get_key_value("hcl").expect("Failed finding 'hcl'!").1;
-  if !color_regex.is_match(hcl) { return false; }
+  match passport.hcl {
+    Some(value) => {
+      if !color_regex.is_match(&value) { return false; }
+    },
+    None => { return false; }
+  }
   // Check ecl
-  if !passport.contains_key("ecl") { return false; }
-  let ecl: &str = passport.get_key_value("ecl").expect("Failed finding 'ecl'!").1;
-  if ecl != "amb" && ecl !=  "blu" && ecl !=  "brn" && ecl !=  "gry" && ecl !=  "grn" && ecl !=  "hzl" && ecl !=  "oth" { return false; }
+  match passport.ecl {
+    Some(value) => {
+      if value != "amb" && value !=  "blu" && value !=  "brn" && value !=  "gry" && value !=  "grn" && value !=  "hzl" && value !=  "oth" { return false; }
+    },
+    None => { return false; }
+  }
   // Check pid
-  if !passport.contains_key("pid") { return false; }
-  let pid: &str = passport.get_key_value("pid").expect("Failed finding 'pid'!").1;
-  if !passport_id_regex.is_match(pid) { return false; }
-
+  match passport.pid {
+    Some(value) => {
+      if !passport_id_regex.is_match(&value) { return false; }
+    },
+    None => { return false; }
+  }
   // Return default
   return true;
 }
@@ -190,14 +212,23 @@ fn advanced_validate_passport (passport: HashMap<String, String>, color_regex: &
 /// 
 /// # Arguments
 /// * `lines` - Raw text password data
-fn parse_passports (lines: &Vec<String>) -> Vec<HashMap<String, String>> {
+fn parse_passports (lines: &Vec<String>) -> Vec<Passport> {
   // Initialize passports
-  let mut passports: Vec<HashMap<String, String>> = Vec::new();
+  let mut passports: Vec<Passport> = Vec::new();
   
   // Process lines
   for line in lines {    
-    // Initialize hashmap
-    let mut hashmap: HashMap<String, String> = HashMap::new();    
+    // Initialize empty passport
+    let mut passport: Passport = Passport {
+      byr: None,
+      iyr: None,
+      eyr: None,
+      hgt: None,
+      hcl: None,
+      ecl: None,
+      pid: None,
+      cid: None
+    };    
     // Parse line
     let line_cleared = line.replace("\n", " ");
     let fields: Vec<&str> = line_cleared.trim().split(' ').collect();
@@ -205,13 +236,35 @@ fn parse_passports (lines: &Vec<String>) -> Vec<HashMap<String, String>> {
     for field in fields {
       // Parse field
       let parsed: Vec<&str> = field.trim().split(':').collect();
-      // Add to Hashmap
-      &hashmap.insert(String::from(parsed[0]), String::from(parsed[1]));
+      // Add to passport
+      match parsed[0] {
+        "byr" => passport.byr = Some(String::from(parsed[1])),
+        "iyr" => passport.iyr = Some(String::from(parsed[1])),
+        "eyr" => passport.eyr = Some(String::from(parsed[1])),
+        "hgt" => passport.hgt = Some(String::from(parsed[1])),
+        "hcl" => passport.hcl = Some(String::from(parsed[1])),
+        "ecl" => passport.ecl = Some(String::from(parsed[1])),
+        "pid" => passport.pid = Some(String::from(parsed[1])),
+        "cid" => passport.cid = Some(String::from(parsed[1])),
+        _ => {}
+      }
     }
-    // Add hashmap to result
-    passports.push(hashmap);
+    // Add passport to result
+    passports.push(passport);
   }
   
   // Return parsed passports
   return passports;
+}
+
+/// Passport structure holds passport information
+struct Passport {  
+  byr: Option<String>, // (Birth Year)
+  iyr: Option<String>, // (Issue Year)
+  eyr: Option<String>, // (Expiration Year)
+  hgt: Option<String>, // (Height)
+  hcl: Option<String>, // (Hair Color)
+  ecl: Option<String>, // (Eye Color)
+  pid: Option<String>, // (Passport ID)
+  cid: Option<String>  // (Country ID)
 }
