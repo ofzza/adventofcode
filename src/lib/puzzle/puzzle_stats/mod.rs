@@ -4,8 +4,7 @@
 /// Puzzle statistics struct
 /// 
 /// TODO: more details ...
-#[derive(Debug)]
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct PuzzleExecutionStatitics {
   pub total_count: u32,
   pub successful_count: u32,

@@ -7,8 +7,7 @@ use super::*;
 /// Wiring segment struct
 /// 
 /// TODO: more details ...
-#[derive(Default)]
-#[derive(Clone)]
+#[derive(Default, Clone)]
 pub struct WireSegment {
   pub wire_index: u32,
   pub accumulated_distance: u32,
@@ -17,9 +16,7 @@ pub struct WireSegment {
 }
 
 /// Wiring segment orientation
-#[derive(Eq)]
-#[derive(PartialEq)]
-#[derive(Hash)]
+#[derive(Eq, PartialEq, Hash)]
 pub enum WireSegmentOrientation {
   Horizontal,
   Vertical
