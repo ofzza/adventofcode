@@ -31,9 +31,11 @@ impl AssemblerInterpreter {
       // Parse instructions
       let line_parsed: Vec<&str> = line.split(' ').collect();
       let instruction_name = String::from(line_parsed[0]);
-      let instruction_arg = line_parsed[1].parse::<isize>().expect("Failed parsing instruction argument value!");
+      let instruction_args = line_parsed[1..].iter().map(|arg| {
+        return arg.parse::<isize>().expect("Failed parsing instruction argument value!");
+      }).collect();
       // Store instruction
-      interpreter.instructions.push((instruction_name, instruction_arg, None));
+      interpreter.instructions.push((instruction_name, instruction_args));
     }
     
     // Return diagram

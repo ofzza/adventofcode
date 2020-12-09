@@ -94,7 +94,7 @@ fn implementation1 (puzzle: &Puzzle<String, isize, isize>, verbose: bool) -> Res
       match check_if_terminates(&mut interpreter, verbose) {
         Ok(result) => {
           match result {
-            InstructionResult::LoopDetectedError(_ip, acc) => Ok(acc),
+            InstructionResult::LoopDetectedError(_ip, registries) => Ok(registries.acc),
             _ => Err("Loop expected!")
           }
         },
@@ -130,7 +130,7 @@ fn implementation2 (puzzle: &Puzzle<String, isize, isize>, verbose: bool) -> Res
           match check_if_terminates(&mut interpreter, false) {
             Ok(result) => {
               match result {
-                InstructionResult::End(_ip, acc) => { return Ok(acc); },
+                InstructionResult::End(_ip, registries) => { return Ok(registries.acc); },
                 _ => ()
               }
             },
@@ -158,7 +158,7 @@ fn check_if_terminates (interpreter: &mut AssemblerInterpreter, verbose: bool) -
   // Run interpreter
   loop {
     match interpreter.next(verbose) {
-      InstructionResult::InstructionOk(_ip, _acc) => {
+      InstructionResult::InstructionOk(_ip, _registry_acc) => {
         // Proceed with execution
         continue;
       },
@@ -166,13 +166,13 @@ fn check_if_terminates (interpreter: &mut AssemblerInterpreter, verbose: bool) -
         // Execution error
         return Err("Intepreter errored executing an instruction!");
       },
-      InstructionResult::LoopDetectedError(ip, acc) => {
+      InstructionResult::LoopDetectedError(ip, registries) => {
         // Loop detected
-        return Ok(InstructionResult::LoopDetectedError(ip.clone(), acc.clone()));
+        return Ok(InstructionResult::LoopDetectedError(ip.clone(), registries.clone()));
       },
-      InstructionResult::End(ip, acc) => {
+      InstructionResult::End(ip, registries) => {
         // Execution error
-        return Ok(InstructionResult::End(ip.clone(), acc.clone()));
+        return Ok(InstructionResult::End(ip.clone(), registries.clone()));
       },
     }
   }
