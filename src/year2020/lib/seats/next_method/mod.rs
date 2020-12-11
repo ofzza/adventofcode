@@ -40,7 +40,7 @@ impl GameOfSeats {
           continue;
         }
 
-        // Get adjecents for sear coordinates
+        // Get adjecents for seat coordinates
         let adjecents = self._adjecent_coords[index];
 
         // Count number of occupied adjecent seats
@@ -57,19 +57,18 @@ impl GameOfSeats {
 
         // Apply rules
         if self.seats[index] == SeatState::EmptySeat && count == 0 {
-          next_seats.insert(index, SeatState::OccupiedSeat);
+          next_seats.push(SeatState::OccupiedSeat);
           count_empty -= 1;
           count_occupied += 1;
           changes = true;
         }
         else if self.seats[index] == SeatState::OccupiedSeat && count >= tolerance {
-          next_seats.insert(index, SeatState::EmptySeat);
+          next_seats.push(SeatState::EmptySeat);
           count_empty += 1;
           count_occupied -= 1;
           changes = true;
-        }
-        else {
-          next_seats.insert(index, self.seats[index].clone());
+        } else {
+          next_seats.push(self.seats[index].clone());
         }
 
       }

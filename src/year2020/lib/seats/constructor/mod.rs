@@ -31,19 +31,19 @@ impl GameOfSeats {
     let mut count_occupied = 0;
     // Decode input
     for y in 0..input.len() {
-      for x in 0..input[y].len() {
-        let index = game._get_index(x, y);
-        match input[y].as_bytes()[x] as char {
+      let bytes = input[y].as_bytes();
+      for x in 0..bytes.len() {
+        match bytes[x] as char {
           '.' => {
-            game.seats.insert(index, SeatState::Floor);
+            game.seats.push(SeatState::Floor);
           },
           'L' => {
             count_empty += 1;
-            game.seats.insert(index, SeatState::EmptySeat);
+            game.seats.push(SeatState::EmptySeat);
           },
           '#' => {
             count_occupied += 1;
-            game.seats.insert(index, SeatState::OccupiedSeat);
+            game.seats.push(SeatState::OccupiedSeat);
           },
           _ => panic!("Unrecognized input character!")
         }
@@ -166,7 +166,7 @@ impl GameOfSeats {
         }
 
         // Store positions of adjecent seats
-        self._adjecent_coords.insert(self._get_index(x, y), positions);
+        self._adjecent_coords.push(positions);
       }
     }
   }
