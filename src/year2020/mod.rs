@@ -20,6 +20,7 @@ mod day09;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 
 // Include dependencies
 use super::lib::puzzle::*;
@@ -43,6 +44,7 @@ pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionSt
   if (day == 0) || (day == 10) { stats.update(day10::run(index, key, verbose)); }
   if (day == 0) || (day == 11) { stats.update(day11::run(index, key, verbose)); }
   if (day == 0) || (day == 12) { stats.update(day12::run(index, key, verbose)); }
+  if (day == 0) || (day == 13) { stats.update(day13::run(index, key, verbose)); }
   // Return composed stats
   return stats;
 }

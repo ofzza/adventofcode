@@ -9,17 +9,23 @@
       "request": "launch",
       "name": "Debug",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=adventofcode",
-          "--package=adventofcode"
-        ],
+        "args": ["build", "--bin=adventofcode", "--package=adventofcode"],
         "filter": {
           "name": "adventofcode",
           "kind": "bin"
         }
       },
-      "args": ["--year", "2020", "--day", "12", "--index", "2", "--key", "solution", "--verbose"],
+      "args": [
+        "--year",
+        "2020",
+        "--day",
+        "13",
+        "--index",
+        "2",
+        "--key",
+        "test",
+        "--verbose"
+      ],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole"
     }
