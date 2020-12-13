@@ -43,7 +43,7 @@ T % 19 = 19 - 7 = 12
 
 ### Solution (Chinese remainder theorem)
 
-- Find T where `T % 7 = 0`, starting at 0 in step of 1 => `7`
+- Find T where `T % 7 = 0`, starting at `0` in step of `1` => `7`
 - Find T where `T % 13 = 12`, starting at `7` in steps of `1 x 7` => `77`
 - Find T where `T % 59 = 55`, starting at `77` in steps of `1 x 7 x 13` => `350`
 - Find T where `T % 31 = 25`, starting at `350` in steps of `1 x 7 x 13 x 59` => `70147`
