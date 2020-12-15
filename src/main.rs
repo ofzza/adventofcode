@@ -56,7 +56,7 @@ fn main() {
   }
 
   // Run all years' puzzles
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
   if (year == 0) || (year == 2019) {

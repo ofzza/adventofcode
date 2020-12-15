@@ -10,10 +10,10 @@ use std::collections::HashMap;
 use super::bitmask::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
 
@@ -62,7 +62,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
-      // Solutionre
+      // Solution
       let input = parse_1d(load_input("./src/year2020/data/day14input.txt"), "\n");
       stats.update(
         Puzzle::new(2020, 14, 2, "solution", input, implementation2, |r| (r, Some(2737766154126)))

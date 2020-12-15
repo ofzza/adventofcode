@@ -23,10 +23,10 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
   /// # Remarks
   /// 
   /// * While processing, outputs puzzle processing status to console
-  pub fn run (&mut self, verbose: bool) -> PuzzleExecutionStatitics {
+  pub fn run (&mut self, verbose: bool) -> PuzzleExecutionStatistics {
     
     // Inizialize stats
-    let mut stats = PuzzleExecutionStatitics{
+    let mut stats = PuzzleExecutionStatistics{
       ..Default::default()
     };
 

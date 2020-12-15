@@ -23,14 +23,15 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
 
 // Include dependencies
 use super::lib::puzzle::*;
 
 /// Run all 2019 days's puzzles
-pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
   // Run puzzles
@@ -49,6 +50,7 @@ pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionSt
   if (day == 0) || (day == 13) { stats.update(day13::run(index, key, verbose)); }
   if (day == 0) || (day == 14) { stats.update(day14::run(index, key, verbose)); }
   if (day == 0) || (day == 15) { stats.update(day15::run(index, key, verbose)); }
+  if (day == 0) || (day == 16) { stats.update(day16::run(index, key, verbose)); }
   // Return composed stats
   return stats;
 }

@@ -9,10 +9,10 @@ use crate::lib::puzzle::*;
 use std::f64::consts::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
 

@@ -24,9 +24,9 @@ mod day11;
 use super::lib::puzzle::*;
 
 /// Run all 2019 days's puzzles
-pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (day: u32, index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
   // Run puzzles

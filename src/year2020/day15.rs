@@ -9,10 +9,10 @@ use crate::lib::puzzle::*;
 // use std::collections::HashMap;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
 
@@ -126,7 +126,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatitics {
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
-      // Solutionre
+      // Solution
       let input = match parse_1d::<usize>(load_input("./src/year2020/data/day15input.txt"), ",") {
         PuzzleInput::Vector1D(code) => PuzzleInput::ParamVector1D(30000000, code),
         _ => panic!("This should never, ever happen!")

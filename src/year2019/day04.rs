@@ -7,10 +7,10 @@
 use crate::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatitics {
+pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
-  let mut stats = PuzzleExecutionStatitics{
+  let mut stats = PuzzleExecutionStatistics{
     ..Default::default()
   };
   
