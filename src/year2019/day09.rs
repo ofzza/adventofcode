@@ -9,7 +9,7 @@ use crate::lib::puzzle::*;
 use super::intcode::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -24,19 +24,19 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![], vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]);
       stats.update(
         Puzzle::new(2019, 9, 1, "test", input, implementation, |outputs| (outputs, Some(vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99])))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![], vec![1102,34915192,34915192,7,4,7,99,0]);
       stats.update(
         Puzzle::new(2019, 9, 1, "test", input, implementation, |outputs| (outputs, Some(vec![1219070632396864])))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![], vec![104,1125899906842624,99]);
       stats.update(
         Puzzle::new(2019, 9, 1, "test", input, implementation, |outputs| (outputs, Some(vec![1125899906842624])))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -48,7 +48,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2019, 9, 1, "solution", input, implementation, |outputs| (outputs, Some(vec![3601950151])))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -64,7 +64,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2019, 9, 2, "solution", input, implementation, |outputs| (outputs, Some(vec![64236])))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }

@@ -26,11 +26,12 @@ fn main() {
   let args: Vec<String> = env::args().collect();
 
   // Match arguments
-  let mut year: u32     = 0;
-  let mut day:u32       = 0;
-  let mut index: u32    = 0;
-  let mut key: String   = String::default();
-  let mut verbose: bool = false;
+  let mut year: u32       = 0;
+  let mut day:u32         = 0;
+  let mut index: u32      = 0;
+  let mut key: String     = String::default();
+  let mut verbose: bool   = false;
+  let mut obfuscate: bool = false;
   
   for i in 0..args.len() {
     // Get year argument
@@ -53,6 +54,10 @@ fn main() {
     if args[i] == "--verbose" {
       verbose = true;
     }
+    // Get obfuscate argument
+    if args[i] == "--obfuscate" {
+      obfuscate = true;
+    }
   }
 
   // Run all years' puzzles
@@ -60,10 +65,10 @@ fn main() {
     ..Default::default()
   };
   if (year == 0) || (year == 2019) {
-    stats.update(year2019::run(day, index, key.as_str(), verbose));
+    stats.update(year2019::run(day, index, key.as_str(), verbose, obfuscate));
   }
   if (year == 0) || (year == 2020) {
-    stats.update(year2020::run(day, index, key.as_str(), verbose));
+    stats.update(year2020::run(day, index, key.as_str(), verbose, obfuscate));
   }
 
   // Output collected stats

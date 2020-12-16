@@ -9,7 +9,7 @@ use crate::lib::puzzle::*;
 use super::lib::wiring::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, _verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -27,7 +27,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 1, "test", input, implementation1, |d| (d, Some(6)))
-          .run(false)
+          .run(false, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector2D(vec![
@@ -36,7 +36,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 1, "test", input, implementation1, |d| (d, Some(159)))
-          .run(false)
+          .run(false, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector2D(vec![
@@ -45,7 +45,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 1, "test", input, implementation1, |d| (d, Some(135)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
     // Run solution
@@ -54,7 +54,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), "\n", ",");
       stats.update(
         Puzzle::new(2019, 3, 1, "solution", input, implementation1, |d| (d, Some(1626)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
   }
@@ -70,7 +70,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 2, "test", input, implementation2, |d| (d, Some(30)))
-          .run(false)
+          .run(false, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector2D(vec![
@@ -79,7 +79,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 2, "test", input, implementation2, |d| (d, Some(610)))
-          .run(false)
+          .run(false, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector2D(vec![
@@ -88,7 +88,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       ]);
       stats.update(
         Puzzle::new(2019, 3, 2, "test", input, implementation2, |d| (d, Some(410)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
     // Run solution
@@ -97,7 +97,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       let input = parse_2d::<String>(load_input("./src/year2019/data/day03input.txt"), "\n", ",");
       stats.update(
         Puzzle::new(2019, 3, 2, "solution", input, implementation2, |d| (d, Some(27330)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
   }

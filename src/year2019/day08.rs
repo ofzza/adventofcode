@@ -9,7 +9,7 @@ use crate::lib::puzzle::*;
 use super::image::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -24,7 +24,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![3, 2], "123456789012".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 8, 1, "test", input, implementation1, |n| (n, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -33,7 +33,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![25, 6], load_input("./src/year2019/data/day08input.txt").as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 8, 1, "solution", input, implementation1, |n| (n, Some(2250)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -46,7 +46,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![2, 2, 0], "0222112222120000".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 8, 2, "test", input, implementation2, |img| (img.calculate_hash(), Some(441979580009008673)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -55,7 +55,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![25, 6, 1], load_input("./src/year2019/data/day08input.txt").as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 8, 2, "solution", input, implementation2, |img| (img.calculate_hash(), Some(10283588279939085619)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }

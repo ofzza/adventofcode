@@ -9,7 +9,7 @@ use crate::lib::puzzle::*;
 use super::intcode::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -27,7 +27,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2019, 5, 1, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(7286649)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -40,73 +40,73 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamVector1D(0, vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(8, vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(0, vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(8, vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(0, vec![3, 3, 1108, -1, 8, 3, 4, 3, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(8, vec![3, 3, 1108, -1, 8, 3, 4, 3, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(0, vec![3, 3, 1107, -1, 8, 3, 4, 3, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(8, vec![3, 3, 1107, -1, 8, 3, 4, 3, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(0, vec![3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(1, vec![3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(0, vec![3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(0)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(1, vec![3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(7, vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
@@ -114,7 +114,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
                                                     999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(999)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(8, vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
@@ -122,7 +122,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
                                                     999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1000)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamVector1D(9, vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
@@ -130,7 +130,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
                                                     999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]);
       stats.update(
         Puzzle::new(2019, 5, 2, "test", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(1001)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -142,7 +142,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2019, 5, 2, "solution", input, implementation, |c| (match c.output { Some(output) => output, None => 0 }, Some(15724522)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }

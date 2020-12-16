@@ -9,7 +9,7 @@ use crate::lib::puzzle::*;
 use super::intcode::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -24,31 +24,31 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::Vector1D(vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
       stats.update(
         Puzzle::new(2019, 2, 1, "test", input, implementation1, |c| (c.memory[0], Some(3500)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector1D(vec![1, 0, 0, 0, 99]);
       stats.update(
         Puzzle::new(2019, 2, 1, "test", input, implementation1, |c| (c.memory[0], Some(2)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector1D(vec![2, 3, 0, 3, 99]);
       stats.update(
         Puzzle::new(2019, 2, 1, "test", input, implementation1, |c| (c.memory[3], Some(6)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector1D(vec![2, 4, 4, 5, 99, 0]);
       stats.update(
         Puzzle::new(2019, 2, 1, "test", input, implementation1, |c| (c.memory[5], Some(9801)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::Vector1D(vec![1, 1, 1, 4, 99, 5, 6, 0, 99]);
       stats.update(
         Puzzle::new(2019, 2, 1, "test", input, implementation1, |c| (c.memory[0], Some(30)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -64,7 +64,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2019, 2, 1, "solution", input, implementation1, |c| (c.memory[0], Some(3101878)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -77,7 +77,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = parse_1d::<i64>(load_input("./src/year2019/data/day02input.txt"), ",");
       stats.update(
         Puzzle::new(2019, 2, 2, "solution", input, implementation2, |c| ((100 * c.memory[1] + c.memory[2]), Some(8444)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
   }

@@ -18,12 +18,13 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
   /// 
   /// # Arguments
   /// 
-  /// * `verbose` - Outputs executing output of the puzzle to the console
+  /// * `verbose`   - Outputs executing output of the puzzle to the console
+  /// * `obfuscate` - If values should be obfuscated in output
   /// 
   /// # Remarks
   /// 
   /// * While processing, outputs puzzle processing status to console
-  pub fn run (&mut self, verbose: bool) -> PuzzleExecutionStatistics {
+  pub fn run (&mut self, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
     
     // Inizialize stats
     let mut stats = PuzzleExecutionStatistics{
@@ -82,12 +83,21 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
         } else {
           stats.total_count += 1;
           stats.failed_count += 1;
-          format!("{}{}RESULT [FAIL != {:?}]", CONSOLE_FAIL_BG, CONSOLE_FAIL_FG, expected)
+          if !obfuscate {
+            format!("{}{}RESULT [FAIL != {:?}]", CONSOLE_FAIL_BG, CONSOLE_FAIL_FG, expected)
+          } else {
+            format!("{}{}RESULT [FAIL != ???]", CONSOLE_FAIL_BG, CONSOLE_FAIL_FG)
+          }
         }
       };
     println!("  {}{}:{}{}{}{}",
       result_label, CONSOLE_RESET,
-      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, format!(" {:?} (in {} sec)", result.0, execution_time),
+      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG,
+      if !obfuscate {
+        format!(" {:?} (in {} sec)", result.0, execution_time)
+      } else {
+        format!(" ??? (in {} sec)", execution_time)
+      },
       CONSOLE_RESET);
 
     // Return collected execution stats

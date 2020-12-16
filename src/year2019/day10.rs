@@ -10,7 +10,7 @@ use crate::lib::puzzle::*;
 use super::image::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -25,31 +25,31 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![5, 5], ".#..#.....#####....#...##".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "test", input, implementation1, |outputs| (outputs.2, Some(8)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![10, 10], "......#.#.#..#.#......#######..#.#.###...#..#.......#....#.##..#....#..##.#..#####...#..#..#....####".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "test", input, implementation1, |outputs| (outputs.2, Some(33)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![10, 10], "#.#...#.#..###....#..#....#...##.#.#.#.#....#.#.#..##..###.#..#...##....##....##......#....####.###.".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "test", input, implementation1, |outputs| (outputs.2, Some(35)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![10, 10], ".#..#..#######.###.#....###.#...###.##.###.##.#.#.....###..#..#.#..#.##..#.#.###.##...##.#.....#.#..".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "test", input, implementation1, |outputs| (outputs.2, Some(41)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
       // Test
       let input = PuzzleInput::ParamsVector1D(vec![20, 20], ".#..##.###...#########.############..##..#.######.########.#.###.#######.####.#.#####.##.#.##.###.##..#####..#.##############################.####....###.#.#.####.######################.##.###..####....######..##.###########.##.####...##..#.#####..#.######.#####...#.##########...#.##########.#######.####.#.###.###.#.##....##.##.###..#####.#.#.###########.####.#.#.#####.####.######.##.####.##.#..##".as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "test", input, implementation1, |outputs| (outputs.2, Some(210)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -58,7 +58,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![24, 24], load_input("./src/year2019/data/day10input.txt").replace('\n', "").as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 1, "solution", input, implementation1, |outputs| (outputs.2, Some(280)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -71,7 +71,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamsVector1D(vec![24, 24, 20, 18, 200], load_input("./src/year2019/data/day10input.txt").replace('\n', "").as_bytes().to_vec());
       stats.update(
         Puzzle::new(2019, 10, 2, "solution", input, implementation2, |outputs| ((outputs.0 * 100) + outputs.1, Some(706)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }

@@ -7,7 +7,7 @@
 use crate::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, _verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -22,7 +22,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       let input = PuzzleInput::Params(vec![128392, 643281]);
       stats.update(
         Puzzle::new(2019, 4, 1, "solution", input, implementation1, |d| (d, Some(2050)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
   }
@@ -35,7 +35,7 @@ pub fn run (index: u32, key: &str, _verbose: bool) -> PuzzleExecutionStatistics 
       let input = PuzzleInput::Params(vec![128392, 643281]);
       stats.update(
         Puzzle::new(2019, 4, 2, "solution", input, implementation2, |d| (d, Some(1390)))
-          .run(false)
+          .run(false, obfuscate)
       );
     }
   }

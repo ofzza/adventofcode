@@ -8,7 +8,7 @@ use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -23,7 +23,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamVector1D(5, vec![35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277, 309, 576]);
       stats.update(
         Puzzle::new(2020, 9, 1, "test", input, implementation1, |r| (r, Some(127)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -35,7 +35,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2020, 9, 1, "solution", input, implementation1, |r| (r, Some(90433990)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -48,7 +48,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = PuzzleInput::ParamVector1D(5, vec![35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277, 309, 576]);
       stats.update(
         Puzzle::new(2020, 9, 2, "test", input, implementation2, |r| (r, Some(62)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -60,7 +60,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       };
       stats.update(
         Puzzle::new(2020, 9, 2, "solution", input, implementation2, |r| (r, Some(11691646)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }

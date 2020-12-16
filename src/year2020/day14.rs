@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use super::bitmask::*;
 
 /// Registers puzzles for the day
-pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
+pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
 
   // Initialize stats
   let mut stats = PuzzleExecutionStatistics{
@@ -30,7 +30,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       ]);
       stats.update(
         Puzzle::new(2020, 14, 1, "test", input, implementation1, |r| (r, Some(165)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -39,7 +39,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = parse_1d(load_input("./src/year2020/data/day14input.txt"), "\n");
       stats.update(
         Puzzle::new(2020, 14, 1, "solution", input, implementation1, |r| (r, Some(14553106347726)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
@@ -57,7 +57,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       ]);
       stats.update(
         Puzzle::new(2020, 14, 2, "test", input, implementation2, |r| (r, Some(208)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
     // Run solution
@@ -66,7 +66,7 @@ pub fn run (index: u32, key: &str, verbose: bool) -> PuzzleExecutionStatistics {
       let input = parse_1d(load_input("./src/year2020/data/day14input.txt"), "\n");
       stats.update(
         Puzzle::new(2020, 14, 2, "solution", input, implementation2, |r| (r, Some(2737766154126)))
-          .run(verbose)
+          .run(verbose, obfuscate)
       );
     }
   }
