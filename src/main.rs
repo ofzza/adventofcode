@@ -36,15 +36,15 @@ fn main() {
   for i in 0..args.len() {
     // Get year argument
     if (args[i] == "--year") && (args.len() > i) {
-      year = args[i + 1].parse::<u32>().expect("Failed parsing '--year' parameter - expecting a positive, while number!");
+      year = args[i + 1].parse::<u32>().expect("Failed parsing '--year' parameter - expecting a positive, whole number!");
     }
     // Get day argument
     if (args[i] == "--day") && (args.len() > i) {
-      day = args[i + 1].parse::<u32>().expect("Failed parsing '--day' parameter - expecting a positive, while number!");
+      day = args[i + 1].parse::<u32>().expect("Failed parsing '--day' parameter - expecting a positive, whole number!");
     }
     // Get index argument
     if (args[i] == "--index") && (args.len() > i) {
-      index = args[i + 1].parse::<u32>().expect("Failed parsing '--index' parameter - expecting a positive, while number!");
+      index = args[i + 1].parse::<u32>().expect("Failed parsing '--index' parameter - expecting a positive, whole number!");
     }
     // Get key argument
     if (args[i] == "--key") && (args.len() > i) {

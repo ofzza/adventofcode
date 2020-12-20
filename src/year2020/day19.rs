@@ -52,7 +52,7 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
   }
 
   // Run puzzle
-  if (index == 0) || (index == 2) {
+  if false && ((index == 0) || (index == 2)) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
