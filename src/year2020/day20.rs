@@ -31,7 +31,7 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
   ];
 
   // Run puzzle
-  if (index == 0) || (index == 9) {
+  if index == 9 {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
