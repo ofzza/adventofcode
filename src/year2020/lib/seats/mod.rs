@@ -17,7 +17,7 @@ pub use to_string::*;
 #[derive(Debug, Clone, PartialEq)]
 pub enum SeatState {
   Floor        = '.' as isize,
-  EmptySeat    = 'l' as isize,
+  EmptySeat    = 'L' as isize,
   OccupiedSeat = '#' as isize
 }
 

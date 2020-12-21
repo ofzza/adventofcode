@@ -37,7 +37,7 @@ impl GameOfSeats {
           '.' => {
             game.seats.push(SeatState::Floor);
           },
-          'l' => {
+          'L' => {
             count_empty += 1;
             game.seats.push(SeatState::EmptySeat);
           },

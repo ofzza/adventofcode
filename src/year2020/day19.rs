@@ -54,7 +54,7 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
   // Run puzzle
   if false && ((index == 0) || (index == 2)) {
     // Run tests
-    if (key == String::default()) || (key == "test") {
+    if (key == String::default()) || (key == "_test") {
       // Test
       let input = PuzzleInput::Vector1D(vec![
         String::from("42: 9 14 | 10 1"),
@@ -258,15 +258,16 @@ fn implementation2 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       let mut rules = parsed.0;
       let msgs = parsed.1;
 
-      // Get rules' lengths
-      rules = get_rule_lengths(&mut rules, verbose);
-      rules = simplify_rules(&mut rules, verbose);
+      // Optimize rules
+      // rules = get_rule_lengths(&mut rules, verbose);
+      rules = expand_recursive_rules(0, vec![8, 11], &mut rules, 30, verbose);
+      // rules = simplify_rules(&mut rules, verbose);
 
       // Count matching messages
       let mut count = 0;
       for i in 0..msgs.len() {
         // Validate message
-        let offsets = validate_msg(&msgs[i][..], 0, &rules, verbose, 0);
+        let offsets = validate_msg(&msgs[i][..], 0, &rules, false && verbose, 0);
         if offsets.len() == 1 && offsets[0] == "" {
           count += 1;
         }
@@ -387,7 +388,7 @@ fn get_rule_length (rule_index: usize, rules: &HashMap<usize, (usize, Vec<Vec<Va
 }
 
 /// TODO: ...
-fn simplify_rules (rules: &mut HashMap<usize, (usize, Vec<Vec<Value>>)>, _verbose: bool) -> HashMap<usize, (usize, Vec<Vec<Value>>)> {
+fn _simplify_rules (rules: &mut HashMap<usize, (usize, Vec<Vec<Value>>)>, _verbose: bool) -> HashMap<usize, (usize, Vec<Vec<Value>>)> {
   // Initialize new_rules
   let mut new_rules: HashMap<usize, (usize, Vec<Vec<Value>>)> = rules.clone();
   // Keep simplifying until no simplifications are found
@@ -402,7 +403,7 @@ fn simplify_rules (rules: &mut HashMap<usize, (usize, Vec<Vec<Value>>)>, _verbos
         .map(|i| {
 
           // Try converting to simplified option form
-          let simplified = simplify_option(rule.1[i].clone(), &rules);
+          let simplified = _simplify_option(rule.1[i].clone(), &rules);
           is_simplified = is_simplified || simplified.0;
 
           // Check if all values in the option are direct values
@@ -446,7 +447,7 @@ fn simplify_rules (rules: &mut HashMap<usize, (usize, Vec<Vec<Value>>)>, _verbos
 }
 
 /// TODO: ...
-fn simplify_option (option: Vec<Value>, rules: &HashMap<usize, (usize, Vec<Vec<Value>>)>) -> (bool, Vec<Value>) {
+fn _simplify_option (option: Vec<Value>, rules: &HashMap<usize, (usize, Vec<Vec<Value>>)>) -> (bool, Vec<Value>) {
   // Simplify by replacing single-step indirections to direct values
   let mut is_simplified = false;
   let single_step_indirection_simplified_option: Vec<Value> = option.iter()
@@ -480,12 +481,107 @@ fn simplify_option (option: Vec<Value>, rules: &HashMap<usize, (usize, Vec<Vec<V
 }
 
 /// TODO: ...
+fn expand_recursive_rules (rule_id: usize, recursive_rule_ids: Vec<usize>, rules: &mut HashMap<usize, (usize, Vec<Vec<Value>>)>, depth: usize, _verbose: bool) -> HashMap<usize, (usize, Vec<Vec<Value>>)> {
+  // Expand recursive rules
+  let mut rule_options_unpacked: HashMap<usize, Vec<Vec<usize>>> = HashMap::new();
+  for recursive_rule_id in recursive_rule_ids.clone() {
+    
+    // Get rule
+    let recursive_rule = rules.get(&recursive_rule_id).unwrap().clone().1;
+
+    // Unpack options
+    let mut options_unpacked: Vec<Vec<usize>> = vec![];
+    for option in recursive_rule {
+      // Unpack option (assuming all values are indirect)
+      options_unpacked.push(
+        option.iter()
+          .map(|value| match value {
+            Value::Indirect(id) => id.clone(),
+            Value::Direct(_) => panic!("Expanding a direct option not allowed!")
+          })
+          .collect()
+      );
+    }
+
+    // Expand unpacked options
+    let mut options_unpacked_expanded: Vec<Vec<usize>> = options_unpacked.clone();
+    for _ in 0..depth {
+      for i in 0..options_unpacked_expanded.len() {
+        // Expand recursive option to requested depth
+        if options_unpacked_expanded[i].contains(&recursive_rule_id) {
+          // Remove recursive option from options
+          let mut recursive_option = options_unpacked_expanded.remove(i);
+          // Ready option for replacement of recursive section
+          let index = recursive_option.iter().position(|id| id.clone() == recursive_rule_id).unwrap();
+          recursive_option.remove(index);
+          // Replace with every other option in the rule and set as new options
+          for replacement_option_unpacked in options_unpacked.clone() {
+            let mut replaced_option = recursive_option.clone();
+            for j in 0..replacement_option_unpacked.len() {
+              let value = replacement_option_unpacked[j];
+              replaced_option.insert(index + j, value);
+            }
+            options_unpacked_expanded.push(replaced_option);
+          }
+        }
+      }
+    }
+
+    // Store unpacked options for recursive rule
+    rule_options_unpacked.insert(recursive_rule_id, options_unpacked_expanded);
+  }
+
+  // Expand target rule (assume only 2 recursive rules - very specific to this task!!!)
+  let mut indices: Vec<Vec<usize>> = vec![];
+  for i in 0..(depth + 1) {
+    indices.push(vec![i, i]);
+    for j in 0..i {
+      indices.push(vec![i, j]);
+      indices.push(vec![j, i]);
+    }
+  }
+  // Expanded rule initialization
+  let rule = rules.get(&rule_id).unwrap().1.clone();
+  let mut rule_expanded: Vec<Vec<Value>> = vec![];
+  // Expanded rule composition
+  for recursive_rules_options_index in indices {
+    let mut option_expanded: Vec<Value> = vec![];
+    for option in &rule {
+      for indirect_rule_value in option {
+        match indirect_rule_value {
+          Value::Indirect(indirect_rule_id) => {
+            match recursive_rule_ids.iter().position(|id| id.clone() == indirect_rule_id.clone()) {
+              Some(i) => {
+                for value in rule_options_unpacked.get(&indirect_rule_id).unwrap()[recursive_rules_options_index[i.clone()].clone()].clone() {
+                  option_expanded.push(Value::Indirect(value.clone()));
+                }
+              },
+              None => {
+                option_expanded.push(Value::Indirect(indirect_rule_id.clone()));
+              }
+            }
+          },
+          _ => ()
+        }
+      }
+    }
+    rule_expanded.push(option_expanded);
+  }
+
+  // Replace with expanded rule
+  rules.insert(rule_id, (0, rule_expanded));
+
+  // Return simplified rules
+  return rules.clone();
+}
+
+/// TODO: ...
 fn validate_msg<'msg> (msg: &'msg str, rule_index: usize, rules: &HashMap<usize, (usize, Vec<Vec<Value>>)>, verbose: bool, depth: usize) -> Vec<&'msg str> {
   // Get rule
   let rule = rules.get(&rule_index).expect("Failed fetching rule!");
 
   // Check if message is long enough to match
-  if rule.0 > 0 && msg.len() < rule.0 {
+  if (rule.0 > 0 && msg.len() < rule.0) || msg.len() == 0 {
     return vec![];
   }
 
@@ -501,6 +597,9 @@ fn validate_msg<'msg> (msg: &'msg str, rule_index: usize, rules: &HashMap<usize,
     let option = &rule.1[option_index];
 
     // Prompt
+    if depth == 0 {
+      print!("");
+    }
     if verbose {
       println!("  {}  > Matching {} option ({:?}) against \"{}\" ... ", padding, option_index, option, msg);
     }

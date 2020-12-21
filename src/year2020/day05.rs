@@ -110,7 +110,7 @@ fn implementation2 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
 /// * `verbose` - Outputs executing output of the puzzle to the console
 fn decode_seat (code: &String, verbose: bool) -> (usize, usize, usize) {
   // Parse seat row, column and ID
-  let binary: String = code.replace('B', "1").replace('F', "0").replace('R', "1").replace('l', "0");
+  let binary: String = code.replace('B', "1").replace('F', "0").replace('R', "1").replace('L', "0");
   let binary_row: String = String::from(&binary[..7]);
   let row = usize::from_str_radix(&binary_row, 2).expect("Failed parsing binary seat ID");
   let binary_column: String = String::from(&binary[7..]);
