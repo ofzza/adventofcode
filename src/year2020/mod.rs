@@ -30,6 +30,7 @@ mod day19;
 mod day20;
 mod day21;
 mod day22;
+mod day23;
 
 // Include dependencies
 use super::lib::puzzle::*;
@@ -63,6 +64,7 @@ pub fn run (day: u32, index: u32, key: &str, verbose: bool, obfuscate: bool) -> 
   if (day == 0) || (day == 20) { stats.update(day20::run(index, key, verbose, obfuscate)); }
   if (day == 0) || (day == 21) { stats.update(day21::run(index, key, verbose, obfuscate)); }
   if (day == 0) || (day == 22) { stats.update(day22::run(index, key, verbose, obfuscate)); }
+  if (day == 0) || (day == 23) { stats.update(day23::run(index, key, verbose, obfuscate)); }
   // Return composed stats
   return stats;
 }
