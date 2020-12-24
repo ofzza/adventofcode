@@ -178,7 +178,7 @@ fn find_indispencibles (adapters: &Vec<usize>) -> Vec<usize> {
 ///
 /// # Arguments
 /// * `adapters` - Joltages of all adapters
-/// * `verbose`         - Outputs executing output of the puzzle to the console
+/// * `verbose`  - Outputs executing output of the puzzle to the console
 /// * `index`    - (Internal) Index after which the adapters can be dropped (used internally to prevent double processing of adapters)
 fn count_permutations (adapters: &Vec<usize>, verbose: bool, index: usize) -> usize {
   // Count optional adapters

@@ -125,7 +125,13 @@ fn implementation2 (puzzle: &Puzzle<usize, usize, usize>, verbose: bool) -> Resu
   }
 }
 
-/// TODO: ...
+/// Plays the game of cups
+/// 
+/// # Arguments
+/// * `cups`        - Initial arrangement of cups
+/// * `iterations`  - Number of iterations the game will play for
+/// * `move_length` - Number of cups moved on each iteration
+/// * `verbose`     - Outputs executing output of the puzzle to the console
 fn play_game (cups: &Vec<usize>, iterations: usize, move_length: usize, verbose: bool) -> Vec<usize> {
   // Clone cups before playing
   let mut cups: Vec<usize> = cups.clone();

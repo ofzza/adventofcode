@@ -19,12 +19,12 @@
         "--year",
         "2020",
         "--day",
-        "23",
+        "24",
         "--index",
         "2",
         "--key",
-        "test"
-        // "--verbose"
+        "test",
+        "--verbose"
       ],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole"
