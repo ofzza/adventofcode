@@ -96,7 +96,7 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
       // Solution
       let input = parse_1d::<String>(load_input("./src/year2020/data/day24input.txt"), "\n");
       stats.update(
-        Puzzle::new(2020, 24, 2, "solution", input, implementation2, |r| (r, None))
+        Puzzle::new(2020, 24, 2, "solution", input, implementation2, |r| (r, Some(4156)))
           .run(verbose, obfuscate)
       );
     }

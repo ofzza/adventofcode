@@ -204,8 +204,6 @@ fn play_game (cups: &Vec<usize>, iterations: usize, move_length: usize, verbose:
     current_value = cups[current_index];
 
   }
-
-
   
   // Return cups 
   return cups;
