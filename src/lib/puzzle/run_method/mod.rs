@@ -104,4 +104,22 @@ impl<TInput: Debug, TOutput, TResult: Debug + PartialOrd> Puzzle<TInput, TOutput
     return stats;
   }
 
+  /// Prompts a message instead of running a puzzle
+  /// 
+  /// Arguments
+  /// * `msg` - Message to prompt
+  pub fn prompt (&mut self, msg: &str) {
+    // Initialize puzzle
+    println!();
+    println!("{}{}{}{}{}{}{}",
+      CONSOLE_TITLE_BG, CONSOLE_TITLE_FG, format!("PUZZLE {}/{}.{}: ", self.year, self.day, self.index),
+      CONSOLE_SUBTITLE_BG, CONSOLE_SUBTITLE_FG, format!("{}", self.key),
+      CONSOLE_RESET);
+
+    // Print puzzle input
+    println!("  {}{}{}{}",
+      CONSOLE_COMMENT_BG, CONSOLE_COMMENT_FG, msg,
+      CONSOLE_RESET);
+  }
+
 }

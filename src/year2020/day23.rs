@@ -50,17 +50,24 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
   }
 
   // Run puzzle
-  if false && ((index == 0) || (index == 2)) {
+  if (index == 0) || (index == 2) {
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
       let mut input_values = vec![3, 8, 9, 1, 2, 5, 4, 6, 7];
       for i in 10..1000001 { input_values.push(i); }
       let input = PuzzleInput::ParamVector1D(10000000, input_values);
-      stats.update(
-        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(149245887792)))
-          .run(false, obfuscate)
-      );
+      if index != 0 {
+        // Run SLOW puzzle only if explicitly called for by index
+        stats.update(
+          Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(149245887792)))
+            .run(false, obfuscate)
+        );
+      } else {
+        // Prompt puzzle is SLOW!
+        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(38162588308)))
+          .prompt("Puzzle is known to be slow to execute, please explicitly execute the puzzle with --year/--day/--index arguments if you want it to run anyway. Execute with --verbose to keep track of progress ...");
+      }
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
@@ -72,10 +79,17 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
         },
         _ => panic!("This should never, ever happen!")
       };
-      stats.update(
-        Puzzle::new(2020, 23, 2, "solution", input, implementation2, |r| (r, Some(38162588308)))
-          .run(false, obfuscate)
-      );
+      if index != 0 {
+        // Run SLOW puzzle only if explicitly called for by index
+        stats.update(
+          Puzzle::new(2020, 23, 2, "solution", input, implementation2, |r| (r, Some(38162588308)))
+            .run(false, obfuscate)
+        );
+      } else {
+        // Prompt puzzle is SLOW!
+        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(38162588308)))
+          .prompt("Puzzle is known to be slow to execute, please explicitly execute the puzzle with --year/--day/--index arguments if you want it to run anyway. Execute with --verbose to keep track of progress ...");
+      }
     }
   }
 

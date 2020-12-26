@@ -75,13 +75,7 @@ fn extract_private_key (public_key: usize, subject: usize, modulo: usize) -> Opt
   //   (subject ^ private_key?) = (k? * modulo) + data
   //   private_key? = ((k? * modulo) + data).log(subject)
   let mut last_candidate_key = 1;
-  let per_percent = modulo / 10000;
   for i in 0..modulo {
-    // Prompt
-    if i % per_percent == 0 {
-      println!("{}% -> {} of {} tested ...", (((i as f64 / modulo as f64) * 10000.0) as usize) as f64 / 100.0, i, modulo);
-    }
-
     // Continue calculation from previous iteration approach
     last_candidate_key = encrypt(1, subject, modulo, last_candidate_key.clone());
     if last_candidate_key == public_key {
