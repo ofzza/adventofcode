@@ -6,6 +6,7 @@
 // Include dependencies
 use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
+use super::RingOfCups;
 
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
@@ -54,42 +55,25 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
     // Run tests
     if (key == String::default()) || (key == "test") {
       // Test
-      let mut input_values = vec![3, 8, 9, 1, 2, 5, 4, 6, 7];
-      for i in 10..1000001 { input_values.push(i); }
-      let input = PuzzleInput::ParamVector1D(10000000, input_values);
-      if index != 0 {
-        // Run SLOW puzzle only if explicitly called for by index
-        stats.update(
-          Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(149245887792)))
-            .run(false, obfuscate)
-        );
-      } else {
-        // Prompt puzzle is SLOW!
-        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(38162588308)))
-          .prompt("Puzzle is known to be slow to execute, please explicitly execute the puzzle with --year/--day/--index arguments if you want it to run anyway. Execute with --verbose to keep track of progress ...");
-      }
+      let input = PuzzleInput::ParamsVector1D(vec![1000000, 10000000], vec![3, 8, 9, 1, 2, 5, 4, 6, 7]);
+      stats.update(
+        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(149245887792)))
+          .run(false, obfuscate)
+      );
     }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
       let input = match parse_1d::<usize>(load_input("./src/year2020/data/day23input.txt"), "\n") {
-        PuzzleInput::Vector1D(mut input_values) => {
-          for i in 10..1000001 { input_values.push(i); }
-          PuzzleInput::ParamVector1D(10000000, input_values)
+        PuzzleInput::Vector1D(input) => {
+          PuzzleInput::ParamsVector1D(vec![1000000, 10000000], input)
         },
         _ => panic!("This should never, ever happen!")
       };
-      if index != 0 {
-        // Run SLOW puzzle only if explicitly called for by index
-        stats.update(
-          Puzzle::new(2020, 23, 2, "solution", input, implementation2, |r| (r, Some(38162588308)))
-            .run(false, obfuscate)
-        );
-      } else {
-        // Prompt puzzle is SLOW!
-        Puzzle::new(2020, 23, 2, "test", input, implementation2, |r| (r, Some(38162588308)))
-          .prompt("Puzzle is known to be slow to execute, please explicitly execute the puzzle with --year/--day/--index arguments if you want it to run anyway. Execute with --verbose to keep track of progress ...");
-      }
+      stats.update(
+        Puzzle::new(2020, 23, 2, "solution", input, implementation2, |r| (r, Some(38162588308)))
+          .run(false, obfuscate)
+      );
     }
   }
 
@@ -102,16 +86,16 @@ fn implementation1 (puzzle: &Puzzle<usize, String, String>, verbose: bool) -> Re
   match &puzzle.input {
     PuzzleInput::ParamVector1D(iterations, cups) => {
       // Play game
-      let cups = play_game(cups, iterations.clone(), 3, verbose);
-      // Rotate after "1" value
-      let mut result: Vec<usize> = vec![];
-      let first_index = cups.iter().position(|cup| cup.clone() == 1).unwrap();
-      for i in 1..cups.len() {
-        result.push(cups[(first_index + i) % cups.len()]);
-      }
+      let ring = play_game(cups, cups.len(), iterations.clone(), 3, verbose);
 
       // Return result
-      Ok(result.iter().map(|cup| cup.to_string()).collect::<Vec<String>>().join(""))
+      let mut current_value = 1;
+      let mut cup_values: Vec<usize> = vec![];
+      for _ in 0..(cups.len() - 1) {
+        current_value = ring.cups_by_value[current_value].1;
+        cup_values.push(current_value);
+      }
+      Ok(cup_values.iter().map(|cup| cup.to_string()).collect::<Vec<String>>().join(""))
     },
     _ => panic!("This shouldn't ever happen!")
   }
@@ -119,21 +103,14 @@ fn implementation1 (puzzle: &Puzzle<usize, String, String>, verbose: bool) -> Re
 
 fn implementation2 (puzzle: &Puzzle<usize, usize, usize>, verbose: bool) -> Result<usize, &str> {
   match &puzzle.input {
-    PuzzleInput::ParamVector1D(iterations, cups) => {
+    PuzzleInput::ParamsVector1D(params, cups) => {
       // Play game
-      let cups = play_game(cups, iterations.clone(), 3, verbose);
-      // Rotate after "1" value
-      let mut result: Vec<usize> = vec![];
-      let first_index = cups.iter().position(|cup| cup.clone() == 1).unwrap();
-      for i in 1..cups.len() {
-        result.push(cups[(first_index + i) % cups.len()]);
-      }
-
-      // Find cup with value "1"
-      let index = cups.iter().position(|cup| cup.clone() == 1).unwrap();
+      let cups = play_game(cups, params[0].clone(), params[1].clone(), 3, verbose);
 
       // Return result
-      return Ok(cups[index + 1] * cups[index + 2]);
+      let value_a = cups.cups_by_value[1].1;
+      let value_b = cups.cups_by_value[value_a].1;
+      return Ok(value_a * value_b);
     },
     _ => panic!("This shouldn't ever happen!")
   }
@@ -142,83 +119,83 @@ fn implementation2 (puzzle: &Puzzle<usize, usize, usize>, verbose: bool) -> Resu
 /// Plays the game of cups
 /// 
 /// # Arguments
-/// * `cups`        - Initial arrangement of cups
-/// * `iterations`  - Number of iterations the game will play for
-/// * `move_length` - Number of cups moved on each iteration
-/// * `verbose`     - Outputs executing output of the puzzle to the console
-fn play_game (cups: &Vec<usize>, iterations: usize, move_length: usize, verbose: bool) -> Vec<usize> {
-  // Clone cups before playing
-  let mut cups: Vec<usize> = cups.clone();
-  let modulo = cups.len();
+/// * `cups`               - Initial (partial) arrangement of cups
+/// * `cups_expanded_size` - Final number of cups, achieved by adding cups with increasing values after the last specified one
+/// * `iterations`         - Number of iterations the game will play for
+/// * `move_length`        - Number of cups moved on each iteration
+/// * `verbose`            - Outputs executing output of the puzzle to the console
+fn play_game (cups: &Vec<usize>, cups_expanded_size: usize, iterations: usize, move_length: usize, verbose: bool) -> RingOfCups {
+  // Instantiate cups
+  let mut cups = RingOfCups::new(cups, cups_expanded_size);
 
   // Prompt initial state
   if verbose {
-    println!("  Initial state: {} -> {:?}", cups[0], cups);
+    println!("  Initial state: {} -> [{}]", cups.current_value, cups_to_string(&cups));
   }
 
   // Play game
-  let mut current_index: usize = 0;
-  let mut current_value = cups[current_index];
   for iteration_index in 0..iterations {
 
-    // Prompt move
+    // Prompt move and pre-move ordering
     if verbose {
       println!("\n  > Move {}", iteration_index + 1);
-      println!("    > Cups: {:?}", cups);
+      println!("    > Cups: [{}]", cups_to_string(&cups));
     }
 
     // Pick up cups
-    let mut picked_up_indices: Vec<usize> = vec![];
-    let mut picked_up_cups: Vec<usize> = vec![];
-    for i in (current_index + 1)..(current_index + move_length + 1) {
-      let picked_up_index = i % modulo;
-      picked_up_indices.push(picked_up_index);
-      picked_up_cups.push(cups[picked_up_index]);
+    let mut current_value = cups.current_value;
+    let mut picked_up_values: Vec<usize> = vec![];
+    for _ in 0..move_length {
+      current_value = cups.cups_by_value[current_value].1;
+      picked_up_values.push(current_value);
     }
 
-    // Prompt move
+    // Prompt picked up cups
     if verbose {
-      println!("    > Pick up: {:?}", picked_up_cups);
+      println!("    > Pick up: {:?}", picked_up_values);
     }
 
     // Determine destination cup value
     let mut destination_value: usize = 0;
-    for diff in 1..modulo {
-      destination_value = (modulo + cups[current_index] - diff - 1) % modulo + 1;
-      if !picked_up_cups.contains(&destination_value) {
+    for diff in 1..cups_expanded_size {
+      destination_value = ((cups_expanded_size + cups.current_value - diff - 1) % cups_expanded_size) + 1;
+      if !picked_up_values.contains(&destination_value) {
         break;
       }
     }
 
-    // Prompt move
+    // Prompt destination
     if verbose {
       println!("    > Destination: {}", destination_value);
-    }
+    } 
 
-    // Remove picked up cups
-    picked_up_indices.sort();
-    for i in 0..picked_up_indices.len() {
-      cups.remove(picked_up_indices[picked_up_indices.len() - i - 1]);
-    }
+    // Move picked up cups
+    cups.move_cups(picked_up_values[0], picked_up_values.len(), destination_value);
 
-    // Find destination cup index
-    let destination_index: usize = (
-      cups.iter()
-        .position(|cup| cup.clone() == destination_value)
-        .unwrap() + 1
-    ) % modulo;
-
-    // Place picked up cups
-    for picked_index in 0..picked_up_cups.len() {
-      cups.insert(destination_index + picked_index, picked_up_cups[picked_index]);
+    // Prompt post-move ordering
+    if verbose {
+      println!("    > Cups: [{}]", cups_to_string(&cups));
     }
 
     // Move to new current
-    current_index = (cups.iter().position(|cup| cup.clone() == current_value).unwrap() + 1) % modulo;
-    current_value = cups[current_index];
+    cups.current_value = cups.cups_by_value[cups.current_value].1;
 
   }
   
   // Return cups 
   return cups;
+}
+
+/// Composes a string representation of the ring of cups
+/// 
+/// Arguments
+/// * `cups` - Cups to convert to a string representation
+fn cups_to_string (cups: &RingOfCups) -> String {
+  let mut current_value = cups.current_value;
+  let mut cup_values: Vec<usize> = vec![];
+  for _ in 0..cups.length {
+    cup_values.push(current_value);
+    current_value = cups.cups_by_value[current_value].1;
+  }
+  return format!("{}", cup_values.iter().map(|value| value.to_string()).collect::<Vec<String>>().join(", "));
 }
