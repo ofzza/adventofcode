@@ -19,43 +19,14 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
 
   // Run puzzle
   if (index == 0) || (index == 1) {
-    // Run tests
-    if (key == String::default()) || (key == "test") {
-      // Test
-      let input = PuzzleInput::Vector1D(vec![
-        String::from("0: 4 1 5"),
-        String::from("1: 2 3 | 3 2"),
-        String::from("2: 4 4 | 5 5"),
-        String::from("3: 4 5 | 5 4"),
-        String::from("4: \"a\""),
-        String::from("5: \"b\""),
-        String::from(""),
-        String::from("ababbb"),
-        String::from("bababa"),
-        String::from("abbbab"),
-        String::from("aaabbb"),
-        String::from("aaaabbb"),
-      ]);
-      stats.update(
-        Puzzle::new(2020, 19, 1, "test", input, implementation1, |r| (r, Some(2)))
-          .run(verbose, obfuscate)
-      );
-    }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
       let input = parse_1d::<String>(load_input("./src/year2020/data/day19input.txt"), "\n");
-      if index != 0 {
-        // Run SLOW puzzle only if explicitly called for by index
-        stats.update(
-          Puzzle::new(2020, 19, 1, "solution", input, implementation1, |r| (r, Some(178)))
-            .run(verbose, obfuscate)
-        );
-      } else {
-        // Prompt puzzle is SLOW!
-        Puzzle::new(2020, 19, 1, "test", input, implementation2, |r| (r, Some(178)))
-          .prompt("Puzzle is known to be slow to execute, please explicitly execute the puzzle with --year/--day/--index arguments if you want it to run anyway. Execute with --verbose to keep track of progress ...");
-      }
+      stats.update(
+        Puzzle::new(2020, 19, 1, "solution", input, implementation1, |r| (r, Some(178)))
+          .run(verbose, obfuscate)
+      );
     }
   }
 
@@ -182,7 +153,7 @@ fn implementation1 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       }    
 
       // Optimize    
-      let rules = optimize_rules(rules, vec![], verbose);
+      let rules = optimize_rules(rules, vec![0, 8, 11], verbose);
       if verbose {
         rules_to_string("  Pre-compiled rules:", &rules);
       }    
@@ -191,7 +162,7 @@ fn implementation1 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       let mut count = 0;
       for i in 0..msgs.len() {
         // Validate message
-        if validate_msg(msgs[i].clone(), 0, rules.clone(), false) {
+        if validate_msg_via_42_and_31(msgs[i].clone(), rules.clone(), false) {
           count += 1;
         }
         // Prompt
@@ -228,7 +199,7 @@ fn implementation2 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       let mut count = 0;
       for i in 0..msgs.len() {
         // Validate message
-        if validate_msg_cheatingish(msgs[i].clone(), rules.clone(), verbose) {
+        if validate_msg_via_42_and_31_recursive(msgs[i].clone(), rules.clone(), verbose) {
           count += 1;
         }
         // Prompt
@@ -403,7 +374,10 @@ fn optimize_rules (mut rules: HashMap<usize, Rule>, ignore: Vec<usize>, _verbose
 
                           // Replace indirect value in option with a pre-compiled one
                           optimized = true;
-                          values[value_index] = Value::Precompiled(v.clone());
+                          let mut v = v.clone();
+                          v.sort();
+                          v.dedup();
+                          values[value_index] = Value::Precompiled(v);
 
                         },
                         _ => ()
@@ -438,16 +412,17 @@ fn optimize_rules (mut rules: HashMap<usize, Rule>, ignore: Vec<usize>, _verbose
                 if values.iter().find(|value| match value { Value::Direct(_) => false, _ => true }).is_none() {
                   // Replace option with a precalculated option
                   optimized = true;
-                  options[option_index] = Option::Precompiled(
-                    vec![
-                      values.iter()
-                        .map(
-                          |value| match value { Value::Direct(value) => value.clone(), _ => panic!() }
-                        )
-                        .collect::<Vec<String>>()
-                        .join("")
-                    ]
-                  );
+                  let mut v = vec![
+                    values.iter()
+                      .map(
+                        |value| match value { Value::Direct(value) => value.clone(), _ => panic!() }
+                      )
+                      .collect::<Vec<String>>()
+                      .join("")
+                  ];
+                  v.sort();
+                  v.dedup();
+                  options[option_index] = Option::Precompiled(v);
                 }              
 
               },
@@ -508,6 +483,8 @@ fn optimize_rules (mut rules: HashMap<usize, Rule>, ignore: Vec<usize>, _verbose
                             values.remove(index_a);
                             values.remove(index_a);
                             // ... and replace them with a combined pre-compiled value
+                            combined.sort();
+                            combined.dedup();
                             values.insert(index_a, Value::Precompiled(combined));
                             break;
 
@@ -635,30 +612,33 @@ fn optimize_rules (mut rules: HashMap<usize, Rule>, ignore: Vec<usize>, _verbose
 /// 
 /// Arguments
 /// * `msg`        - Message to validate
-/// * `rule_index` - ID of the rule to verify the message against
 /// * `rules`      - Optimized rules
 /// * `verbose`    - Outputs executing output of the puzzle to the console
-fn validate_msg (msg: String, rule_index: usize, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
+fn validate_msg_via_42_and_31 (msg: String, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
   // Prompt
   if verbose {
     println!("  Matching message: \"{}\"", msg);
   }
 
   // Get rules
-  let mut rule = match rules.get(&rule_index).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
-  rule.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
-  let _rule_length = rule[0].len();
+  let mut rule31 = match rules.get(&31).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
+  rule31.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
+  let _rule31_length = rule31[0].len();
+  let mut rule42 = match rules.get(&42).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
+  rule42.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
+  let _rule42_length = rule42[0].len();
   
   // Set starting indices
   let mut starting_indices = vec![0];
     
-  // Match rule for as long as possible
-  loop {
+  // Match rule 42 for as long as possible
+  let mut count_42 = 0;
+  for _ in 0..2 {
     // Try matching rule
     let mut matched_indices: Vec<usize> = starting_indices.iter()
       // Try matching rule at given index
       .map(|index| {
-        for value in rule.clone() {
+        for value in rule42.clone() {
           let index_start = index.clone();
           let index_end = index_start + value.len();
           if msg.len() >= index_end && msg[index_start..index_end] == value {
@@ -680,11 +660,55 @@ fn validate_msg (msg: String, rule_index: usize, rules: HashMap<usize, Rule>, ve
       break;
     } else {
       starting_indices = matched_indices;
+      count_42 += 1;
+    }
+  }
+
+  // Check not fully matched by rule 42
+  if starting_indices.len() < 1 || starting_indices[0] == msg.len() {
+    return false;
+  }
+
+  // Check if not matched exactly 2 times
+  if count_42 != 2 {
+    return false;
+  }
+
+  // Match rule 31 for as long as possible
+  let mut count_31 = 0;
+  for _ in 0..1 {
+    // Try matching rule
+    let mut matched_indices: Vec<usize> = starting_indices.iter()
+      // Try matching rule at given index
+      .map(|index| {
+        for value in rule31.clone() {
+          let index_start = index.clone();
+          let index_end = index_start + value.len();
+          if msg.len() >= index_end && msg[index_start..index_end] == value {
+            return Some(index + value.len())
+          }
+        }
+        return None;
+      })
+      .filter(|index| {
+        return match index { Some(_) => true, None => false };
+      })
+      .map(|index| index.unwrap())
+      .collect();
+    // Sort and deduplicate results
+    matched_indices.sort();
+    matched_indices.dedup();
+    // Check results
+    if matched_indices.len() == 0 {
+      break;
+    } else {
+      starting_indices = matched_indices;
+      count_31 += 1;
     }
   }
 
   // Check match
-  let matched = starting_indices.len() == 1 && starting_indices[0] == msg.len();
+  let matched = starting_indices.len() == 1 && starting_indices[0] == msg.len() && count_42 == 2 && count_31 == 1;
   
   // Prompt match
   if verbose {
@@ -701,7 +725,7 @@ fn validate_msg (msg: String, rule_index: usize, rules: HashMap<usize, Rule>, ve
 /// * `msg`        - Message to validate
 /// * `rules`      - Optimized rules
 /// * `verbose`    - Outputs executing output of the puzzle to the console
-fn validate_msg_cheatingish (msg: String, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
+fn validate_msg_via_42_and_31_recursive (msg: String, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
   // Prompt
   if verbose {
     println!("  Matching message: \"{}\"", msg);
