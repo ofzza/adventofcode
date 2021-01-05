@@ -7,7 +7,6 @@
 use crate::lib::inputs::*;
 use crate::lib::puzzle::*;
 use std::collections::HashMap;
-use std::cmp::Ordering;
 
 /// Registers puzzles for the day
 pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExecutionStatistics {
@@ -19,6 +18,28 @@ pub fn run (index: u32, key: &str, verbose: bool, obfuscate: bool) -> PuzzleExec
 
   // Run puzzle
   if (index == 0) || (index == 1) {
+    // Run tests
+    if (key == String::default()) || (key == "test") {
+      // Test
+      let input = PuzzleInput::Vector1D(vec![
+        String::from("0: 4 1 5"),
+        String::from("1: 2 3 | 3 2"),
+        String::from("2: 4 4 | 5 5"),
+        String::from("3: 4 5 | 5 4"),
+        String::from("4: \"a\""),
+        String::from("5: \"b\""),
+        String::from(""),
+        String::from("ababbb"),
+        String::from("bababa"),
+        String::from("abbbab"),
+        String::from("aaabbb"),
+        String::from("aaaabbb")
+      ]);
+      stats.update(
+        Puzzle::new(2020, 19, 1, "test", input, implementation1, |r| (r, Some(2)))
+          .run(verbose, obfuscate)
+      );
+    }
     // Run solution
     if (key == String::default()) || (key == "solution") {
       // Solution
@@ -153,17 +174,18 @@ fn implementation1 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       }    
 
       // Optimize    
-      let rules = optimize_rules(rules, vec![0, 8, 11], verbose);
-      if verbose {
-        rules_to_string("  Pre-compiled rules:", &rules);
-      }    
+      // let rules = optimize_rules(rules, vec![0, 8, 11], verbose);
+      // if verbose {
+      //   rules_to_string("  Pre-compiled rules:", &rules);
+      // }    
       
       // Count matching messages
       let mut count = 0;
       for i in 0..msgs.len() {
         // Validate message
-        if validate_msg_via_42_and_31(msgs[i].clone(), rules.clone(), false) {
-          count += 1;
+        match validate_msg_by_rule(&msgs[i][..], 0, &rules, vec![], 0, verbose) {
+          Some(_) => { count += 1; },
+          None => {}
         }
         // Prompt
         if verbose {
@@ -190,17 +212,18 @@ fn implementation2 (puzzle: &Puzzle<String, usize, usize>, verbose: bool) -> Res
       }    
 
       // Optimize    
-      let rules = optimize_rules(rules, vec![0, 8, 11], verbose);
-      if verbose {
-        rules_to_string("  Pre-compiled rules:", &rules);
-      }    
+      // let rules = optimize_rules(rules, vec![0, 8, 11], verbose);
+      // if verbose {
+      //   rules_to_string("  Pre-compiled rules:", &rules);
+      // }    
 
       // Count matching messages
       let mut count = 0;
       for i in 0..msgs.len() {
         // Validate message
-        if validate_msg_via_42_and_31_recursive(msgs[i].clone(), rules.clone(), verbose) {
-          count += 1;
+        match validate_msg_by_rule(&msgs[i][..], 0, &rules, vec![], 0, verbose) {
+          Some(_) => { count += 1; },
+          None => {}
         }
         // Prompt
         if verbose {
@@ -242,21 +265,21 @@ fn parse_input (lines: &Vec<String>) -> (HashMap<usize, Rule>, Vec<String>) {
     // Register explicit allowed character rule
     else if parsed_line.len() > 1 && parsed_line[1].contains(&"\"") {
       let option = parsed_line[1].trim().replace("\"", "").as_bytes()[0] as char;
-      rules.insert(parsed_line[0].parse::<usize>().expect("Failed parsing rule index!"), Rule::Options(vec![Option::Values(vec![Value::Direct(option.to_string())])]));
+      rules.insert(parsed_line[0].parse::<usize>().expect("Failed parsing rule index!"), Rule::Options(vec![RuleOption::Values(vec![RuleValue::Direct(option.to_string())])]));
     }
 
     // Parse complex rule, referencing other rules
     else {
-      let options: Vec<Option> = parsed_line[1]
+      let options: Vec<RuleOption> = parsed_line[1]
         .trim()
         .split("|")
         .map(
           |indices| {
             let values = indices.trim()
               .split(" ")
-              .map(|index| Value::Indirect(index.parse::<usize>().expect("Failed parsing rule index!")))
+              .map(|index| RuleValue::Indirect(index.parse::<usize>().expect("Failed parsing rule index!")))
               .collect();
-            return Option::Values(values);
+            return RuleOption::Values(values);
           }
         ).collect();
       rules.insert(parsed_line[0].parse::<usize>().expect("Failed parsing rule index!"), Rule::Options(options));
@@ -267,562 +290,109 @@ fn parse_input (lines: &Vec<String>) -> (HashMap<usize, Rule>, Vec<String>) {
   return (rules, msgs);
 }
 
-/// Optimizes rules by recombining them
-/// 
-/// Arguments
-/// * `rules`    - Rules to optimize
-/// * `ignore`   - List of rule IDs to not optimize
-/// * `verbose`  - Outputs executing output of the puzzle to the console
-fn optimize_rules (mut rules: HashMap<usize, Rule>, ignore: Vec<usize>, _verbose: bool) -> HashMap<usize, Rule> {
-  // Process rules until no changes left to be made
-  loop {
-    // Initialize optimization detection
-    let mut optimized = false;
-    let rules_cloned = &rules.clone();
-    
-    // Attempt optimizations
-    for rule_id in rules_cloned.keys() {
+/// TODO: Write a proper, recursive validation without any presupposed assumptions derived from the particular known input!
+fn validate_msg_by_rule<'l> (msg: &'l str, rule_id: usize, rules: &HashMap<usize, Rule>, match_remainder: Vec<RuleValue>, depth: usize, verbose: bool) -> Option<()> {
+  // Get requested rule
+  let rule = rules.get(&rule_id).unwrap();
 
-      // Ignore rule if in ignore list
-      if ignore.contains(rule_id) {
-        continue;
-      }
-
-      // Get rule
-      let rule = rules.get_mut(rule_id).unwrap();
-      
-      // Replace indirect values to direct valued rules with direct values
-      match rule {
-        Rule::Options(options) => {
-
-          // Process options
-          for option_index in 0..options.len() {
-            let option = &mut options[option_index];
-            match option {
-              Option::Values(values) => {
-
-                // Process option values
-                for value_index in 0..values.len() {
-                  let value = &values[value_index];
-                  match value {
-                    Value::Indirect(rule_id) => {
-
-                      // Check if rule with single
-                      let direct_value_rule = rules_cloned.get(rule_id).unwrap();
-                      match direct_value_rule {
-                        Rule::Options(direct_value_options) => {
-                          if direct_value_options.len() == 1 {
-                            let direct_value_option = &direct_value_options[0];
-                            match direct_value_option {
-                              Option::Values(direct_match_values) => {
-                                if direct_match_values.len() == 1 {
-                                  let direct_match_value = &direct_match_values[0];
-                                  match direct_match_value {
-                                    Value::Direct(c) => {
-
-                                      // Replace indirect value in option with a direct one
-                                      optimized = true;
-                                      values[value_index] = Value::Direct(c.clone());
-
-                                    },
-                                    _ => ()
-                                  }
-                                }
-                              },
-                              _ => ()
-                            }
-                          }
-                        },
-                        _ => ()
-                      }
-
-                    },
-                    _ => ()
-                  }
-                }
-
-              },
-              _ => ()
-            }
-          }
-
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-      // Replace indirect values to pre-compiled rules with pre-compiled values
-      match rule {
-        Rule::Options(options) => {
-
-          // Process options
-          for option_index in 0..options.len() {
-            let option = &mut options[option_index];
-            match option {
-              Option::Values(values) => {
-
-                // Process option values
-                for value_index in 0..values.len() {
-                  let value = &values[value_index];
-                  match value {
-                    Value::Indirect(rule_id) => {
-
-                      // Check if rule with single
-                      let direct_value_rule = rules_cloned.get(rule_id).unwrap();
-                      match direct_value_rule {
-                        Rule::Precompiled(v) => {
-
-                          // Replace indirect value in option with a pre-compiled one
-                          optimized = true;
-                          let mut v = v.clone();
-                          v.sort();
-                          v.dedup();
-                          values[value_index] = Value::Precompiled(v);
-
-                        },
-                        _ => ()
-                      }
-
-                    },
-                    _ => ()
-                  }
-                }
-
-              },
-              _ => ()
-            }
-          }
-
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-      // Concatenate direct values into pre-compiled options
-      match rule {
-        Rule::Options(options) => {
-
-          // Process options
-          for option_index in 0..options.len() {
-            let option = &mut options[option_index];
-            match option {
-              Option::Values(values) => {
-
-                // Check if all option values are direct values
-                if values.iter().find(|value| match value { Value::Direct(_) => false, _ => true }).is_none() {
-                  // Replace option with a precalculated option
-                  optimized = true;
-                  let mut v = vec![
-                    values.iter()
-                      .map(
-                        |value| match value { Value::Direct(value) => value.clone(), _ => panic!() }
-                      )
-                      .collect::<Vec<String>>()
-                      .join("")
-                  ];
-                  v.sort();
-                  v.dedup();
-                  options[option_index] = Option::Precompiled(v);
-                }              
-
-              },
-              _ => ()
-            }
-          }
-
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-      // Concatenate adjecent direct and pre-compiled values into pre-compiled values
-      match rule {
-        Rule::Options(options) => {
-
-          // Process options
-          for option_index in 0..options.len() {
-            let option = &mut options[option_index];
-            match option {
-              Option::Values(values) => {
-                if values.len() > 0 {
-
-                  // Find adjecent values that can be merged
-                  for i in 1..values.len() {
-                    let index_a = i - 1;
-                    let index_b = i;
-                    // Confirm that both values are of direct or pre-compiled type
-                    match values[index_a] {
-                      Value::Indirect(_) => (),
-                      _ => {
-                        match values[index_b] {
-                          Value::Indirect(_) => (),
-                          _ => {
-                            
-                            // Extract values' pre-compileds
-                            let precompiled_a = match &values[index_a] {
-                              Value::Direct(v) => vec![v.clone()],
-                              Value::Precompiled(vs) => vs.clone(),
-                              _ => panic!()
-                            };
-                            let precompiled_b = match &values[index_b] {
-                              Value::Direct(v) => vec![v.clone()],
-                              Value::Precompiled(vs) => vs.clone(),
-                              _ => panic!()
-                            };
-                            
-                            // Combine extracted values
-                            let mut combined: Vec<String> = vec![];
-                            for a in precompiled_a {
-                              for b in precompiled_b.clone() {
-                                combined.push(vec![a.clone(), b.clone()].join(""));
-                              }
-                            }
-
-                            // Remove previous values
-                            optimized = true;
-                            values.remove(index_a);
-                            values.remove(index_a);
-                            // ... and replace them with a combined pre-compiled value
-                            combined.sort();
-                            combined.dedup();
-                            values.insert(index_a, Value::Precompiled(combined));
-                            break;
-
-                          }
-                        }
-                      }
-                    }
-                  }
-
-                }
-              },
-              _ => ()
-            }
-          }
-
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-      // Concatenate pre-compiled single value into a pre-compiled option
-      match rule {
-        Rule::Options(options) => {
-
-          // Process options
-          for option_index in 0..options.len() {
-            let option = &mut options[option_index];
-            match option {
-              Option::Values(values) => {
-
-                // Check if option only has a single pre-compiled value
-                if values.len() == 1 {
-                  if values.iter().find(|value| match value { Value::Precompiled(_) => false, _ => true }).is_none() {
-                    // Replace option with a precalculated option
-                    optimized = true;
-                    options[option_index] = Option::Precompiled(
-                      match &values[0] { Value::Precompiled(vs) => vs.clone(), _ => panic!() }
-                    );
-                  }   
-                }
-              },
-              _ => ()
-            }
-          }
-
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-      // Concatenate pre-compiled options into a pre-compiled rule
-      match rule {
-        Rule::Options(options) => {
-          if options.iter().find(|option| match option { Option::Precompiled(_) => false, _ => true }).is_none() {
-            // Collect all precompiled options' values
-            let mut all_options: Vec<String> = vec![];
-            for option in options {
-              match option {
-                Option::Precompiled(values) => {
-                  for value in values {
-                    all_options.push(value.clone());
-                  }
-                },
-                _ => panic!()
-              }
-            }
-            // Insert as precompiled rule
-            optimized = true;
-            rules.insert(rule_id.clone(), Rule::Precompiled(all_options));
-          }
-        },
-        _ => ()
-      }
-      if optimized { break; }
-
-    }
-
-    // Prune unused rules
-    let mut used_rule_ids: Vec<usize> = vec![0, 8, 11, 31, 42];
-    for rule_id in rules_cloned.keys() {
-      let rule = rules.get(rule_id).unwrap();
-      match rule {
-        Rule::Options(options) => {
-          for option in options {
-            match option {
-              Option::Values(values) => {
-                for value in values {
-                  match value {
-                    Value::Indirect(rule_id) => {
-                      used_rule_ids.push(rule_id.clone());
-                    },
-                    _ => ()
-                  }
-                }
-              },
-              _ => ()
-            }
-          }
-        },
-        _ => ()
-      }
-    }
-    for rule_id in rules_cloned.keys() {
-      if !used_rule_ids.contains(rule_id) {
-        // Get rule
-        match rules.get(rule_id).unwrap() {
-          Rule::None => (),
-          _ => {
-            // Remove unused rule
-            optimized = true;
-            rules.insert(rule_id.clone(), Rule::None);
-          }
-        }
-      }
-    }
-
-    // If no optimizations left, break
-    if !optimized { break; }
-  }
-  // Return proecessed rules
-  return rules;
-}
-
-/// Validates a message according to a single rule, assuming the rule was optimized to have no outside references
-/// 
-/// Arguments
-/// * `msg`        - Message to validate
-/// * `rules`      - Optimized rules
-/// * `verbose`    - Outputs executing output of the puzzle to the console
-fn validate_msg_via_42_and_31 (msg: String, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
   // Prompt
   if verbose {
-    println!("  Matching message: \"{}\"", msg);
+    println!("  > [{}] Validating \"{}\" against rule: {:?} / remainder: {:?}", depth, msg, rule, match_remainder);
   }
-
-  // Get rules
-  let mut rule31 = match rules.get(&31).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
-  rule31.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
-  let _rule31_length = rule31[0].len();
-  let mut rule42 = match rules.get(&42).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
-  rule42.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
-  let _rule42_length = rule42[0].len();
   
-  // Set starting indices
-  let mut starting_indices = vec![0];
-    
-  // Match rule 42 for as long as possible
-  let mut count_42 = 0;
-  for _ in 0..2 {
-    // Try matching rule
-    let mut matched_indices: Vec<usize> = starting_indices.iter()
-      // Try matching rule at given index
-      .map(|index| {
-        for value in rule42.clone() {
-          let index_start = index.clone();
-          let index_end = index_start + value.len();
-          if msg.len() >= index_end && msg[index_start..index_end] == value {
-            return Some(index + value.len())
+  // Validate by requested rule
+  match rule {
+    Rule::Options(options) => {
+
+      // Check each option
+      for option in options {
+        match option {
+          RuleOption::Values(values) => {
+
+            // Prompt
+            if verbose {
+              println!("    > [{}] Validating \"{}\" against option: {:?} / remainder: {:?}", depth, msg, option, match_remainder);
+            }
+
+            let mut validation_values: Vec<RuleValue> = vec![];
+            validation_values.extend(values.clone());
+            validation_values.extend(match_remainder.clone());
+            let validation_result = validate_msg_by_values(msg, validation_values, rules, depth + 1, verbose);
+            match validation_result {
+              // If validation successful, pass along success
+              Some(_) => { return Some(()); },
+              // If not successful, continue checking options
+              None => {}
+            }
+
           }
         }
-        return None;
-      })
-      .filter(|index| {
-        return match index { Some(_) => true, None => false };
-      })
-      .map(|index| index.unwrap())
-      .collect();
-    // Sort and deduplicate results
-    matched_indices.sort();
-    matched_indices.dedup();
-    // Check results
-    if matched_indices.len() == 0 {
-      break;
-    } else {
-      starting_indices = matched_indices;
-      count_42 += 1;
+      }
+
     }
   }
 
-  // Check not fully matched by rule 42
-  if starting_indices.len() < 1 || starting_indices[0] == msg.len() {
-    return false;
-  }
-
-  // Check if not matched exactly 2 times
-  if count_42 != 2 {
-    return false;
-  }
-
-  // Match rule 31 for as long as possible
-  let mut count_31 = 0;
-  for _ in 0..1 {
-    // Try matching rule
-    let mut matched_indices: Vec<usize> = starting_indices.iter()
-      // Try matching rule at given index
-      .map(|index| {
-        for value in rule31.clone() {
-          let index_start = index.clone();
-          let index_end = index_start + value.len();
-          if msg.len() >= index_end && msg[index_start..index_end] == value {
-            return Some(index + value.len())
-          }
-        }
-        return None;
-      })
-      .filter(|index| {
-        return match index { Some(_) => true, None => false };
-      })
-      .map(|index| index.unwrap())
-      .collect();
-    // Sort and deduplicate results
-    matched_indices.sort();
-    matched_indices.dedup();
-    // Check results
-    if matched_indices.len() == 0 {
-      break;
-    } else {
-      starting_indices = matched_indices;
-      count_31 += 1;
-    }
-  }
-
-  // Check match
-  let matched = starting_indices.len() == 1 && starting_indices[0] == msg.len() && count_42 == 2 && count_31 == 1;
-  
-  // Prompt match
-  if verbose {
-    println!("  -> {}", if matched { "MATCHED!!!" } else { "NOT matched!" });
-  }
-
-  // Return match
-  return matched;
+  // Rule not matched
+  return None;
 }
 
-/// Validates a message according to a single, particular rule consisting of syntax: (Ax[42]) (Bx[42] Bx[31]), A > 1, B > 1
-/// 
-/// Arguments
-/// * `msg`        - Message to validate
-/// * `rules`      - Optimized rules
-/// * `verbose`    - Outputs executing output of the puzzle to the console
-fn validate_msg_via_42_and_31_recursive (msg: String, rules: HashMap<usize, Rule>, verbose: bool) -> bool {
-  // Prompt
-  if verbose {
-    println!("  Matching message: \"{}\"", msg);
-  }
+// TODO: ...
+fn validate_msg_by_values<'l> (msg: &'l str, values: Vec<RuleValue>, rules: &HashMap<usize, Rule>, depth: usize, verbose: bool) -> Option<()> {
+  // Take currently validating message segment
+  let mut msg = &msg[..];
 
-  // Get rules
-  let mut rule31 = match rules.get(&31).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
-  rule31.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
-  let _rule31_length = rule31[0].len();
-  let mut rule42 = match rules.get(&42).unwrap() { Rule::Precompiled(values) => values.clone(), _ => panic!() };
-  rule42.sort_by(|a, b| if a.len() < b.len() { Ordering::Less } else { Ordering::Greater });
-  let _rule42_length = rule42[0].len();
-  
-  // Set starting indices
-  let mut starting_indices = vec![0];
-    
-  // Match rule 42 for as long as possible
-  let mut count_42 = 0;
-  loop {
-    // Try matching rule
-    let mut matched_indices: Vec<usize> = starting_indices.iter()
-      // Try matching rule at given index
-      .map(|index| {
-        for value in rule42.clone() {
-          let index_start = index.clone();
-          let index_end = index_start + value.len();
-          if msg.len() >= index_end && msg[index_start..index_end] == value {
-            return Some(index + value.len())
-          }
+  // Validate values
+  for i in 0..values.len() {
+
+    // Prompt
+    if verbose {
+      println!("  > [{}] Validating \"{}\" against values: {:?}", depth, msg, values[i..].to_vec());
+    }
+
+    // If no message left to validate, return failed validation
+    if msg.len() == 0 {
+      return None;
+    }
+
+    // Match value against remaining message segment
+    let value = values[i].clone();
+    match value {
+      RuleValue::Direct(text) => {
+
+        // If match, update remaining message segment
+        if msg[0..text.len()] == text {
+          msg = &msg[text.len()..];
         }
-        return None;
-      })
-      .filter(|index| {
-        return match index { Some(_) => true, None => false };
-      })
-      .map(|index| index.unwrap())
-      .collect();
-    // Sort and deduplicate results
-    matched_indices.sort();
-    matched_indices.dedup();
-    // Check results
-    if matched_indices.len() == 0 {
-      break;
-    } else {
-      starting_indices = matched_indices;
-      count_42 += 1;
+        
+        // If no match, return failed validation
+        else {
+          return None;
+        }
+
+      },
+      RuleValue::Indirect(rule_id) => {
+
+        // Validate an indirect match
+        match validate_msg_by_rule(msg, rule_id, rules, values[(i + 1)..].to_vec(), depth + 1, verbose) {
+          // If validation successful, pass along success
+          Some(_) => { return Some(()); },
+          // If no match, return failed validation
+          None => { return None; }
+        }
+
+      }
     }
   }
 
-  // Check not fully matched by rule 42
-  if starting_indices.len() < 1 || starting_indices[0] == msg.len() {
-    return false;
+  // Return success if message fully matched
+  if msg.len() == 0 {
+    return Some(());
   }
 
-  // Match rule 31 for as long as possible
-  let mut count_31 = 0;
-  loop {
-    // Try matching rule
-    let mut matched_indices: Vec<usize> = starting_indices.iter()
-      // Try matching rule at given index
-      .map(|index| {
-        for value in rule31.clone() {
-          let index_start = index.clone();
-          let index_end = index_start + value.len();
-          if msg.len() >= index_end && msg[index_start..index_end] == value {
-            return Some(index + value.len())
-          }
-        }
-        return None;
-      })
-      .filter(|index| {
-        return match index { Some(_) => true, None => false };
-      })
-      .map(|index| index.unwrap())
-      .collect();
-    // Sort and deduplicate results
-    matched_indices.sort();
-    matched_indices.dedup();
-    // Check results
-    if matched_indices.len() == 0 {
-      break;
-    } else {
-      starting_indices = matched_indices;
-      count_31 += 1;
-    }
+  // Return validation failed 'cos remainder not allowed
+  else {
+    return None;
   }
-
-  // Check match
-  let matched = starting_indices.len() == 1 && starting_indices[0] == msg.len() && (count_42 > count_31);
-  
-  // Prompt match
-  if verbose {
-    println!("  -> {}", if matched { "MATCHED!!!" } else { "NOT matched!" });
-  }
-
-  // Return match
-  return matched;
 }
 
 /// Returns a string representation of rules
@@ -842,22 +412,18 @@ fn rules_to_string (msg: &str, rules: &HashMap<usize, Rule>) -> () {
 /// Types of rules
 #[derive(Debug, Clone)]
 enum Rule {
-  Options(Vec<Option>),
-  Precompiled(Vec<String>),
-  None
+  Options(Vec<RuleOption>)
 }
 
 /// Types of rule options
 #[derive(Debug, Clone)]
-enum Option {
-  Values(Vec<Value>),
-  Precompiled(Vec<String>)
+enum RuleOption {
+  Values(Vec<RuleValue>)
 }
 
 /// Types of rule values
 #[derive(Debug, Clone)]
-enum Value {
+enum RuleValue {
   Direct(String),
-  Indirect(usize),
-  Precompiled(Vec<String>)
+  Indirect(usize)
 }
