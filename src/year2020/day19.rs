@@ -290,7 +290,15 @@ fn parse_input (lines: &Vec<String>) -> (HashMap<usize, Rule>, Vec<String>) {
   return (rules, msgs);
 }
 
-/// TODO: Write a proper, recursive validation without any presupposed assumptions derived from the particular known input!
+/// Validates if message matches a rule
+/// 
+/// # Argument
+/// * `msg`             - Message to validate
+/// * `rule_id`         - Id of the rule to validate by
+/// * `rules`           - All rules as parsed
+/// * `match_remainder` - (For internal use in recursive calls) Additional values to match after the rule 
+/// * `depth`           - (For internal use in recursive calls) Recursive depth
+/// * `verbose`         - Outputs executing output of the puzzle to the console
 fn validate_msg_by_rule<'l> (msg: &'l str, rule_id: usize, rules: &HashMap<usize, Rule>, match_remainder: Vec<RuleValue>, depth: usize, verbose: bool) -> Option<()> {
   // Get requested rule
   let rule = rules.get(&rule_id).unwrap();
@@ -336,7 +344,14 @@ fn validate_msg_by_rule<'l> (msg: &'l str, rule_id: usize, rules: &HashMap<usize
   return None;
 }
 
-// TODO: ...
+/// Validates if message matches a sequence of values
+/// 
+/// # Argument
+/// * `msg`             - Message to validate
+/// * `values`          - Values to validate the message by
+/// * `rules`           - All rules as parsed
+/// * `depth`           - (For internal use in recursive calls) Recursive depth
+/// * `verbose`         - Outputs executing output of the puzzle to the console
 fn validate_msg_by_values<'l> (msg: &'l str, values: Vec<RuleValue>, rules: &HashMap<usize, Rule>, depth: usize, verbose: bool) -> Option<()> {
   // Take currently validating message segment
   let mut msg = &msg[..];

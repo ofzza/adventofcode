@@ -41,13 +41,23 @@ impl RingOfCups {
     }
   }
 
-  /// TODO: ...
+  /// Compose initial state of a cup
+  /// 
+  /// # Arguments
+  /// * `index`              - Index of a cup
+  /// * `cups`               - Explicit values of a limited starting subset of all cups
+  /// * `cups_expanded_size` - Total number of all cups
   fn get_initial_value (index: isize, cups: &Vec<usize>, cups_expanded_size: usize) -> usize {
     let index = (cups_expanded_size as isize + index) as usize % cups_expanded_size;
     return if index < cups.len() { cups[index] } else { index + 1 };
   }
 
-  /// TODO: ...
+  /// Moves a number of sequential cups from one position to another
+  /// 
+  /// # Arguments
+  /// * `first_value`       - First in the sequence of values to move
+  /// * `values_length`     - Length of sequence of values to move
+  /// * `destination_value` - Value after which to place the moved sequence of values
   pub fn move_cups (&mut self, first_value: usize, values_length: usize, destination_value: usize) -> () {
     // Find last picked up values
     let mut last_value = first_value;
