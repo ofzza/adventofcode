@@ -1,8 +1,5 @@
-//! Common library module
+//! 2021 common library module
 // -----------------------------------------------------------------------------
 
 // Load child modules
-pub mod vargs;
-pub mod stdout;
-pub mod input;
-pub mod puzzle;
+// ...

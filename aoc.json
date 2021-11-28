@@ -1,0 +1,23 @@
+{
+  "author": "ofzza",
+  "year": 2021,
+  "tasks": [
+    {
+      "name": "demo-01",
+      "type": "demo",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--",
+        "--type",
+        "demo",
+        "--input--file",
+        "./src/year2021/data/demo/input01.txt",
+        "--expect",
+        "Hello world",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "Hello world"
+    }
+  ]
+}
