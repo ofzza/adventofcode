@@ -15,8 +15,8 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Info
     PuzzleInfo {
       year: 2021,
-      day: 0,
-      index: 0,
+      day: 99,
+      index: 99,
       tag: String::from("demo")
     },
 

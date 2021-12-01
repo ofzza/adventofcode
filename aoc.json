@@ -2,22 +2,87 @@
   "author": "ofzza",
   "year": 2021,
   "tasks": [
+    // #region Day 01
     {
-      "name": "demo-01",
-      "type": "demo",
+      "name": "01-01-T01",
+      "type": "test",
       "command": "cargo",
       "args": [
         "run",
+        "--release",
         "--",
-        "--type",
-        "demo",
-        "--input--file",
-        "./src/year2021/data/demo/input01.txt",
+        "--day",
+        "1",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day01/input-test.txt",
         "--expect",
-        "Hello world",
+        "7",
         "{{verbose??--verbose}}"
       ],
-      "value": "Hello world"
+      "value": "7"
+    },
+    {
+      "name": "01-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "1",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day01/input.txt",
+        "--expect",
+        "1655",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "1655"
+    },
+    {
+      "name": "01-02-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "1",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day01/input-test.txt",
+        "--expect",
+        "5",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "5"
+    },
+    {
+      "name": "01-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "1",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day01/input.txt",
+        "--expect",
+        "1683",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "1683"
     }
+    // #endregion
   ]
 }
