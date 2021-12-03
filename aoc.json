@@ -164,6 +164,88 @@
         "{{verbose??--verbose}}"
       ],
       "value": "2138382217"
+    },
+    // #endregion
+    // #region Day 03
+    {
+      "name": "03-01-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "3",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day03/input-test.txt",
+        "--expect",
+        "198",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "198"
+    },
+    {
+      "name": "03-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "3",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day03/input.txt",
+        "--expect",
+        "3633500",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "3633500"
+    },
+    {
+      "name": "03-02-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "3",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day03/input-test.txt",
+        "--expect",
+        "230",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "230"
+    },
+    {
+      "name": "03-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "3",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day03/input.txt",
+        "--expect",
+        "4550283",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "4550283"
     }
     // #endregion
   ]
