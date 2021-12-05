@@ -6,12 +6,13 @@
 // Include dependencies
 use trie_rs::*;
 
-// Diagnostic message
+// Diagnostic message structure
 #[derive(Clone)]
 pub struct DiagnosticMessage {
   /// Diagnostic message in binary
   pub code: Vec<bool>
 }
+// Diagnostic message implementation
 impl DiagnosticMessage {
   /// Represents the diagnostic message as a usize number
   /// 
@@ -44,7 +45,7 @@ impl<'a> DiagnosticReport {
   /// Initializes a trie representation of diagnostic messages
   /// 
   /// # Arguments
-  /// * data Puzzle input data
+  /// * data: Puzzle input data
   fn compose_trie (&mut self) {
     let mut builder: TrieBuilder<bool> = TrieBuilder::new();
     for i in 0..self._messages.len() {
@@ -77,8 +78,8 @@ impl<'a> DiagnosticReport {
   /// Runs a customizable processing loop over diagnostic messages structured in a binary trie
   /// 
   /// # Arguments
-  /// * is_continue Callback executed on start of every loop cycle to determine if another cycle of the loop should run
-  /// * do_update   Callback used to mutate the state being processed
+  /// * is_continue:  Callback executed on start of every loop cycle to determine if another cycle of the loop should run
+  /// * do_update:    Callback used to mutate the state being processed
   /// 
   /// # Returns
   /// Final state after processing

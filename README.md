@@ -26,6 +26,13 @@ Available arguments:
   | --input-file  | `$ cargo run -- --input-file ./input.txt`  | Path to a file containing input data  |
   | --input-value | `$ cargo run -- --input-value "1 2 3 4 5"` | Explicit string containing input data |
 
+- Result validation:
+
+  | Description | Syntax                                  | Explanation                                                    |
+  | ----------- | --------------------------------------- | -------------------------------------------------------------- |
+  | --expect    | `$ cargo run -- --expect "Hello world"` | Performs validation to check if result matches expected value  |
+  | --repeat    | `$ cargo run -- --repeat 1000`          | Runs each puzzle 1000 times to get more precise average timing |
+
 - Format output:
 
   | Description | Syntax                       | Explanation                     |
@@ -33,14 +40,8 @@ Available arguments:
   | --verbose   | `$ cargo run -- --verbose`   | Will output more information    |
   | --obfuscate | `$ cargo run -- --obfuscate` | Will obfuscate the final result |
 
-- Result validation:
-
-  | Description | Syntax                                  | Explanation                                                   |
-  | ----------- | --------------------------------------- | ------------------------------------------------------------- |
-  | --expect    | `$ cargo run -- --expect "Hello world"` | Performs validation to check if result matches expected value |
-
 For example:
 
 ```sh
-cargo run -- --input-file "./src/year2021/data/demo/input01.txt" --expect "Hello world" --verbose --obfuscate
+cargo run -- --tag "demo" --input-file "./src/year2021/data/demo/input01.txt" --expect "Hello world" --verbose --obfuscate
 ```

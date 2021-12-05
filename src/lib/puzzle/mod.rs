@@ -57,15 +57,17 @@ impl PuzzleRegistry {
   /// Executes a puzzle
   /// 
   /// # Arguments
-  /// * info:   Information of the puzzle being executed
-  /// * f:      Puzzle implementation function
-  /// * input:  Puzzle input data
-  /// * args:   Startup arguments
-  pub fn execute (info: &PuzzleInfo, f: &Box<fn(data: String) -> String>, input: String, args: &VArgs) {
+  /// * info:           Information of the puzzle being executed
+  /// * start_instant:  Instant of puzzle started reading input data
+  /// * f:              Puzzle implementation function
+  /// * input:          Puzzle input data
+  /// * args:           Startup arguments
+  pub fn execute (info: &PuzzleInfo, start_instant: Instant, f: &Box<fn(data: String) -> String>, input: String, args: &VArgs) {
     // Time function execution
-    let now = Instant::now();
-    let elapsed = now.elapsed().as_secs_f32();
+    let processing_instant = Instant::now();
     let result = f(input);
+    let start_elapsed = start_instant.elapsed().as_secs_f32();
+    let processing_elapsed = processing_instant.elapsed().as_secs_f32();
     // Check result
     let valid: Option<bool> = if args.expect.is_empty() { None } else { Some(result.trim() == args.expect.trim()) };
     // Obfuscate result
@@ -74,7 +76,7 @@ impl PuzzleRegistry {
     if args.verbose {
       StdOut::println(String::default(), None);
       StdOut::println(format!("Executing puzzle {:04}/{:02}.{} ({}):", info.year, info.day, info.index, info.tag), None);
-      StdOut::println(format!("Executed in {}ms with result:", (elapsed * 1000.0)), None);
+      StdOut::println(format!("Executed in {}ms ({}ms with input fetching) with result:", (processing_elapsed * 1000.0), (start_elapsed * 1000.0)), None);
     }
     match valid {
       None => StdOut::println(format!("{}", output), Some(StdOutColoring::UNKNOWN)),

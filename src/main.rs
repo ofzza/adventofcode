@@ -8,6 +8,7 @@ mod year2021;
 
 // Include dependencies
 use std::env;
+use std::time::Instant;
 use lib::vargs::*;
 use lib::input::*;
 use lib::puzzle::*;
@@ -42,12 +43,14 @@ fn main() {
     let f = registry.puzzles.values().nth(i).unwrap();
     // Check if puzzle matches startup criteria
     if args.puzzle.matches(info) {
+      // Time function execution
+      let start_input = Instant::now();
       // Load puzzle input
       let input = if !args.input_value.is_empty() { args.input_value.clone() }
         else if !args.input_file.is_empty() { Input::read_file(&args.input_file) }
         else { String::default() };
       // Run puzzle
-      PuzzleRegistry::execute(info, f, input, &args);
+      PuzzleRegistry::execute(info, start_input, f, input, &args);
     }
   }
 }

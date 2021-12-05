@@ -10,7 +10,7 @@ use crate::lib::input::*;
 /// Parses input data
 /// 
 /// # Arguments
-/// * data Puzzle input data
+/// * data: Puzzle input data
 /// 
 /// # Returns
 /// Vector of numbers
