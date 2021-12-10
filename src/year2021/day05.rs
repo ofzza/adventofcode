@@ -9,7 +9,7 @@ use crate::lib::input::*;
 use crate::year2021::lib::geometry_plain::*;
 
 /// Parses input data
-fn parse(data: & String) -> Vec<Vec<Vec<isize>>> {
+fn parse(data: &String) -> Vec<Vec<Vec<isize>>> {
   Input::parse(data.trim(), "\n", |line| {
     Input::parse(line, "->", |point| {
       Input::parse(point.trim(), ",", |n| n.parse::<isize>().unwrap())

@@ -9,7 +9,7 @@ use crate::lib::input::*;
 use crate::year2021::lib::diagnostic_report::*;
 
 /// Parses input data
-fn parse(data: & String) -> Vec<Vec<bool>>{
+fn parse(data: &String) -> Vec<Vec<bool>>{
   Input::parse(data.as_str().trim(), "\n", |line| {
     Input::parse(line.trim(), "", |x| {
       if x == "1" { true } else { false }

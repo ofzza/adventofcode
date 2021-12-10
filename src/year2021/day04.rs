@@ -9,7 +9,7 @@ use crate::lib::input::*;
 use crate::year2021::lib::bingo::*;
 
 /// Parses input data
-fn parse(data: & String) -> (Vec<u8>, Vec<Vec<Vec<u8>>>) {
+fn parse(data: &String) -> (Vec<u8>, Vec<Vec<Vec<u8>>>) {
   let parsed: Vec<&str> = data.as_str().trim().splitn(2, "\n\n").collect();
   let numbers = Input::parse(parsed[0].trim(), ",", |n| n.parse::<u8>().unwrap());
   let cards = Input::parse(parsed[1].trim(), "\n\n", |card| {
