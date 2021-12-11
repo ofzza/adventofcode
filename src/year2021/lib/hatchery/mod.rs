@@ -3,11 +3,6 @@
 //! Implements a model of exponential (fish) breeding/growth
 // -----------------------------------------------------------------------------
 
-// Import dependencies
-// use std::rc::Rc;
-// use std::cell::RefCell;
-// use std::collections::hash_map::*;
-
 /// Hatchery structure
 pub struct Hatchery {
   pub maturity_interval_len: usize,
