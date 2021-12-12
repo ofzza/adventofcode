@@ -3,7 +3,7 @@
 //! Implements segmented display decoding functionality
 // -----------------------------------------------------------------------------
 
-/// Segment display
+/// Segment display struct
 pub struct SegmentDisplay {
   signal_mapping: Vec<usize>
 }
