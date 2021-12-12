@@ -21,6 +21,7 @@ mod day06;
 mod day07;
 mod day08;
 mod day09;
+mod day10;
 
 /// Registers year runner
 pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
@@ -34,5 +35,6 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
   registry = day07::init(registry);
   registry = day08::init(registry);
   registry = day09::init(registry);
+  registry = day10::init(registry);
   registry
 }
