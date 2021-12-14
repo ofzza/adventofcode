@@ -822,7 +822,7 @@
       "value": "2769449099"
     },
     // #endregion
-    // #region Day 10
+    // #region Day 11
     {
       "name": "11-01-T01",
       "type": "test",
@@ -902,6 +902,168 @@
         "{{verbose??--verbose}}"
       ],
       "value": "422"
+    },
+    // #endregion
+    // #region Day 12
+    {
+      "name": "12-01-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-01.txt",
+        "--expect",
+        "10",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "10"
+    },
+    {
+      "name": "12-01-T02",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-02.txt",
+        "--expect",
+        "19",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "19"
+    },
+    {
+      "name": "12-01-T03",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-03.txt",
+        "--expect",
+        "226",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "226"
+    },
+    {
+      "name": "12-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day12/input.txt",
+        "--expect",
+        "3761",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "3761"
+    },
+    {
+      "name": "12-02-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-01.txt",
+        "--expect",
+        "36",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "36"
+    },
+    {
+      "name": "12-02-T02",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-02.txt",
+        "--expect",
+        "103",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "103"
+    },
+    {
+      "name": "12-02-T03",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day12/input-test-03.txt",
+        "--expect",
+        "3509",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "3509"
+    },
+    {
+      "name": "12-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "12",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day12/input.txt",
+        "--expect",
+        "99138",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "99138"
     }
     // #endregion
   ]
