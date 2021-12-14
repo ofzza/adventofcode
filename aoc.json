@@ -1064,6 +1064,68 @@
         "{{verbose??--verbose}}"
       ],
       "value": "99138"
+    },
+    // #endregion
+    // #region Day 13
+    {
+      "name": "13-01-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "13",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day13/input-test.txt",
+        "--expect",
+        "17",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "17"
+    },
+    {
+      "name": "13-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "13",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day13/input.txt",
+        "--expect",
+        "790",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "790"
+    },
+    {
+      "name": "13-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "13",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day13/input.txt",
+        "--expect",
+        "PGHZBFJC",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "PGHZBFJC"
     }
     // #endregion
   ]

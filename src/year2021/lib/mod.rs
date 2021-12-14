@@ -4,6 +4,7 @@
 // Load child modules
 pub mod bingo;
 pub mod diagnostic_report;
+pub mod dot_display;
 pub mod geometry_plain;
 pub mod hatchery;
 pub mod matrix;
