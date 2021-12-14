@@ -69,7 +69,6 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Process input data
       let data = parse(&data);
 
-
       // Complete all valid lines
       let mut scores: Vec<usize> = vec![];
       for i in 0..data.len() {

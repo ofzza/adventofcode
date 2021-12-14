@@ -45,7 +45,7 @@ impl SegmentDisplay {
   pub fn program (&mut self, digits: &Vec<Vec<char>>) {
     // Reset programed digits
     self.signal_mapping = Vec::with_capacity(7);
-    for i in 0..7 {
+    for _ in 0..7 {
       self.signal_mapping.push(25);
     }
 

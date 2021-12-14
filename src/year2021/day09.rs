@@ -37,15 +37,16 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let data = parse(&data);
 
       // Store as 2D grid
-      let mut matrix = Matrix::new(vec![data[0].len(), data.len()], vec![] as Vec<usize>);
+      let matrix = Matrix::new(vec![data[0].len(), data.len()]);
+      let mut vector: Vec<usize> = matrix.create();
       for y in 0..data.len() {
         for x in 0..data[y].len() {
-          matrix.data.push(data[y][x]);
+          vector.push(data[y][x]);
         }
       }
 
       // Find local minimums
-      let mins: Vec<usize> = find_mins(&matrix).iter().map(|p| { matrix.get(&p).unwrap().clone() }).collect();
+      let mins: Vec<usize> = find_mins(&matrix, &vector).iter().map(|i| { vector[i.clone()] }).collect();
 
       // Calculate and return result
       String::from(format!("{:?}", mins.iter().sum::<usize>() + mins.len()))
@@ -70,26 +71,29 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let data = parse(&data);
 
       // Store as 2D grid
-      let mut matrix = Matrix::new(vec![data[0].len(), data.len()], vec![] as Vec<usize>);
+      let matrix = Matrix::new(vec![data[0].len(), data.len()]);
+      let mut vector: Vec<usize> = matrix.create();
       for y in 0..data.len() {
         for x in 0..data[y].len() {
-          matrix.data.push(data[y][x]);
+          vector.push(data[y][x]);
         }
       }
 
       // Find local minimums
-      let mins: Vec<Vec<usize>> = find_mins(&matrix);
+      let mins: Vec<usize> = find_mins(&matrix, &vector);
+      let mut disqualified: Vec<bool> = Vec::with_capacity(vector.len());
+      for _ in 0..vector.len() {
+        disqualified.push(false);
+      }
 
       // Find size of pool around each local minimum
+      let mut sizes_total: usize = 0;
       let mut sizes: Vec<usize> = vec![];
       for i in 0..mins.len() {
-        let mut disqualified: Vec<bool> = Vec::with_capacity(matrix.data.len());
-        for _ in 0..matrix.data.len() {
-          disqualified.push(false);
-        }
-        measure_pool_size(&matrix, &mins[i], &mut disqualified);
+        measure_pool_size(&matrix, &vector, mins[i], &mut disqualified);
         let size: usize = disqualified.iter().filter(|b| { b == &&true }).collect::<Vec<&bool>>().len();
-        sizes.push(size);
+        sizes.push(size - sizes_total);
+        sizes_total = size;
       }
 
       // Find produt of sizes of 3 largest pools
@@ -112,40 +116,39 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
 /// Finds coordinates of local minimums
 /// 
 /// # Arguments
-/// * matrix: Matrix with values to find minimums within
+/// * matrix: Matrix of same dimensions and shape as the data
+/// * vector: Linear vector of matrix data
 /// 
 /// # Returns
-/// Vector of coordinates of local minimums
-fn find_mins (matrix: &Matrix<usize>) -> Vec<Vec<usize>> {
+/// Vector of indexes of local minimums
+fn find_mins (matrix: &Matrix, vector: &Vec<usize>) -> Vec<usize> {
   // Initilalize disqualified fields cache
-  let mut disqualified: Vec<bool> = Vec::with_capacity(matrix.data.len());
-  for _ in 0..matrix.data.len() {
+  let mut disqualified: Vec<bool> = Vec::with_capacity(vector.len());
+  for _ in 0..vector.len() {
     disqualified.push(false);
   }
 
   // Search for minimums
-  let mut mins: Vec<Vec<usize>> = vec![];
-  for y in 0..matrix.dimensions[1] {
-    for x in 0..matrix.dimensions[0] {
-      // Check if already compared
-      if disqualified[matrix.coords_to_index(&vec![x, y]).unwrap()] {
-        continue;
+  let mut mins: Vec<usize> = vec![];
+  for i in 0..vector.len() {
+    // Check if already compared
+    if disqualified[i] {
+      continue;
+    }
+    // Get value and neighbours
+    let value = vector[i];
+    let neighbours = matrix.get_neighbours(&i, false);
+    // Compare to neighbours
+    let mut is_min = true;
+    for i in 0..neighbours.len() {
+      if value >= vector[neighbours[i]] {
+        is_min = false; break;
+      } else {
+        disqualified[neighbours[i]] = true;
       }
-      // Get value and neighbours
-      let value = matrix.get(&vec![x, y]).unwrap();
-      let neighbours = matrix.get_neighbours(&vec![x, y], false);
-      // Compare to neighbours
-      let mut is_min = true;
-      for i in 0..neighbours.len() {
-        if value >= neighbours[i].1 {
-          is_min = false; break;
-        } else {
-          disqualified[matrix.coords_to_index(&neighbours[i].0).unwrap()] = true;
-        }
-      }
-      if is_min {
-        mins.push(vec![x, y]);
-      }
+    }
+    if is_min {
+      mins.push(i);
     }
   }
 
@@ -156,20 +159,20 @@ fn find_mins (matrix: &Matrix<usize>) -> Vec<Vec<usize>> {
 /// Finds size of pool around a starting minimum
 /// 
 /// # Arguments
-/// * matrix:       Matrix with values to find minimums within
-/// * start:        Starting minimum to search around
+/// * matrix:       Matrix of same dimensions and shape as the data
+/// * vector:       Linear vector of matrix data
+/// * index:        Current position index being searched around
 /// * disqualified: Shared vector used to disqualify counted points form being counted again
-fn measure_pool_size (matrix: &Matrix<usize>, start: &Vec<usize>, disqualified: &mut Vec<bool>) {
+fn measure_pool_size (matrix: &Matrix, vector: &Vec<usize>, index: usize, disqualified: &mut Vec<bool>) {
   // Check if already disqualified
-  let index = matrix.coords_to_index(&start).unwrap();
   if !disqualified[index] {
     disqualified[index] = true;
     // Get neighbours of current point
-    let neighbours = matrix.get_neighbours(&start, false);
+    let neighbours = matrix.get_neighbours(&index, false);
     // Find new non-border neighbours
     for i in 0..neighbours.len() {
-      if neighbours[i].1 < &9 {
-        measure_pool_size(matrix, &neighbours[i].0, disqualified);
+      if vector[neighbours[i]] < 9 {
+        measure_pool_size(matrix, &vector, neighbours[i], disqualified);
       }
     }
   }
