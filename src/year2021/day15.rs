@@ -105,7 +105,7 @@ fn find_distances (vector: &Vec<usize>, data_matrix: &Matrix, scale: usize) -> V
   let distances_matrix: Matrix = Matrix::new(vec![data_matrix.dimensions[0] * scale, data_matrix.dimensions[1] * scale]);
   
   distances.push(0);
-  for i in 1..(data_matrix.length * scale * scale) {
+  for _ in 1..(data_matrix.length * scale * scale) {
     distances.push(10 * data_matrix.length * scale * scale);
   }
 
