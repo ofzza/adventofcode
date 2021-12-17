@@ -130,6 +130,7 @@ fn react (count: &mut HashMap<(char, char), usize>, reactions: &HashMap<(char, c
   count.clear();
   // For each pair, compose and count reacted elemnt pairs
   let pairs: Vec<&(char, char)> = previous.keys().collect::<Vec<&(char, char)>>();
+  let mut inserts: Vec<((char, char), usize)> = Vec::with_capacity(pairs.len());
   for i in 0..pairs.len() {
     let value = previous.get(&pairs[i]).unwrap().clone();
     let reactant: char = reactions.get(&pairs[i]).unwrap().clone();
@@ -138,12 +139,14 @@ fn react (count: &mut HashMap<(char, char), usize>, reactions: &HashMap<(char, c
       Some(value) => value,
       None => &0usize
     };
+    inserts.push((first, first_previous_count + value));
     count.insert(first, first_previous_count + value);
     let second: (char, char) = (reactant, pairs[i].1);
     let second_previous_count = match count.get(&second) {
       Some(value) => value,
       None => &0usize
     };
+    inserts.push((second, second_previous_count + value));
     count.insert(second, second_previous_count + value);
   }
 }
