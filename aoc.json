@@ -18,7 +18,7 @@
         "--input-file",
         "./src/year2021/data/day01/input-test.txt",
         "--expect",
-        "7",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "7"
@@ -38,7 +38,7 @@
         "--input-file",
         "./src/year2021/data/day01/input.txt",
         "--expect",
-        "1655",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1655"
@@ -58,7 +58,7 @@
         "--input-file",
         "./src/year2021/data/day01/input-test.txt",
         "--expect",
-        "5",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "5"
@@ -78,7 +78,7 @@
         "--input-file",
         "./src/year2021/data/day01/input.txt",
         "--expect",
-        "1683",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1683"
@@ -100,7 +100,7 @@
         "--input-file",
         "./src/year2021/data/day02/input-test.txt",
         "--expect",
-        "150",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "150"
@@ -120,7 +120,7 @@
         "--input-file",
         "./src/year2021/data/day02/input.txt",
         "--expect",
-        "2120749",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2120749"
@@ -140,7 +140,7 @@
         "--input-file",
         "./src/year2021/data/day02/input-test.txt",
         "--expect",
-        "900",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "900"
@@ -160,7 +160,7 @@
         "--input-file",
         "./src/year2021/data/day02/input.txt",
         "--expect",
-        "2138382217",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2138382217"
@@ -182,7 +182,7 @@
         "--input-file",
         "./src/year2021/data/day03/input-test.txt",
         "--expect",
-        "198",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "198"
@@ -202,7 +202,7 @@
         "--input-file",
         "./src/year2021/data/day03/input.txt",
         "--expect",
-        "3633500",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "3633500"
@@ -222,7 +222,7 @@
         "--input-file",
         "./src/year2021/data/day03/input-test.txt",
         "--expect",
-        "230",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "230"
@@ -242,7 +242,7 @@
         "--input-file",
         "./src/year2021/data/day03/input.txt",
         "--expect",
-        "4550283",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "4550283"
@@ -264,7 +264,7 @@
         "--input-file",
         "./src/year2021/data/day04/input-test.txt",
         "--expect",
-        "4512",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "4512"
@@ -284,7 +284,7 @@
         "--input-file",
         "./src/year2021/data/day04/input.txt",
         "--expect",
-        "2496",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2496"
@@ -304,7 +304,7 @@
         "--input-file",
         "./src/year2021/data/day04/input-test.txt",
         "--expect",
-        "1924",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1924"
@@ -324,7 +324,7 @@
         "--input-file",
         "./src/year2021/data/day04/input.txt",
         "--expect",
-        "25925",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "25925"
@@ -346,7 +346,7 @@
         "--input-file",
         "./src/year2021/data/day05/input-test.txt",
         "--expect",
-        "5",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "5"
@@ -366,7 +366,7 @@
         "--input-file",
         "./src/year2021/data/day05/input.txt",
         "--expect",
-        "4993",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "4993"
@@ -386,7 +386,7 @@
         "--input-file",
         "./src/year2021/data/day05/input-test.txt",
         "--expect",
-        "12",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "12"
@@ -406,7 +406,7 @@
         "--input-file",
         "./src/year2021/data/day05/input.txt",
         "--expect",
-        "21101",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "21101"
@@ -428,7 +428,7 @@
         "--input-file",
         "./src/year2021/data/day06/input-test.txt",
         "--expect",
-        "5934",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "5934"
@@ -448,7 +448,7 @@
         "--input-file",
         "./src/year2021/data/day06/input.txt",
         "--expect",
-        "388739",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "388739"
@@ -468,7 +468,7 @@
         "--input-file",
         "./src/year2021/data/day06/input-test.txt",
         "--expect",
-        "26984457539",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "26984457539"
@@ -488,7 +488,7 @@
         "--input-file",
         "./src/year2021/data/day06/input.txt",
         "--expect",
-        "1741362314973",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1741362314973"
@@ -510,7 +510,7 @@
         "--input-file",
         "./src/year2021/data/day07/input-test.txt",
         "--expect",
-        "37",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "37"
@@ -530,7 +530,7 @@
         "--input-file",
         "./src/year2021/data/day07/input.txt",
         "--expect",
-        "355150",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "355150"
@@ -550,7 +550,7 @@
         "--input-file",
         "./src/year2021/data/day07/input-test.txt",
         "--expect",
-        "168",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "168"
@@ -570,7 +570,7 @@
         "--input-file",
         "./src/year2021/data/day07/input.txt",
         "--expect",
-        "98368490",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "98368490"
@@ -592,7 +592,7 @@
         "--input-file",
         "./src/year2021/data/day08/input-test.txt",
         "--expect",
-        "26",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "26"
@@ -612,7 +612,7 @@
         "--input-file",
         "./src/year2021/data/day08/input.txt",
         "--expect",
-        "284",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "284"
@@ -632,7 +632,7 @@
         "--input-file",
         "./src/year2021/data/day08/input-test.txt",
         "--expect",
-        "61229",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "61229"
@@ -652,7 +652,7 @@
         "--input-file",
         "./src/year2021/data/day08/input.txt",
         "--expect",
-        "973499",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "973499"
@@ -674,7 +674,7 @@
         "--input-file",
         "./src/year2021/data/day09/input-test.txt",
         "--expect",
-        "15",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "15"
@@ -694,7 +694,7 @@
         "--input-file",
         "./src/year2021/data/day09/input.txt",
         "--expect",
-        "541",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "541"
@@ -714,7 +714,7 @@
         "--input-file",
         "./src/year2021/data/day09/input-test.txt",
         "--expect",
-        "1134",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1134"
@@ -734,7 +734,7 @@
         "--input-file",
         "./src/year2021/data/day09/input.txt",
         "--expect",
-        "847504",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "847504"
@@ -756,7 +756,7 @@
         "--input-file",
         "./src/year2021/data/day10/input-test.txt",
         "--expect",
-        "26397",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "26397"
@@ -776,7 +776,7 @@
         "--input-file",
         "./src/year2021/data/day10/input.txt",
         "--expect",
-        "392421",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "392421"
@@ -796,7 +796,7 @@
         "--input-file",
         "./src/year2021/data/day10/input-test.txt",
         "--expect",
-        "288957",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "288957"
@@ -816,7 +816,7 @@
         "--input-file",
         "./src/year2021/data/day10/input.txt",
         "--expect",
-        "2769449099",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2769449099"
@@ -838,7 +838,7 @@
         "--input-file",
         "./src/year2021/data/day11/input-test.txt",
         "--expect",
-        "1656",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1656"
@@ -858,7 +858,7 @@
         "--input-file",
         "./src/year2021/data/day11/input.txt",
         "--expect",
-        "1757",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1757"
@@ -878,7 +878,7 @@
         "--input-file",
         "./src/year2021/data/day11/input-test.txt",
         "--expect",
-        "195",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "195"
@@ -898,7 +898,7 @@
         "--input-file",
         "./src/year2021/data/day11/input.txt",
         "--expect",
-        "422",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "422"
@@ -918,52 +918,25 @@
         "--index",
         "1",
         "--input-file",
-        "./src/year2021/data/day12/input-test-01.txt",
+        "{{:input}}",
         "--expect",
-        "10",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "10"
-    },
-    {
-      "name": "12-01-T02",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "12",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day12/input-test-02.txt",
-        "--expect",
-        "19",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "19"
-    },
-    {
-      "name": "12-01-T03",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "12",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day12/input-test-03.txt",
-        "--expect",
-        "226",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "226"
+      "runs": [
+        {
+          "input": "./src/year2021/data/day12/input-test-01.txt",
+          "value": "10"
+        },
+        {
+          "input": "./src/year2021/data/day12/input-test-02.txt",
+          "value": "19"
+        },
+        {
+          "input": "./src/year2021/data/day12/input-test-03.txt",
+          "value": "226"
+        }
+      ]
     },
     {
       "name": "12-01-S",
@@ -980,7 +953,7 @@
         "--input-file",
         "./src/year2021/data/day12/input.txt",
         "--expect",
-        "3761",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "3761"
@@ -998,52 +971,25 @@
         "--index",
         "2",
         "--input-file",
-        "./src/year2021/data/day12/input-test-01.txt",
+        "{{:input}}",
         "--expect",
-        "36",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "36"
-    },
-    {
-      "name": "12-02-T02",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "12",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day12/input-test-02.txt",
-        "--expect",
-        "103",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "103"
-    },
-    {
-      "name": "12-02-T03",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "12",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day12/input-test-03.txt",
-        "--expect",
-        "3509",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "3509"
+      "runs": [
+        {
+          "input": "./src/year2021/data/day12/input-test-01.txt",
+          "value": "36"
+        },
+        {
+          "input": "./src/year2021/data/day12/input-test-02.txt",
+          "value": "103"
+        },
+        {
+          "input": "./src/year2021/data/day12/input-test-03.txt",
+          "value": "3509"
+        }
+      ]
     },
     {
       "name": "12-02-S",
@@ -1060,7 +1006,7 @@
         "--input-file",
         "./src/year2021/data/day12/input.txt",
         "--expect",
-        "99138",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "99138"
@@ -1082,7 +1028,7 @@
         "--input-file",
         "./src/year2021/data/day13/input-test.txt",
         "--expect",
-        "17",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "17"
@@ -1102,7 +1048,7 @@
         "--input-file",
         "./src/year2021/data/day13/input.txt",
         "--expect",
-        "790",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "790"
@@ -1122,7 +1068,7 @@
         "--input-file",
         "./src/year2021/data/day13/input.txt",
         "--expect",
-        "PGHZBFJC",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "PGHZBFJC"
@@ -1144,7 +1090,7 @@
         "--input-file",
         "./src/year2021/data/day14/input-test.txt",
         "--expect",
-        "1588",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "1588"
@@ -1164,7 +1110,7 @@
         "--input-file",
         "./src/year2021/data/day14/input.txt",
         "--expect",
-        "2768",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2768"
@@ -1184,7 +1130,7 @@
         "--input-file",
         "./src/year2021/data/day14/input-test.txt",
         "--expect",
-        "2188189693529",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2188189693529"
@@ -1204,7 +1150,7 @@
         "--input-file",
         "./src/year2021/data/day14/input.txt",
         "--expect",
-        "2914365137499",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2914365137499"
@@ -1226,7 +1172,7 @@
         "--input-file",
         "./src/year2021/data/day15/input-test.txt",
         "--expect",
-        "40",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "40"
@@ -1246,7 +1192,7 @@
         "--input-file",
         "./src/year2021/data/day15/input.txt",
         "--expect",
-        "673",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "673"
@@ -1266,7 +1212,7 @@
         "--input-file",
         "./src/year2021/data/day15/input-test.txt",
         "--expect",
-        "315",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "315"
@@ -1286,7 +1232,7 @@
         "--input-file",
         "./src/year2021/data/day15/input.txt",
         "--expect",
-        "2893",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "2893"
@@ -1306,132 +1252,41 @@
         "--index",
         "1",
         "--input-file",
-        "./src/year2021/data/day16/input-test-01.txt",
+        "{{:input}}",
         "--expect",
-        "6",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "6"
-    },
-    {
-      "name": "16-01-T02",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-02.txt",
-        "--expect",
-        "9",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "9"
-    },
-    {
-      "name": "16-01-T03",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-03.txt",
-        "--expect",
-        "14",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "14"
-    },
-    {
-      "name": "16-01-T04",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-04.txt",
-        "--expect",
-        "16",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "16"
-    },
-    {
-      "name": "16-01-T05",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-05.txt",
-        "--expect",
-        "12",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "12"
-    },
-    {
-      "name": "16-01-T06",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-06.txt",
-        "--expect",
-        "23",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "23"
-    },
-    {
-      "name": "16-01-T07",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "1",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-07.txt",
-        "--expect",
-        "31",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "31"
+      "runs": [
+        {
+          "input": "./src/year2021/data/day16/input-test-01.txt",
+          "value": "6"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-02.txt",
+          "value": "9"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-03.txt",
+          "value": "14"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-04.txt",
+          "value": "16"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-05.txt",
+          "value": "12"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-06.txt",
+          "value": "23"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-07.txt",
+          "value": "31"
+        }
+      ]
     },
     {
       "name": "16-01-S",
@@ -1448,7 +1303,7 @@
         "--input-file",
         "./src/year2021/data/day16/input.txt",
         "--expect",
-        "974",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "974"
@@ -1466,152 +1321,45 @@
         "--index",
         "2",
         "--input-file",
-        "./src/year2021/data/day16/input-test-08.txt",
+        "{{:input}}",
         "--expect",
-        "3",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "3"
-    },
-    {
-      "name": "16-02-T09",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-09.txt",
-        "--expect",
-        "54",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "54"
-    },
-    {
-      "name": "16-02-T10",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-10.txt",
-        "--expect",
-        "7",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "7"
-    },
-    {
-      "name": "16-02-T11",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-11.txt",
-        "--expect",
-        "9",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "9"
-    },
-    {
-      "name": "16-02-T12",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-12.txt",
-        "--expect",
-        "1",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "1"
-    },
-    {
-      "name": "16-02-T13",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-13.txt",
-        "--expect",
-        "0",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "0"
-    },
-    {
-      "name": "16-02-T14",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-14.txt",
-        "--expect",
-        "0",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "0"
-    },
-    {
-      "name": "16-02-T15",
-      "type": "test",
-      "command": "cargo",
-      "args": [
-        "run",
-        "--release",
-        "--",
-        "--day",
-        "16",
-        "--index",
-        "2",
-        "--input-file",
-        "./src/year2021/data/day16/input-test-15.txt",
-        "--expect",
-        "1",
-        "{{verbose??--verbose}}"
-      ],
-      "value": "1"
+      "runs": [
+        {
+          "input": "./src/year2021/data/day16/input-test-08.txt",
+          "value": "3"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-09.txt",
+          "value": "54"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-10.txt",
+          "value": "7"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-11.txt",
+          "value": "9"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-12.txt",
+          "value": "1"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-13.txt",
+          "value": "0"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-14.txt",
+          "value": "0"
+        },
+        {
+          "input": "./src/year2021/data/day16/input-test-15.txt",
+          "value": "1"
+        }
+      ]
     },
     {
       "name": "16-02-S",
@@ -1628,7 +1376,7 @@
         "--input-file",
         "./src/year2021/data/day16/input.txt",
         "--expect",
-        "180616437720",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "180616437720"
@@ -1650,7 +1398,7 @@
         "--input-file",
         "./src/year2021/data/day17/input-test.txt",
         "--expect",
-        "45",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "45"
@@ -1670,7 +1418,7 @@
         "--input-file",
         "./src/year2021/data/day17/input.txt",
         "--expect",
-        "10585",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "10585"
@@ -1690,7 +1438,7 @@
         "--input-file",
         "./src/year2021/data/day17/input-test.txt",
         "--expect",
-        "112",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "112"
@@ -1710,10 +1458,122 @@
         "--input-file",
         "./src/year2021/data/day17/input.txt",
         "--expect",
-        "5247",
+        "{{:value}}",
         "{{verbose??--verbose}}"
       ],
       "value": "5247"
+    },
+    // #endregion
+    // #region Day 18
+    {
+      "name": "18-01-T01",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "18",
+        "--index",
+        "1",
+        "--input-file",
+        "{{:input}}",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "runs": [
+        {
+          "input": "./src/year2021/data/day18/input-test-01.txt",
+          "value": "1384"
+        },
+        {
+          "input": "./src/year2021/data/day18/input-test-02.txt",
+          "value": "445"
+        },
+        {
+          "input": "./src/year2021/data/day18/input-test-03.txt",
+          "value": "791"
+        },
+        {
+          "input": "./src/year2021/data/day18/input-test-04.txt",
+          "value": "1137"
+        },
+        {
+          "input": "./src/year2021/data/day18/input-test-05.txt",
+          "value": "3488"
+        },
+        {
+          "input": "./src/year2021/data/day18/input-test-06.txt",
+          "value": "4140"
+        }
+      ]
+    },
+    {
+      "name": "18-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "18",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day18/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "4365"
+    },
+    {
+      "name": "18-02-T08",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "18",
+        "--index",
+        "2",
+        "--input-file",
+        "{{:input}}",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "runs": [
+        {
+          "input": "./src/year2021/data/day18/input-test-06.txt",
+          "value": "3993"
+        }
+      ]
+    },
+    {
+      "name": "18-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "18",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day18/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "4490"
     }
     // #endregion
   ]
