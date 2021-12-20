@@ -13,3 +13,4 @@ pub mod path_finding;
 pub mod probe;
 pub mod segment_display;
 pub mod snailfish_arithmetic;
+pub mod sparse_point_cloud;

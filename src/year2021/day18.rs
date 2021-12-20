@@ -69,6 +69,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Process input data
       let data = parse(&data);
       let numbers: Vec<Rc<RefCell<SnailFishNumber>>> = data.iter().map(|n| SnailFishArithmetic::parse(n)).collect();
+      
       // Sum every pair of numbers and find max sum
       let mut max: usize = 0;
       for i in 0..numbers.len() {
