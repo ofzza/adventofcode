@@ -17,11 +17,11 @@
       },
       "args": [
         "--day",
-        "19",
+        "20",
         "--index",
         "2",
         "--input-file",
-        "./src/year2021/data/day19/input.txt",
+        "./src/year2021/data/day20/input.txt",
         "--verbose"
       ],
       "cwd": "${workspaceFolder}",
