@@ -7,7 +7,6 @@
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
 use crate::year2021::lib::bits::*;
-use crate::year2021::lib::dot_display::*;
 use crate::year2021::lib::matrix::*;
 
 /// Parses input data
