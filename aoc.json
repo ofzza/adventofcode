@@ -4,7 +4,7 @@
   "tasks": [
     // #region Day 01
     {
-      "name": "01-01-T01",
+      "name": "01-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -44,7 +44,7 @@
       "value": "1655"
     },
     {
-      "name": "01-02-T01",
+      "name": "01-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -86,7 +86,7 @@
     // #endregion
     // #region Day 02
     {
-      "name": "02-01-T01",
+      "name": "02-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -126,7 +126,7 @@
       "value": "2120749"
     },
     {
-      "name": "02-02-T01",
+      "name": "02-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -168,7 +168,7 @@
     // #endregion
     // #region Day 03
     {
-      "name": "03-01-T01",
+      "name": "03-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -208,7 +208,7 @@
       "value": "3633500"
     },
     {
-      "name": "03-02-T01",
+      "name": "03-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -250,7 +250,7 @@
     // #endregion
     // #region Day 04
     {
-      "name": "04-01-T01",
+      "name": "04-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -290,7 +290,7 @@
       "value": "2496"
     },
     {
-      "name": "04-02-T01",
+      "name": "04-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -332,7 +332,7 @@
     // #endregion
     // #region Day 05
     {
-      "name": "05-01-T01",
+      "name": "05-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -372,7 +372,7 @@
       "value": "4993"
     },
     {
-      "name": "05-02-T01",
+      "name": "05-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -414,7 +414,7 @@
     // #endregion
     // #region Day 06
     {
-      "name": "06-01-T01",
+      "name": "06-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -454,7 +454,7 @@
       "value": "388739"
     },
     {
-      "name": "06-02-T01",
+      "name": "06-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -496,7 +496,7 @@
     // #endregion
     // #region Day 07
     {
-      "name": "07-01-T01",
+      "name": "07-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -536,7 +536,7 @@
       "value": "355150"
     },
     {
-      "name": "07-02-T01",
+      "name": "07-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -578,7 +578,7 @@
     // #endregion
     // #region Day 08
     {
-      "name": "08-01-T01",
+      "name": "08-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -618,7 +618,7 @@
       "value": "284"
     },
     {
-      "name": "08-02-T01",
+      "name": "08-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -660,7 +660,7 @@
     // #endregion
     // #region Day 09
     {
-      "name": "09-01-T01",
+      "name": "09-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -700,7 +700,7 @@
       "value": "541"
     },
     {
-      "name": "09-02-T01",
+      "name": "09-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -742,7 +742,7 @@
     // #endregion
     // #region Day 10
     {
-      "name": "10-01-T01",
+      "name": "10-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -782,7 +782,7 @@
       "value": "392421"
     },
     {
-      "name": "10-02-T01",
+      "name": "10-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -824,7 +824,7 @@
     // #endregion
     // #region Day 11
     {
-      "name": "11-01-T01",
+      "name": "11-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -864,7 +864,7 @@
       "value": "1757"
     },
     {
-      "name": "11-02-T01",
+      "name": "11-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -906,7 +906,7 @@
     // #endregion
     // #region Day 12
     {
-      "name": "12-01-T01",
+      "name": "12-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -959,7 +959,7 @@
       "value": "3761"
     },
     {
-      "name": "12-02-T01",
+      "name": "12-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1014,7 +1014,7 @@
     // #endregion
     // #region Day 13
     {
-      "name": "13-01-T01",
+      "name": "13-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1076,7 +1076,7 @@
     // #endregion
     // #region Day 14
     {
-      "name": "14-01-T01",
+      "name": "14-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1116,7 +1116,7 @@
       "value": "2768"
     },
     {
-      "name": "14-02-T01",
+      "name": "14-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1158,7 +1158,7 @@
     // #endregion
     // #region Day 15
     {
-      "name": "15-01-T01",
+      "name": "15-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1198,7 +1198,7 @@
       "value": "673"
     },
     {
-      "name": "15-02-T01",
+      "name": "15-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1240,7 +1240,7 @@
     // #endregion
     // #region Day 16
     {
-      "name": "16-01-T01",
+      "name": "16-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1384,7 +1384,7 @@
     // #endregion
     // #region Day 17
     {
-      "name": "17-01-T01",
+      "name": "17-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1424,7 +1424,7 @@
       "value": "10585"
     },
     {
-      "name": "17-02-T01",
+      "name": "17-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1466,7 +1466,7 @@
     // #endregion
     // #region Day 18
     {
-      "name": "18-01-T01",
+      "name": "18-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1578,7 +1578,7 @@
     // #endregion
     // #region Day 19
     // {
-    //   "name": "19-01-T01",
+    //   "name": "19-01-T",
     //   "type": "test",
     //   "command": "cargo",
     //   "args": [
@@ -1618,7 +1618,7 @@
     //   "value": "326"
     // },
     // {
-    //   "name": "19-02-T01",
+    //   "name": "19-02-T",
     //   "type": "test",
     //   "command": "cargo",
     //   "args": [
@@ -1660,7 +1660,7 @@
     // #endregion
     // #region Day 20
     {
-      "name": "20-01-T01",
+      "name": "20-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1700,7 +1700,7 @@
       "value": "5203"
     },
     {
-      "name": "20-02-T01",
+      "name": "20-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1742,7 +1742,7 @@
     // #endregion
     // #region Day 21
     {
-      "name": "21-01-T01",
+      "name": "21-01-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1782,7 +1782,7 @@
       "value": "679329"
     },
     {
-      "name": "21-02-T01",
+      "name": "21-02-T",
       "type": "test",
       "command": "cargo",
       "args": [
@@ -1820,6 +1820,97 @@
         "{{verbose??--verbose}}"
       ],
       "value": "433315766324816"
+    },
+    // #endregion
+    // #region Day 22
+    {
+      "name": "22-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "22",
+        "--index",
+        "1",
+        "--input-file",
+        "{{:input}}",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "runs": [
+        {
+          "input": "./src/year2021/data/day22/input-test-01.txt",
+          "value": "39"
+        },
+        {
+          "input": "./src/year2021/data/day22/input-test-02.txt",
+          "value": "590784"
+        }
+      ]
+    },
+    {
+      "name": "22-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "22",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day22/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "615700"
+    },
+    {
+      "name": "22-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "22",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day22/input-test-03.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "2758514936282235"
+    },
+    {
+      "name": "22-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "22",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day22/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "1236463892941356"
     }
     // #endregion
   ]
