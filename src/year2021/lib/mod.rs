@@ -2,6 +2,7 @@
 // -----------------------------------------------------------------------------
 
 // Load child modules
+pub mod amphipods_burrow;
 pub mod bingo;
 pub mod bits;
 pub mod diagnostic_report;
