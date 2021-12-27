@@ -2035,6 +2035,68 @@
         "{{verbose??--verbose}}"
       ],
       "value": "11931881141161"
+    },
+    // #endregion
+    // #region Day 25
+    {
+      "name": "25-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "25",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day25/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "58"
+    },
+    {
+      "name": "25-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "25",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day25/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "598"
+    },
+    {
+      "name": "25-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "25",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day25/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "Done!"
     }
     // #endregion
   ]

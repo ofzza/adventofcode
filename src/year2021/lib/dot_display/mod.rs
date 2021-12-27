@@ -3,10 +3,14 @@
 //! Implements dot display functionality
 // -----------------------------------------------------------------------------
 
+// Include dependencies
+use crate::year2021::lib::matrix::*;
+
 /// Dot display struct
 pub struct DotDisplay {}
 /// Dot display implementation
 impl DotDisplay {
+
   /// Print points to display
   /// 
   /// # Arguments
@@ -25,4 +29,20 @@ impl DotDisplay {
       println!();
     }
   }
+
+  /// Print matrix to display
+  /// 
+  /// # Arguments
+  /// * points: Vector of points to display
+  pub fn print_2d_matrix<T> (matrix: &Matrix, vector: &Vec<T>) where T: std::fmt::Display {
+    // Print out display
+    for y in 0..matrix.dimensions[1] {
+      for x in 0..matrix.dimensions[0] {
+        print!("{}", vector[matrix.coords_to_index(&vec![x, y]).unwrap()]);
+      }
+      println!();
+    }
+  }
+
+
 }
