@@ -1993,6 +1993,48 @@
         "{{verbose??--verbose}}"
       ],
       "value": "47234"
+    },
+    // #endregion
+    // #region Day 24
+    {
+      "name": "24-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "24",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day24/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "94992992796199"
+    },
+    {
+      "name": "24-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "24",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day24/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "11931881141161"
     }
     // #endregion
   ]
