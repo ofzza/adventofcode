@@ -1577,86 +1577,86 @@
     },
     // #endregion
     // #region Day 19
-    // {
-    //   "name": "19-01-T",
-    //   "type": "test",
-    //   "command": "cargo",
-    //   "args": [
-    //     "run",
-    //     "--release",
-    //     "--",
-    //     "--day",
-    //     "19",
-    //     "--index",
-    //     "1",
-    //     "--input-file",
-    //     "./src/year2021/data/day19/input-test.txt",
-    //     "--expect",
-    //     "{{:value}}",
-    //     "{{verbose??--verbose}}"
-    //   ],
-    //   "value": "79"
-    // },
-    // {
-    //   "name": "19-01-S",
-    //   "type": "solution",
-    //   "command": "cargo",
-    //   "args": [
-    //     "run",
-    //     "--release",
-    //     "--",
-    //     "--day",
-    //     "19",
-    //     "--index",
-    //     "1",
-    //     "--input-file",
-    //     "./src/year2021/data/day19/input.txt",
-    //     "--expect",
-    //     "{{:value}}",
-    //     "{{verbose??--verbose}}"
-    //   ],
-    //   "value": "326"
-    // },
-    // {
-    //   "name": "19-02-T",
-    //   "type": "test",
-    //   "command": "cargo",
-    //   "args": [
-    //     "run",
-    //     "--release",
-    //     "--",
-    //     "--day",
-    //     "19",
-    //     "--index",
-    //     "2",
-    //     "--input-file",
-    //     "./src/year2021/data/day19/input-test.txt",
-    //     "--expect",
-    //     "{{:value}}",
-    //     "{{verbose??--verbose}}"
-    //   ],
-    //   "value": "3621"
-    // },
-    // {
-    //   "name": "19-02-S",
-    //   "type": "solution",
-    //   "command": "cargo",
-    //   "args": [
-    //     "run",
-    //     "--release",
-    //     "--",
-    //     "--day",
-    //     "19",
-    //     "--index",
-    //     "2",
-    //     "--input-file",
-    //     "./src/year2021/data/day19/input.txt",
-    //     "--expect",
-    //     "{{:value}}",
-    //     "{{verbose??--verbose}}"
-    //   ],
-    //   "value": "10630"
-    // },
+    {
+      "name": "19-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "19",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day19/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "79"
+    },
+    {
+      "name": "19-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "19",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2021/data/day19/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "326"
+    },
+    {
+      "name": "19-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "19",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day19/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "3621"
+    },
+    {
+      "name": "19-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--day",
+        "19",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2021/data/day19/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "10630"
+    },
     // #endregion
     // #region Day 20
     {
