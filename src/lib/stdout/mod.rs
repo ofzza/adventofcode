@@ -9,7 +9,7 @@ use termion::{color};
 
 /// Enumerates coloring styles
 pub enum StdOutColoring {
-  RESET,
+  #[allow(dead_code)] RESET,
   UNKNOWN,
   VALID,
   INVALID

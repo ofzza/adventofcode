@@ -273,7 +273,7 @@ impl AmphipodsBurrow {
     // Initialize positions represented by color characters
     let mut hallway: Vec<char> = vec!['_', '_', '.', '_', '.', '_', '.', '_', '.', '_', '_'];
     let mut room: Vec<char> = Vec::with_capacity(self.room_size);
-    for i in 0..self.room_size { room.push('_'); }
+    for _ in 0..self.room_size { room.push('_'); }
     let mut rooms: Vec<Vec<char>> = vec![
       room.clone(),
       room.clone(),

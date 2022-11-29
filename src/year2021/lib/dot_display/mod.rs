@@ -34,6 +34,7 @@ impl DotDisplay {
   /// 
   /// # Arguments
   /// * points: Vector of points to display
+  #[allow(dead_code)]
   pub fn print_2d_matrix<T> (matrix: &Matrix, vector: &Vec<T>) where T: std::fmt::Display {
     // Print out display
     for y in 0..matrix.dimensions[1] {

@@ -1,6 +1,6 @@
-//! 2021 demo puzzle
+//! 202x demo puzzle
 //! 
-//! https://adventofcode.com/2021
+//! https://adventofcode.com/202x
 // -----------------------------------------------------------------------------
 
 // Include dependencies
@@ -9,6 +9,7 @@ use crate::lib::puzzle::*;
 // use crate::lib::console::*;
 
 /// Registers puzzles for the day
+#[allow(dead_code)]
 pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
   registry.register(
 
@@ -26,18 +27,18 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // !DOCS: let data = Input::parse(data.as_str(), "\n", |x| { x.parse::<usize>().unwrap() });
       // Process data 02
       // !DOCS: let data = Input::parse(data.as_str(), "\n", |data| {
-      //   Input::parse(data, " ", |x| { x.parse::<usize>().unwrap() })
-      // });
+      // !DOCS:   Input::parse(data, " ", |x| { x.parse::<usize>().unwrap() })
+      // !DOCS: });
       // Process data 03
       // !DOCS: let data = Input::parse(data.as_str(), "\n\n", |data| {
-      //   Input::parse(data, "\n", |x| { x.parse::<usize>().unwrap() })
-      // });
-      // !DOCS: Process data 04
-      // let data = Input::parse(data.as_str(), "\n\n", |data| {
-      //   Input::parse(data, "\n", |data| {
-      //     Input::parse(data, " ", |x| { x.parse::<usize>().unwrap()
-      //   })
-      // }) });
+      // !DOCS:   Input::parse(data, "\n", |x| { x.parse::<usize>().unwrap() })
+      // !DOCS: });
+      // Process data 04
+      // !DOCS: let data = Input::parse(data.as_str(), "\n\n", |data| {
+      // !DOCS:   Input::parse(data, "\n", |data| {
+      // !DOCS:     Input::parse(data, " ", |x| { x.parse::<usize>().unwrap()
+      // !DOCS:   })
+      // !DOCS: });
 
       // Output result
       String::from("Hello world")

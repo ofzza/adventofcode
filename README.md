@@ -43,5 +43,11 @@ Available arguments:
 For example:
 
 ```sh
-cargo run -- --tag "demo" --input-file "./src/year2021/data/demo/input01.txt" --expect "Hello world" --verbose --obfuscate
+cargo run -- --tag "demo" --expect "Hello world" --verbose --obfuscate
+```
+
+... or to run a release version with compiler optimizations enabled:
+
+```sh
+cargo run --profile release -- --tag "demo" --expect "Hello world" --verbose --obfuscate
 ```

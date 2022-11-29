@@ -16,12 +16,14 @@
         }
       },
       "args": [
+        "--year",
+        "2022",
         "--day",
-        "19",
+        "1",
         "--index",
-        "2",
+        "1",
         "--input-file",
-        "./src/year2021/data/day19/input-test.txt",
+        "./src/year2022/data/day01/input-test.txt",
         "--verbose"
       ],
       "cwd": "${workspaceFolder}",

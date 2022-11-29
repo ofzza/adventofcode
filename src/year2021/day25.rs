@@ -7,7 +7,6 @@
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
 use crate::year2021::lib::matrix::*;
-use crate::year2021::lib::dot_display::*;
 
 /// Parses input data
 fn parse(data: &String) -> Vec<Vec<char>> {
@@ -114,7 +113,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     },
 
     // Implementation
-    |data: String| {
+    |_: String| {
       // Calculate and return result
       String::from(format!("{}", "Done!"))
     }

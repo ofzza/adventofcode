@@ -3,8 +3,10 @@
 // -----------------------------------------------------------------------------
 
 // Load child modules
-pub mod lib;
+mod lib;
+mod demo;
 mod year2021;
+mod year2022;
 
 // Include dependencies
 use std::env;
@@ -32,8 +34,15 @@ fn main() {
 
   // Register puzzles
   let mut registry = PuzzleRegistry::new();
+  // Register demo puzzle
+  registry = demo::init(registry);
+  // Register 2021 puzzles
   if args.puzzle.year == 0 || args.puzzle.year == 2021 {
     registry = year2021::init(registry);
+  }
+  // Register 2022 puzzles
+  if args.puzzle.year == 0 || args.puzzle.year == 2022 {
+    registry = year2022::init(registry);
   }
 
   // Run all puzzles just for fun
