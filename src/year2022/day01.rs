@@ -14,9 +14,9 @@ use crate::lib::input::*;
 /// 
 /// # Returns
 /// Vector of numbers
-fn parse(data: &String) -> Vec<usize>{
-  Input::parse(data.as_str().trim(), "\n", |x| {
-    x.parse::<usize>().unwrap()
+fn parse(data: &String) -> Vec<Vec<usize>>{
+  Input::parse(data.as_str().trim(), "\n\n", |data| {
+    Input::parse(data, "\n", |x| { x.parse::<usize>().unwrap() })
   })
 }
 
@@ -39,14 +39,22 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Process input data
       let data = parse(&data);
 
-      // Find increasing values
-      let mut sum: usize = 0;
-      for n in data {        
-        sum += n;
+      // Find max subset
+      let mut max_sum: usize = 0;
+      for i in 0..data.len() {        
+        // Sum up subset
+        let mut sum: usize = 0;
+        for n in &data[i] {        
+          sum += n;
+        }
+        // Compare tp max subset found
+        if sum > max_sum {
+          max_sum = sum;
+        }
       }
 
       // Return result
-      String::from(format!("{:?}", sum))
+      String::from(format!("{:?}", max_sum))
     }
 
   );
@@ -67,14 +75,33 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Process input data
       let data = parse(&data);
 
-      // Find increasing values
-      let mut prod: usize = 1;
-      for n in data {
-        prod *= n;
+      // Find max 3 subsets
+      let mut max_sums: Vec<usize> = vec![0, 0, 0];
+      for i in 0..data.len() {        
+        // Sum up subset
+        let mut sum: usize = 0;
+        for n in &data[i] {        
+          sum += n;
+        }
+        // Compare to top 3 max subsets found
+        for j in 0..max_sums.len() {
+          if sum > max_sums[j] {
+            // Insert max into cirrect sorted place
+            max_sums.insert(j, sum);
+            // Trim number of tracked max values
+            max_sums = max_sums[0..3].to_vec();
+            break;
+          }
+        }
+      }
+      // Sub up 3 max subsets
+      let mut sum: usize = 0;
+      for i in 0..3 {
+        sum += max_sums[i];
       }
 
       // Return result
-      String::from(format!("{:?}", prod))
+      String::from(format!("{:?}", sum))
     }
 
   );
