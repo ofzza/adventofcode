@@ -1,6 +1,6 @@
 {
   "author": "ofzza",
-  "year": 2021,
+  "year": 2022,
   "tasks": [
     // #region YEAR 2021
     // #region Day 01
@@ -2382,6 +2382,96 @@
         "{{verbose??--verbose}}"
       ],
       "value": "211447"
+    },
+    // #endregion
+    // #region Day 02
+    {
+      "name": "2022-02-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "2",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day02/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "15"
+    },
+    {
+      "name": "2022-02-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "2",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day02/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "13268"
+    },
+    {
+      "name": "2022-02-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "2",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day02/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "12"
+    },
+    {
+      "name": "2022-02-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "2",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day02/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "15508"
     }
     // #endregion
     // #endregion
