@@ -13,10 +13,12 @@ use crate::lib::puzzle::*;
 // Import child modules
 mod day01;
 mod day02;
+mod day03;
 
 /// Registers year runner
 pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
   registry = day01::init(registry);
   registry = day02::init(registry);
+  registry = day03::init(registry);
   registry
 }

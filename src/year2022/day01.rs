@@ -8,12 +8,6 @@ use crate::lib::puzzle::*;
 use crate::lib::input::*;
 
 /// Parses input data
-/// 
-/// # Arguments
-/// * data: Puzzle input data
-/// 
-/// # Returns
-/// Vector of numbers
 fn parse(data: &String) -> Vec<Vec<usize>>{
   Input::parse(data.as_str().trim(), "\n\n", |data| {
     Input::parse(data, "\n", |x| { x.parse::<usize>().unwrap() })

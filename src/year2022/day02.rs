@@ -8,12 +8,6 @@ use crate::lib::puzzle::*;
 use crate::lib::input::*;
 
 /// Parses input data
-/// 
-/// # Arguments
-/// * data: Puzzle input data
-/// 
-/// # Returns
-/// Vector of numbers
 fn parse(data: &String) -> Vec<Vec<&str>>{
   Input::parse(data.as_str().trim(), "\n", |data| {
     Input::parse(data, " ", |x| {
@@ -23,7 +17,7 @@ fn parse(data: &String) -> Vec<Vec<&str>>{
 }
 
 fn game_translate(game_strings: &Vec<Vec<&str>>) -> Vec<(usize, usize)> {
-  // Initialize result
+  // Return result
   let mut game_numbers: Vec<(usize, usize)> = vec![];
   // Map characters to values
   for round in game_strings {
@@ -65,7 +59,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
         let result = if round.0 as isize % 3 == round.1 as isize % 3 { 3 } // Shows same play -> Draw
                else if round.0 as isize % 3 == (round.1 as isize + 1) % 3 { 0 }   // Shows one lower play -> Loss
                else if (round.0 as isize + 1) % 3 == round.1 as isize % 3 { 6 }   // Shows one higher play -> Win
-               else { 0 };
+               else { panic!("This can never happen!") };
         let scores = ((round.1 % 3) + 1, result);
         score += scores.0 + scores.1;
       }
@@ -96,10 +90,10 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Calculate score
       let mut score: usize = 0;
       for round in &game_numbers {
-        let play: usize = if round.1 == 0 { (round.0 as isize - 1 + 3) % 3 } // -> Loss -> Show one lower play
-                     else if round.1 == 1 { round.0 as isize } // -> Draw -> Show same play
-                     else if round.1 == 2 { (round.0 as isize + 1) % 3 } // -> Win -> Show one higher play
-                     else { 0 } as usize;
+        let play: usize = if round.1 == 0 { ((round.0 as isize - 1 + 3) % 3) as usize } // -> Loss -> Show one lower play
+                     else if round.1 == 1 { (round.0 as isize) as usize } // -> Draw -> Show same play
+                     else if round.1 == 2 { ((round.0 as isize + 1) % 3) as usize } // -> Win -> Show one higher play
+                     else { panic!("This can never happen!") };
         let scores = (play + 1, round.1 * 3);
         score += scores.0 + scores.1;
       }
