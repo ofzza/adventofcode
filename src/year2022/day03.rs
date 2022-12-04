@@ -1,6 +1,6 @@
-//! 2022 day 01 puzzle
+//! 2022 day 03 puzzle
 //! 
-//! https://adventofcode.com/2022/day/1
+//! https://adventofcode.com/2022/day/3
 // -----------------------------------------------------------------------------
 
 // Include dependencies

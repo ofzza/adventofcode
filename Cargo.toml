@@ -4,6 +4,10 @@
   authors = ["ofzza <ofzza@ofzza.com>"]
   edition = "2018"
 
+[[bin]]
+name = "adventofcode"
+src = "src/main.rs"
+
 [profile.dev]
   opt-level = 0
   debug = true

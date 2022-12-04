@@ -2,8 +2,11 @@
 // https://adventofcode.com/
 // -----------------------------------------------------------------------------
 
-// Load child modules
+// Load shared libraries
+#![allow(special_module_name)]
 mod lib;
+
+// Load puzzles
 mod demo;
 mod year2021;
 mod year2022;
