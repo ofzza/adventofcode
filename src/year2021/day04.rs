@@ -13,8 +13,8 @@ fn parse(data: &String) -> (Vec<u8>, Vec<Vec<Vec<u8>>>) {
   let parsed: Vec<&str> = data.as_str().trim().splitn(2, "\n\n").collect();
   let numbers = Input::parse(parsed[0].trim(), ",", |n| n.parse::<u8>().unwrap());
   let cards = Input::parse(parsed[1].trim(), "\n\n", |card| {
-    Input::parse(card, "\n", |nums| {
-      Input::parse(&nums.to_string().as_str().replace("  ", " "), " ", |n| n.parse::<u8>().unwrap())
+    Input::parse(card.trim(), "\n", |nums| {
+      Input::parse(&nums.to_string().as_str().trim().replace("  ", " "), " ", |n| n.parse::<u8>().unwrap())
     })
   });
   (numbers, cards)

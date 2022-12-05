@@ -8,7 +8,7 @@ use crate::lib::puzzle::*;
 use crate::lib::input::*;
 
 /// Parses input data
-fn parse(data: &String) -> Vec<Vec<Vec<usize>>>{
+fn parse(data: &String) -> Vec<Vec<Vec<usize>>> {
   Input::parse(data.as_str().trim(), "\n", |data| {
     Input::parse(data, ",", |data| {
       Input::parse(data, "-", |x| {

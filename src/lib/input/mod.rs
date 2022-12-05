@@ -32,7 +32,7 @@ impl Input {
   /// * separator: String to split the data on while parsing
   /// * callback:  Callback function used to parse every split section
   pub fn parse<'a, Tout> (data: &'a str, separator: &str, callback: fn (&'a str) -> Tout) -> Vec<Tout> {
-    let items: Vec<&str> = if separator == "" { data.trim().split_terminator(separator).skip(1).collect() } else { data.trim().split(separator).collect() };
+    let items: Vec<&str> = if separator == "" { data.split_terminator(separator).skip(1).collect() } else { data.split(separator).collect() };
     items.iter().map(|line| { callback(line) }).collect()
   }
 

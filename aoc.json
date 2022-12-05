@@ -2652,6 +2652,96 @@
         "{{verbose??--verbose}}"
       ],
       "value": "823"
+    },
+    // #endregion
+    // #region Day 05
+    {
+      "name": "2022-05-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "5",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day05/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "\"CMZ\""
+    },
+    {
+      "name": "2022-05-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "5",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day05/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "\"BSDMQFLSP\""
+    },
+    {
+      "name": "2022-05-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "5",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day05/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "\"MCD\""
+    },
+    {
+      "name": "2022-05-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "5",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day05/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "\"PGSQBFLDP\""
     }
     // #endregion
     // #endregion
