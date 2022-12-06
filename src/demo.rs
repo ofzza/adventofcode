@@ -24,17 +24,17 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Implementation
     |_data: String| {
       // Process data 01
-      // !DOCS: let data = Input::parse(data.as_str(), "\n", |x| { x.parse::<usize>().unwrap() });
+      // !DOCS: let data = Input::parse(data.as_str().trim(), "\n", |x| { x.parse::<usize>().unwrap() });
       // Process data 02
-      // !DOCS: let data = Input::parse(data.as_str(), "\n", |data| {
+      // !DOCS: let data = Input::parse(data.as_str().trim(), "\n", |data| {
       // !DOCS:   Input::parse(data, " ", |x| { x.parse::<usize>().unwrap() })
       // !DOCS: });
       // Process data 03
-      // !DOCS: let data = Input::parse(data.as_str(), "\n\n", |data| {
+      // !DOCS: let data = Input::parse(data.as_str().trim(), "\n\n", |data| {
       // !DOCS:   Input::parse(data, "\n", |x| { x.parse::<usize>().unwrap() })
       // !DOCS: });
       // Process data 04
-      // !DOCS: let data = Input::parse(data.as_str(), "\n\n", |data| {
+      // !DOCS: let data = Input::parse(data.as_str().trim(), "\n\n", |data| {
       // !DOCS:   Input::parse(data, "\n", |data| {
       // !DOCS:     Input::parse(data, " ", |x| { x.parse::<usize>().unwrap()
       // !DOCS:   })

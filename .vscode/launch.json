@@ -19,11 +19,11 @@
         "--year",
         "2022",
         "--day",
-        "5",
+        "6",
         "--index",
         "1",
         "--input-file",
-        "./src/year2022/data/day05/input-test.txt",
+        "./src/year2022/data/day06/input-test-2.txt",
         "--verbose"
       ],
       "cwd": "${workspaceFolder}",
