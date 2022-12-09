@@ -214,15 +214,23 @@ impl<'a> DOS<'a> {
   /// 
   /// # Arguments
   /// * callback: Callback function to be called on every directory and file as they are being traversed
+  /// * aggregate: Aggregating value being passed between itnerations of the callback execution
+  /// 
+  /// # Returns
+  /// Aggregating value being passed between itnerations of the callback execution
   pub fn traverse_fs<T> (&self, callback: fn(directory: Option<&FsDirectory>, file: Option<&FsFile>, aggregate: T) -> T, aggregate: T) -> T {
     self.traverse_directory(&self.fs, callback, aggregate)
   }
   /// Tracerses the entire FS and invokes a callback with every directory and file along the way
   /// 
   /// # Arguments
+  /// * directory: Directory to traverse
   /// * callback: Callback function to be called on every directory and file as they are being traversed
-  fn traverse_directory<T> (&self, directory: &FsDirectory, callback: fn(directory: Option<&FsDirectory>, file: Option<&FsFile>, aggregate: T) -> T, aggregate: T) -> T {
-    let mut aggregate = aggregate;
+  /// * aggregate: Aggregating value being passed between itnerations of the callback execution
+  /// 
+  /// # Returns
+  /// Aggregating value being passed between itnerations of the callback execution
+  fn traverse_directory<T> (&self, directory: &FsDirectory, callback: fn(directory: Option<&FsDirectory>, file: Option<&FsFile>, aggregate: T) -> T, mut aggregate: T) -> T {
     // Callback for current directory
     aggregate = callback(Option::Some(directory), Option::None, aggregate);
     // Callback for current directory files

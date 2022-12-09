@@ -3,3 +3,4 @@
 
 // Load child modules
 pub mod dos;
+pub mod rope;
