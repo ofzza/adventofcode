@@ -76,7 +76,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let tops = stacks.iter().map(|stack| stack.last().unwrap().clone()).collect::<Vec<&str>>().join("");
 
       // Return result
-      String::from(format!("{:?}", tops))
+      String::from(format!("{}", tops))
     }
 
   );
@@ -115,7 +115,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let tops = stacks.iter().map(|stack| stack.last().unwrap().clone()).collect::<Vec<&str>>().join("");
 
       // Return result
-      String::from(format!("{:?}", tops))
+      String::from(format!("{}", tops))
     }
 
   );

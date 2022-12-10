@@ -2675,7 +2675,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "\"CMZ\""
+      "value": "CMZ"
     },
     {
       "name": "2022-05-01-S",
@@ -2697,7 +2697,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "\"BSDMQFLSP\""
+      "value": "BSDMQFLSP"
     },
     {
       "name": "2022-05-02-T",
@@ -2719,7 +2719,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "\"MCD\""
+      "value": "MCD"
     },
     {
       "name": "2022-05-02-S",
@@ -2741,7 +2741,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "\"PGSQBFLDP\""
+      "value": "PGSQBFLDP"
     },
     // #endregion
     // #region Day 06
@@ -3278,6 +3278,96 @@
         "{{verbose??--verbose}}"
       ],
       "value": "2522"
+    },
+    // #endregion
+    // #region Day 10
+    {
+      "name": "2022-10-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "10",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day10/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "13140"
+    },
+    {
+      "name": "2022-10-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "10",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day10/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "14560"
+    },
+    {
+      "name": "2022-10-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "10",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day10/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "EKRHEPUZ"
+    },
+    {
+      "name": "2022-10-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "10",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day10/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "EKRHEPUZ"
     }
     // #endregion
     // #endregion

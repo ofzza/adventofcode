@@ -6,7 +6,7 @@
 // Include dependecies
 // ...
 
-/// Filesystem file structure
+/// Device Operating System Filesystem file structure
 #[derive(Debug)]
 pub struct FsFile<'a> {
   // Name

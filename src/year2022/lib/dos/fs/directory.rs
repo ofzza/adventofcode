@@ -7,7 +7,7 @@
 use super::file::FsFile;
 use std::collections::hash_map::HashMap;
 
-/// Filesystem directory structure
+/// Device Operating System Filesystem directory structure
 #[derive(Debug)]
 pub struct FsDirectory<'a> {
   // Name
@@ -55,6 +55,29 @@ impl FsDirectory<'_> {
     }
     // Set directory size
     self.size = size;
+  }
+
+  /// Tracerses the entire FS and invokes a callback with every directory and file along the way
+  /// 
+  /// # Arguments
+  /// * callback: Callback function to be called on every directory and file as they are being traversed
+  /// * aggregate: Aggregating value being passed between itnerations of the callback execution
+  /// 
+  /// # Returns
+  /// Aggregating value being passed between itnerations of the callback execution
+  pub fn traverse<T> (&self, callback: fn(directory: Option<&FsDirectory>, file: Option<&FsFile>, aggregate: T) -> T, mut aggregate: T) -> T {
+    // Callback for current directory
+    aggregate = callback(Option::Some(self), Option::None, aggregate);
+    // Callback for current directory files
+    for file in self.files.values() {
+      aggregate = callback(Option::None, Option::Some(&file), aggregate);
+    }
+    // Traverse (sub)directories
+    for dir in self.directories.values() {
+      aggregate = dir.traverse(callback, aggregate);
+    }
+    // Return edited aggregate
+    aggregate
   }
 }
 

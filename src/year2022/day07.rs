@@ -36,11 +36,11 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let mut dos = DOS::new();
 
       // Parse out individial commands
-      dos.terminal(&data);
+      dos.process_terminal_stdout(&data);
       // Refresh directory structure sizes
-      dos.refresh_fs_sizes();      
+      dos.fs.refresh_sizes();      
       // Traverse FS
-      let size: usize = dos.traverse_fs(|directory, _, aggregate| {
+      let size: usize = dos.fs.traverse(|directory, _, aggregate| {
         // Match directories
         match directory {
           Option::Some(directory) => aggregate + if directory.size <= 100000 { directory.size } else { 0 },
@@ -74,15 +74,15 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let mut dos = DOS::new();
 
       // Parse out individial commands
-      dos.terminal(&data);
+      dos.process_terminal_stdout(&data);
       // Refresh directory structure sizes
-      dos.refresh_fs_sizes();      
+      dos.fs.refresh_sizes();      
       // Get total used space
       let total = 70000000;
-      let used = dos.fs.size;
+      let used = dos.fs.root.size;
       let free = total - used;
       // Traverse FS to find directory to delete
-      let (_, size): (usize, usize) = dos.traverse_fs(|directory, _, aggregate| {
+      let (_, size): (usize, usize) = dos.fs.traverse(|directory, _, aggregate| {
         // Match directories
         match directory {
           Option::Some(directory) => if (aggregate.0 + directory.size) >= 30000000 && directory.size < aggregate.1 { (aggregate.0, directory.size) } else { aggregate },
