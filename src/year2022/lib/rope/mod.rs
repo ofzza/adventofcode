@@ -18,7 +18,7 @@ impl Rope {
   /// 
   /// # Arguments
   /// * len: Number of sections simulating the rope
-  pub fn new (len: usize) -> Rope<> {
+  pub fn new (len: usize) -> Rope {
     // Check for minimal length
     if len < 2 {
       panic!("Rope of length < 2 not allowed!");
