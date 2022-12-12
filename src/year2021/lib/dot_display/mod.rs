@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------
 
 // Include dependencies
-use crate::year2021::lib::matrix::*;
+use crate::year::lib::matrix::*;
 
 /// Dot display struct
 pub struct DotDisplay {}

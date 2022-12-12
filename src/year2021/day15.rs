@@ -6,7 +6,7 @@
 // Include dependencies
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
-use crate::year2021::lib::matrix::*;
+use crate::year::lib::matrix::*;
 
 /// Parses input data
 fn parse(data: &String) -> Vec<Vec<usize>> {

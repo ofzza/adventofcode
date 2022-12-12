@@ -1,8 +1,6 @@
-//! 2022 common library module
+//! Any year module
 // -----------------------------------------------------------------------------
 
 // Load child modules
-pub mod dos;
-pub mod rope;
-pub mod keep_away;
-pub mod hill_climb;
+pub mod lib;
+pub use lib::*;

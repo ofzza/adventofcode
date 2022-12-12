@@ -6,7 +6,7 @@
 // Include dependencies
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
-use crate::year2022::keepaway::*;
+use crate::year2022::keep_away::*;
 
 /// Parses input data
 fn parse<'a>(data: &'a String) -> Vec<PlayerState<'a>> {

@@ -8,6 +8,7 @@ mod lib;
 
 // Load puzzles
 mod demo;
+mod year;
 mod year2021;
 mod year2022;
 
