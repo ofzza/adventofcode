@@ -59,9 +59,25 @@ fn main() {
       // Time function execution
       let start_input = Instant::now();
       // Load puzzle input
-      let input = if !args.input_value.is_empty() { args.input_value.clone() }
-        else if !args.input_file.is_empty() { Input::read_file(&args.input_file) }
-        else { String::default() };
+      let input = if !args.input_value.is_empty() {
+          args.input_value.clone()
+        }
+        else if !args.input_file.is_empty() {
+          let year  = format!("{:0>4}", info.year);
+          let day   = format!("{:0>2}", info.day);
+          let index = format!("{:0>2}", info.index);
+          let tag   = info.tag.as_str();
+          Input::read_file(
+            &args.input_file
+              .replace("[:year]",  year.to_string().as_str())
+              .replace("[:day]",   day.to_string().as_str())
+              .replace("[:index]", index.to_string().as_str())
+              .replace("[:tag]",   tag)
+          )
+        }
+        else {
+          String::default()
+        };
       // Run puzzle
       PuzzleRegistry::execute(info, start_input, f, input, &args);
     }

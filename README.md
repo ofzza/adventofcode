@@ -21,10 +21,12 @@ Available arguments:
 
 - Specify input data:
 
-  | Description   | Syntax                                     | Explanation                           |
-  | ------------- | ------------------------------------------ | ------------------------------------- |
-  | --input-file  | `$ cargo run -- --input-file ./input.txt`  | Path to a file containing input data  |
-  | --input-value | `$ cargo run -- --input-value "1 2 3 4 5"` | Explicit string containing input data |
+  | Description   | Syntax                                           | Explanation                                        |
+  | ------------- | ------------------------------------------------ | -------------------------------------------------- |
+  | --input-file  | `$ cargo run -- --input-file ./input.txt`        | Path to a file containing input data               |
+  |               | `$ cargo run -- --input-file ./input-[:day].txt` | Interpolated path to a file containing input data  |
+  |               |                                                  | Allowed: `[:year]`, `[:day]`, `[:index]`, `[:tag]` |
+  | --input-value | `$ cargo run -- --input-value "1 2 3 4 5"`       | Explicit string containing input data              |
 
 - Result validation:
 
