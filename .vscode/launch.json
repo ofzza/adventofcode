@@ -21,7 +21,7 @@
         "--day",
         "13",
         "--index",
-        "1",
+        "2",
         "--input-file",
         "./src/year2022/data/day13/input-test.txt",
         "--verbose"
