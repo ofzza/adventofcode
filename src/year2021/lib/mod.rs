@@ -7,7 +7,6 @@ pub mod amphipods_burrow;
 pub mod bingo;
 pub mod bits;
 pub mod diagnostic_report;
-pub mod dot_display;
 pub mod geometry_cuboids;
 pub mod geometry_plain;
 pub mod hatchery;

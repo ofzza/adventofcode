@@ -3638,6 +3638,96 @@
         "{{verbose??--verbose}}"
       ],
       "value": "25038"
+    },
+    // #endregion
+    // #region Day 14
+    {
+      "name": "2022-14-01-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "14",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day14/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "24"
+    },
+    {
+      "name": "2022-14-01-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "14",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2022/data/day14/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "757"
+    },
+    {
+      "name": "2022-14-02-T",
+      "type": "test",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "14",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day14/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "93"
+    },
+    {
+      "name": "2022-14-02-S",
+      "type": "solution",
+      "command": "cargo",
+      "args": [
+        "run",
+        "--release",
+        "--",
+        "--year",
+        "2022",
+        "--day",
+        "14",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2022/data/day14/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "24943"
     }
     // #endregion
     // #endregion

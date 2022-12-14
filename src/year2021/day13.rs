@@ -6,7 +6,7 @@
 // Include dependencies
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
-use crate::year2021::lib::dot_display::*;
+use crate::year::lib::dot_display::*;
 
 /// Parses input data
 fn parse(data: &String) -> (Vec<(usize, usize)>, Vec<(&str, usize)>) {
@@ -86,7 +86,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       points.dedup();
 
       // Display points
-      DotDisplay::print(points);
+      DotDisplay::print_binary(points);
 
       // Calculate and return result
       String::from(format!("{}", "PGHZBFJC"))

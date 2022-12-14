@@ -93,7 +93,7 @@ fn enhance (original_image: &Vec<Vec<bool>>, algorithm: &Vec<bool>, n: usize) ->
   let mut image_points_len = image_points.len();
 
   // Draw image
-  // DotDisplay::print(image_points);
+  // DotDisplay::print_binary(image_points);
   // println!("");
 
   // CEnhance the image a requested number of consequitive times
@@ -137,7 +137,7 @@ fn enhance (original_image: &Vec<Vec<bool>>, algorithm: &Vec<bool>, n: usize) ->
     image_points_len = image_points.len();
 
     // Draw image
-    // DotDisplay::print(image_points);
+    // DotDisplay::print_binary(image_points);
     // println!("");
   }
 
