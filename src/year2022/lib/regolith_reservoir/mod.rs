@@ -27,6 +27,9 @@ impl RegolithReservoir {
   /// Constructor
   /// 
   /// # Arguments
+  /// * source: Coordinates for the source of the falling sand
+  /// * walls: Inflection points of all defined walls
+  /// * infinite_floor_offset: Offset of the "infinite floor" under the lowest real floor height, if "infinite floor" exists
   pub fn new (source: (usize, usize), walls: Vec<Vec<(usize, usize)>>, infinite_floor_offset: Option<usize>) -> RegolithReservoir {
     // Initialize hashmap
     let mut hash: HashMap<(usize, usize), bool> = HashMap::new();
