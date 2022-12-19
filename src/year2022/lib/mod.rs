@@ -9,3 +9,5 @@ pub mod hill_climb;
 pub mod distress_signal;
 pub mod regolith_reservoir;
 pub mod beacons;
+pub mod vulcano;
+pub mod voxel_space;
