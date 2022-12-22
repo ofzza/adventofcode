@@ -12,3 +12,4 @@ pub mod beacons;
 pub mod vulcano;
 pub mod voxel_space;
 pub mod tetris;
+pub mod monkey_math;
