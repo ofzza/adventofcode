@@ -27,7 +27,7 @@ impl VArgs {
   /// * `--year`        - Only executes puzzles marked with same year  (Set 0 or omit for all years)
   /// * `--day`         - Only executes puzzles marked with same day   (Set 0 or omit for all days)
   /// * `--index`       - Only executes puzzles marked with same index (Set 0 or omit for all indices)
-  /// * `--tag`        - Only executes puzzles marked with same tag  (Leave empty or omit for all tags)
+  /// * `--tag`         - Only executes puzzles marked with same tag  (Leave empty or omit for all tags)
   /// * `--input-file`  - Path to the input data file (Leave empty if you want to use explicit input value)
   /// * `--input-value` - Explicit input data (Leave empty if you want to use data from the input file instead)
   /// * `--expect`      - Expected result for the puzzle to output (Leave empty or omit for no expected result)

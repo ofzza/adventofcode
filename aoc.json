@@ -3931,7 +3931,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "3068"
     },
     {
       "name": "2022-17-01-S",
@@ -3953,11 +3953,12 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "3048"
     },
     {
       "name": "2022-17-02-T",
-      "type": "test",
+      // FIXME: Speed this up somehow!
+      "type": "SLOW:test",
       "command": "cargo",
       "args": [
         "run",
@@ -3975,11 +3976,12 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "1514285714288"
     },
     {
       "name": "2022-17-02-S",
-      "type": "solution",
+      // FIXME: Speed this up somehow!
+      "type": "SLOW:solution",
       "command": "cargo",
       "args": [
         "run",
@@ -3997,7 +3999,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "1504093567249"
     },
     // #endregion
     // #region Day 18

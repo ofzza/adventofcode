@@ -11,3 +11,4 @@ pub mod regolith_reservoir;
 pub mod beacons;
 pub mod vulcano;
 pub mod voxel_space;
+pub mod tetris;
