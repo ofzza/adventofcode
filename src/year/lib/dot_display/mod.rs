@@ -11,6 +11,28 @@ pub struct DotDisplay {}
 /// Dot display implementation
 impl DotDisplay {
 
+  /// Normalizes a vector of points to only positive coordinates
+  /// 
+  /// # Arguments
+  /// * points: Pointe to normalize
+  /// 
+  /// # Returns
+  /// Normalized coordiantes
+  pub fn normalize (points: &Vec<(isize, isize)>) -> Vec<(usize, usize)> {
+    // Find min x and y coordinates
+    let min: (isize, isize) = (
+      points.iter().map(|p| p.0).collect::<Vec<isize>>().iter().min().unwrap().clone(),
+      points.iter().map(|p| p.1).collect::<Vec<isize>>().iter().min().unwrap().clone()
+    );
+    // Calculate offset
+    let offset = (
+      if min.0 < 0 { min.0.abs() } else { 0 },
+      if min.1 < 0 { min.1.abs() } else { 0 }
+    );
+    // Normalize coordinates
+    points.iter().map(|c| ((c.0 + offset.0) as usize, (c.1 + offset.1) as usize)).collect::<Vec<(usize, usize)>>()
+  }
+
   /// Print points to display
   /// 
   /// # Arguments

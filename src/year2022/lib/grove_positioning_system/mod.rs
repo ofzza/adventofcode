@@ -3,9 +3,6 @@
 //! Grove Positioning System module
 // -----------------------------------------------------------------------------
 
-// Include dependencies
-use std::{collections::hash_map::HashMap, ptr::eq, clone};
-
 /// Grove Positioning System structure
 pub struct GPS {
   // Original values as set
@@ -26,7 +23,9 @@ impl GPS {
     }
     // Return new instance of GPS
     GPS {
+      // Original values as set
       values,
+      // Current position of each mixed value indexed by its original position
       position_by_index,
     }
   }
