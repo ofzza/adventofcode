@@ -1,24 +1,18 @@
-//! 2022 day 22 puzzle
+//! 2022 day 25 puzzle
 //! 
-//! https://adventofcode.com/2022/day/22
+//! https://adventofcode.com/2022/day/25
 // -----------------------------------------------------------------------------
 
 // Include dependencies
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
-use crate::year2022::lib::monkey_map::MonkeyMap;
+use crate::year2022::lib::snafu::SNAFU;
 
 /// Parses input data
-fn parse<'a>(data: &'a String) -> (Vec<Vec<char>>, &str) {
-  // Extract sections
-  let sections = Input::parse(data.as_str().trim(), "\n\n", |data| data);
-  // Parse 1st sectipn
-  let section = Input::parse(sections[0].trim(), "\n", |data| {
-    Input::parse(data, "", |x| x.chars().nth(0).unwrap())
-  });
-  // Return sections
-  (section, sections[1].trim())
-
+fn parse<'a>(data: &'a String) -> Vec<&str> {
+  Input::parse(data.as_str().trim(), "\n", |data| {
+    data
+  })
 }
 
 /// Registers puzzles for the day
@@ -30,7 +24,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Info
     PuzzleInfo {
       year: 2022,
-      day: 22,
+      day: 25,
       index: 1,
       tag: String::from("puzzle")
     },
@@ -40,11 +34,17 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Process input data
       let data = parse(&data);
 
-      // Initialize map
-      let mut map = MonkeyMap::new(data.0, data.1);
+      // Decode and sum all the numbers provided
+      let mut sum: isize = 0;
+      for num in data {
+        sum += SNAFU::decode(num);
+      }
+
+      // Encode the sum
+      let encoded = SNAFU::encode(sum);
 
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from(format!("{}", encoded))
     }
 
   );
@@ -55,18 +55,15 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Info
     PuzzleInfo {
       year: 2022,
-      day: 22,
+      day: 25,
       index: 2,
       tag: String::from("puzzle")
     },
 
     // Implementation
     |data: String| {
-      // Process input data
-      let _data = parse(&data);
-      
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from("Done!")
     }
 
   );
