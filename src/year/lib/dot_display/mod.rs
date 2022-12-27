@@ -18,6 +18,7 @@ impl DotDisplay {
   /// 
   /// # Returns
   /// Normalized coordiantes
+  #[allow(dead_code)]
   pub fn normalize (points: &Vec<(isize, isize)>) -> Vec<(usize, usize)> {
     // Find min x and y coordinates
     let min: (isize, isize) = (

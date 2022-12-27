@@ -11,9 +11,9 @@ use crate::year2022::lib::monkey_map::MonkeyMap;
 /// Parses input data
 fn parse<'a>(data: &'a String) -> (Vec<Vec<char>>, &str) {
   // Extract sections
-  let sections = Input::parse(data.as_str().trim(), "\n\n", |data| data);
+  let sections = Input::parse(data.as_str(), "\n\n", |data| data);
   // Parse 1st sectipn
-  let section = Input::parse(sections[0].trim(), "\n", |data| {
+  let section = Input::parse(sections[0], "\n", |data| {
     Input::parse(data, "", |x| x.chars().nth(0).unwrap())
   });
   // Return sections
@@ -43,8 +43,25 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       // Initialize map
       let mut map = MonkeyMap::new(data.0, data.1);
 
+      // Follow directions
+      let coords = map.follow_directions(|map, coords, direction| {
+        return map.determine_next_coordinates_with_wraparound(&coords, &direction)
+      });
+
+      // Encode final position
+      let result =
+          1000 * coords.1
+        +    4 * coords.0
+        + match map.orientation {
+          ( 1,  0) => 0,
+          ( 0,  1) => 1,
+          (-1,  0) => 2,
+          ( 0, -1) => 3,
+          _ => panic!("Undefined orientation!")
+        };
+
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from(format!("{:?}", result))
     }
 
   );
@@ -63,10 +80,30 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Implementation
     |data: String| {
       // Process input data
-      let _data = parse(&data);
-      
+      let data = parse(&data);
+
+      // Initialize map
+      let mut map = MonkeyMap::new(data.0, data.1);
+
+      // Follow directions
+      let coords = map.follow_directions(|map, coords, direction| {
+        return map.determine_next_coordinates_on_cube(&coords, &direction)
+      });
+
+      // Encode final position
+      let result =
+          1000 * coords.1
+        +    4 * coords.0
+        + match map.orientation {
+          ( 1,  0) => 0,
+          ( 0,  1) => 1,
+          (-1,  0) => 2,
+          ( 0, -1) => 3,
+          _ => panic!("Undefined orientation!")
+        };
+
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from(format!("{:?}", result))
     }
 
   );

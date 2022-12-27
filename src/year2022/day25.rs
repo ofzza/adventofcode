@@ -61,7 +61,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     },
 
     // Implementation
-    |data: String| {
+    |_| {
       // Return result
       String::from("Done!")
     }
