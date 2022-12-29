@@ -3863,7 +3863,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "1647"
     },
     {
       "name": "2022-16-02-T",
@@ -3885,11 +3885,12 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "1707"
     },
     {
+      // FIXME: Speed this up somehow!
       "name": "2022-16-02-S",
-      "type": "solution",
+      "type": "SLOW:solution",
       "command": "cargo",
       "args": [
         "run",
@@ -3907,7 +3908,7 @@
         "{{:value}}",
         "{{verbose??--verbose}}"
       ],
-      "value": "0"
+      "value": "2169"
     },
     // #endregion
     // #region Day 17

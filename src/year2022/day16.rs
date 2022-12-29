@@ -42,7 +42,7 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
       let mut vulcano = Vulcano::new(data);
 
       // Calculate maximum release starting from valve "AA" within 30 minutes
-      let max = vulcano.calculate_max_release_in_minutes("AA", 30);
+      let max = vulcano.calculate_max_release(vec!["AA"], 30);
       
       // Return result
       String::from(format!("{:?}", max))
@@ -64,10 +64,16 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Implementation
     |data: String| {
       // Process input data
-      let _data = parse(&data);
+      let data = parse(&data);
+
+      // Initialize a vulcano
+      let mut vulcano = Vulcano::new(data);
+
+      // Calculate maximum release starting from valve "AA" within 30 minutes
+      let max = vulcano.calculate_max_release(vec!["AA", "AA"], 26);
       
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from(format!("{:?}", max))
     }
 
   );
