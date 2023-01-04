@@ -91,7 +91,7 @@ impl<'a> Vulcano<'a> {
     // Initialize a path for each participant
     let paths = starting_valve_names.iter().map(|name| vec![(name.clone(), false)]).collect::<Vec<Vec<(&str, bool)>>>();
     // Find max release
-    let (global_max_release, _, max_paths) = self.calculate_max_release_internal(
+    let (global_max_release, _, max_paths) = self._calculate_max_release(
       0,
       starting_valve_names,
       time_total,
@@ -110,8 +110,8 @@ impl<'a> Vulcano<'a> {
     global_max_release
   }
 
-  /// TODO:...
-  fn calculate_max_release_internal (
+  /// Internal, recursive method for calculating max release
+  fn _calculate_max_release (
     &self,
     global_max_release: usize,
     names: Vec<&'a str>,
@@ -342,7 +342,7 @@ impl<'a> Vulcano<'a> {
         // Calculate release after having opened the valve (and have spent an extra minute to do so ...)
         let release_accumulated_next = release_accumulated + release_rate;
         let release_rate_next = release_rate + release_rate_diff;
-        let (_, returned_release, returned_path) = self.calculate_max_release_internal(global_max_release, names_next, time - 1, release_accumulated_next, release_rate_next, opened_next, skipped_next, useless_next, paths_next);
+        let (_, returned_release, returned_path) = self._calculate_max_release(global_max_release, names_next, time - 1, release_accumulated_next, release_rate_next, opened_next, skipped_next, useless_next, paths_next);
         // Check if release is better than current max
         if returned_release > release_max {
           // Set next maximum
