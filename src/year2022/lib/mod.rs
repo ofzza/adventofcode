@@ -18,3 +18,4 @@ pub mod unstable_diffusion;
 pub mod monkey_map;
 pub mod snafu;
 pub mod mining_blueprint;
+pub mod blizzards;

@@ -3,6 +3,7 @@
 //! Beacon Exclusion Zone module
 // -----------------------------------------------------------------------------
 
+// Include dependencies
 use std::collections::HashSet;
 
 /// Beacon Exclusion Zone structure

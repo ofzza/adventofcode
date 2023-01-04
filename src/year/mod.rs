@@ -3,4 +3,3 @@
 
 // Load child modules
 pub mod lib;
-pub use lib::*;

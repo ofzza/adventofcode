@@ -19,9 +19,9 @@
         "--year",
         "2022",
         "--day",
-        "19",
+        "24",
         "--index",
-        "1",
+        "2",
         "--input-file",
         "./src/year[:year]/data/day[:day]/input-test.txt",
         "--verbose"

@@ -33,7 +33,7 @@ pub struct MiningBlueprint<'a> {
   recipes: HashMap<usize, MiningRecipe<'a>>,
   // Enummerated ingrediant names
   index_by_ingrediant: HashMap<&'a str, usize>,
-  ingrediant_by_index: Vec<&'a str>
+  _ingrediant_by_index: Vec<&'a str>
 }
 
 /// Mining Blueprint implementation
@@ -85,7 +85,7 @@ impl<'a> MiningBlueprint<'a> {
       recipes: recipes_hashmap,
       // Enumerated types
       index_by_ingrediant,
-      ingrediant_by_index
+      _ingrediant_by_index: ingrediant_by_index
     }
   }
 

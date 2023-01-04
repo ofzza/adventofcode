@@ -5,8 +5,8 @@
 
 // Include dependencies
 use std::collections::hash_set::HashSet;
-use crate::year::math::Math;
-use crate::year::matrix::Matrix;
+use crate::year::lib::math::Math;
+use crate::year::lib::matrix::Matrix;
 
 /// Monkey Map Face structure
 pub struct MonkeyMapFace {

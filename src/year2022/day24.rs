@@ -6,10 +6,12 @@
 // Include dependencies
 use crate::lib::puzzle::*;
 use crate::lib::input::*;
+use crate::year2022::lib::blizzards::BlizzardBasin;
+
 /// Parses input data
-fn parse<'a>(data: &'a String) -> Vec<&str> {
+fn parse<'a>(data: &'a String) -> Vec<Vec<char>> {
   Input::parse(data.as_str().trim(), "\n", |data| {
-    data
+    data.chars().collect::<Vec<char>>()
   })
 }
 
@@ -30,10 +32,16 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Implementation
     |data: String| {
       // Process input data
-      let _data = parse(&data);
+      let data = parse(&data);
+
+      // Initialize blizzard basin
+      let mut blizzards = BlizzardBasin::new(data);
+
+      // Find quickest path
+      let steps = blizzards.traverse(blizzards.position_start.clone(), blizzards.position_end.clone(), 0);      
       
       // Return result
-      String::from(format!("{:?}", 0))
+      String::from(format!("{:?}", steps))
     }
 
   );
@@ -52,10 +60,19 @@ pub fn init (mut registry: PuzzleRegistry) -> PuzzleRegistry {
     // Implementation
     |data: String| {
       // Process input data
-      let _data = parse(&data);
+      let data = parse(&data);
+
+      // Initialize blizzard basin
+      let mut blizzards = BlizzardBasin::new(data);
+
+      // Find quickest path
+      let steps_there                      = blizzards.traverse(blizzards.position_start.clone(), blizzards.position_end.clone(), 0);      
+      let steps_there_and_back             = blizzards.traverse(blizzards.position_end.clone(), blizzards.position_start.clone(), steps_there);      
+      let steps_there_back_and_there_again = blizzards.traverse(blizzards.position_start.clone(), blizzards.position_end.clone(), steps_there_and_back);      
       
       // Return result
-      String::from(format!("{:?}", 0))
+      // 819 => Too low!
+      String::from(format!("{:?}", steps_there_back_and_there_again))
     }
 
   );
