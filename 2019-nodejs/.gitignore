@@ -1,0 +1,12 @@
+# Dependency directories
+node_modules/
+package-lock.json
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Binaries
+binary

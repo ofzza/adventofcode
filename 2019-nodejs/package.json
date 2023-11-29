@@ -1,0 +1,28 @@
+{
+  "name": "adventofcode.com",
+  "version": "0.0.0",
+  "description": "My adventofcode.com solutions",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "readline-sync": "^1.4.10",
+    "yargs": "^15.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ofzza/adventofcode.git"
+  },
+  "author": "ofzza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ofzza/adventofcode/issues"
+  },
+  "homepage": "https://github.com/ofzza/adventofcode#readme"
+}

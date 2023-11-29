@@ -1,3 +1,7 @@
+# Binaries
+bin
+obj
+
 # Log files
 *.log
 
