@@ -1,0 +1,93 @@
+{
+  "author": "ofzza",
+  "year": 2023,
+  "tasks": [
+    // #region YEAR 2023
+    // #region Day 01
+    {
+      "name": "2023-01-01-T",
+      "type": "test",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--",
+        "--year",
+        "2023",
+        "--day",
+        "1",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2023/data/day01/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "0"
+    },
+    {
+      "name": "2023-01-01-S",
+      "type": "solution",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--",
+        "--year",
+        "2023",
+        "--day",
+        "1",
+        "--index",
+        "1",
+        "--input-file",
+        "./src/year2023/data/day01/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "0"
+    },
+    {
+      "name": "2023-01-02-T",
+      "type": "test",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--",
+        "--year",
+        "2023",
+        "--day",
+        "1",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2023/data/day01/input-test.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "0"
+    },
+    {
+      "name": "2023-01-02-S",
+      "type": "solution",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--",
+        "--year",
+        "2023",
+        "--day",
+        "1",
+        "--index",
+        "2",
+        "--input-file",
+        "./src/year2023/data/day01/input.txt",
+        "--expect",
+        "{{:value}}",
+        "{{verbose??--verbose}}"
+      ],
+      "value": "0"
+    }
+    // #endregion
+  ]
+}
