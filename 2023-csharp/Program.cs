@@ -71,10 +71,12 @@ public class Program
         // Initialize summary
         var successByTag = new Dictionary<string, int>() { { "*", 0 } };
         var failByTag = new Dictionary<string, int>() { { "*", 0 } };
+        var unknownByTag = new Dictionary<string, int>() { { "*", 0 } };
         var timeByTag = new Dictionary<string, int>() { { "*", 0 } };
         foreach (var tag in Enum.GetValues(typeof(Tag))) {
             successByTag.Add(tag.ToString()!.ToLower(), 0);
             failByTag.Add(tag.ToString()!.ToLower(), 0);
+            unknownByTag.Add(tag.ToString()!.ToLower(), 0);
             timeByTag.Add(tag.ToString()!.ToLower(), 0);
         }
         // Process all available types
@@ -127,18 +129,24 @@ public class Program
                 // Evaluate output
                 var outputString = this.Obfuscate ? "".PadLeft(output?.ToString()?.Length ?? 0, '#') : output?.ToString();
                 var expectString = this.Obfuscate ? "".PadLeft(expect?.ToString()?.Length ?? 0, '#') : expect?.ToString();
-                if (expect != null && !object.Equals(output, expect))
+                if (expect != null && object.Equals(output, expect))
                 {
+                    Console.Create(ConsoleColor.Green).WriteLine($"""   ✅ {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms)""");
+                    successByTag[tag?.ToLower()!] += 1;
+                    successByTag["*"] += 1;
+                    timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                }
+                else if (expect != null && !object.Equals(output, expect)) {
                     Console.Create(ConsoleColor.Red).WriteLine($"""   ❌ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms, Expected {expectString})""");
                     failByTag[tag?.ToLower()!] += 1;
                     failByTag["*"] += 1;
                     timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                     timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
-                }
-                else {
-                    Console.Create(ConsoleColor.Green).WriteLine($"""   ✅ {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms)""");
-                    successByTag[tag?.ToLower()!] += 1;
-                    successByTag["*"] += 1;
+                } else {
+                    Console.Create(ConsoleColor.Yellow).WriteLine($"""   ❔ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms, Expected {expectString})""");
+                    unknownByTag[tag?.ToLower()!] += 1;
+                    unknownByTag["*"] += 1;
                     timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                     timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                 }
@@ -150,13 +158,20 @@ public class Program
             console.WriteLine();
             console.WriteLine("--- SUMMARY ---");
             console.WriteLine();
-            console.WriteLine($"""- ✅ Successful executions: {successByTag["*"]}/{successByTag["*"] + failByTag["*"]}""");
+            console.WriteLine($"""- ✅ Successful executions: {successByTag["*"]}/{successByTag["*"] + failByTag["*"] + unknownByTag["*"]}""");
             foreach (var tag in Enum.GetValues(typeof(Tag))) {
                 console.WriteLine($"""   - {tag,-8}: {successByTag[tag.ToString()!.ToLower()]}/{successByTag[tag.ToString()!.ToLower()] + failByTag[tag.ToString()!.ToLower()]}""");
             }
+            if (unknownByTag["*"] > 0) {
+                console.WriteLine();
+                console.WriteLine($"""- ❔ Unknown executions: {unknownByTag["*"]}/{successByTag["*"] + failByTag["*"] + unknownByTag["*"]}""");
+                foreach (var tag in Enum.GetValues(typeof(Tag))) {
+                    console.WriteLine($"""   - {tag,-8}: {unknownByTag[tag.ToString()!.ToLower()]}/{successByTag[tag.ToString()!.ToLower()] + failByTag[tag.ToString()!.ToLower()]}""");
+                }
+            }
             if (failByTag["*"] > 0) {
                 console.WriteLine();
-                console.WriteLine($"""- ❌ Failed executions: {failByTag["*"]}/{successByTag["*"] + failByTag["*"]}""");
+                console.WriteLine($"""- ❌ Failed executions: {failByTag["*"]}/{successByTag["*"] + failByTag["*"] + unknownByTag["*"]}""");
                 foreach (var tag in Enum.GetValues(typeof(Tag))) {
                     console.WriteLine($"""   - {tag,-8}: {failByTag[tag.ToString()!.ToLower()]}/{successByTag[tag.ToString()!.ToLower()] + failByTag[tag.ToString()!.ToLower()]}""");
                 }

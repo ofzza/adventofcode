@@ -8,21 +8,22 @@ using ofzza.aoc.utils.matrix;
 public partial class Day03: ISolution<string[], int> {
   public int Run(SolutionExecutionRunInfo<string[]> info, Console log, bool verbose, bool obfuscate) {
     // Parse input
-    var values = parse(info.InputValue!);
+    var parsed = parse(info.InputValue!);
     var indexer = new MatrixIndexer(new[] { info.InputValue!.Length, info.InputValue![0].Length });
     // First
     if (info.ExecutionIndex == 1) {
         // Find all serial numbers adjecent to parts
         var partAdjecentSerialNumbers = new HashSet<PartSerialNumber>();
         for (var i=0; i<indexer.Length; i++) {
-          if (values[i].Type == ValueType.Part) {
+          if (parsed[i].Type == ValueType.Part) {
             var neighbors = indexer.GetNeighboringIndices(i, true);
             foreach (var neighbor in neighbors) {
-              if (values[neighbor].Type == ValueType.SerialNumber) {
-                partAdjecentSerialNumbers.Add((PartSerialNumber)values[neighbor].SerialNumber!);
+              if (parsed[neighbor].Type == ValueType.SerialNumber) {
+                partAdjecentSerialNumbers.Add((PartSerialNumber)parsed[neighbor].SerialNumber!);
               }
             }
           }
+          log.Progress(i, indexer.Length);
         }
         
         // Sum up all serial numbers adjecent to parts
@@ -37,13 +38,13 @@ public partial class Day03: ISolution<string[], int> {
         // Find all serial numbers adjecent to parts
         var sum = 0;
         for (var i=0; i<indexer.Length; i++) {
-          if (values[i].Type == ValueType.Part && values[i].Part == '*') {
+          if (parsed[i].Type == ValueType.Part && parsed[i].Part == '*') {
             var neighbors = indexer.GetNeighboringIndices(i, true);
             var neighborsSerialNumbers = new List<PartSerialNumber>();
             var hash = new HashSet<PartSerialNumber>();
             foreach (var neighbor in neighbors) {
-              if (values[neighbor].Type == ValueType.SerialNumber) {
-                var serialNumer = (PartSerialNumber)values[neighbor].SerialNumber!;
+              if (parsed[neighbor].Type == ValueType.SerialNumber) {
+                var serialNumer = (PartSerialNumber)parsed[neighbor].SerialNumber!;
                 if (!hash.Contains(serialNumer)) {
                   neighborsSerialNumbers.Add(serialNumer);
                   hash.Add(serialNumer);
@@ -54,6 +55,7 @@ public partial class Day03: ISolution<string[], int> {
               sum += neighborsSerialNumbers[0].Number * neighborsSerialNumbers[1].Number;
             }
           }
+          log.Progress(i, indexer.Length);
         }
         
         // Sum up all serial numbers adjecent to parts

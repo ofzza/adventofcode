@@ -40,7 +40,7 @@ public partial class Day03: ISolution<string[], int> {
     // Part #2, Solution
     new SolutionExecution<string[], int>(2, Tag.Solution) {
       InputValue = File.ReadAllText("./inputs/Day03/input.txt").Trim().Split("\n"),
-      Expect = null
+      Expect = 73074886
     }
   };
 }

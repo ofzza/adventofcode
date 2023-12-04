@@ -16,7 +16,8 @@ public partial class Day02: ISolution<string[], int> {
         input.Limits.First(limit => limit.Color == CubeColor.Green)!.Count,
         input.Limits.First(limit => limit.Color == CubeColor.Blue)!.Count,
       };
-      foreach (var game in input.Games) {
+      for (var i=0; i<input.Games.Count; i++) {
+        var game = input.Games[i];
         var possibleGame = true;
         foreach (var round in game.Rounds) {
           var possibleRound = true;
@@ -29,13 +30,15 @@ public partial class Day02: ISolution<string[], int> {
           if (!possibleRound) { possibleGame = false; break; }
         }
         if (possibleGame) { sum += game.Index; }
+        log.Progress(i, input.Games.Count);
       }
       return sum;
     }
     // Second
     else if (info.ExecutionIndex == 2) {
         var sum = 0;
-        foreach (var game in input.Games) {
+        for (var i=0; i<input.Games.Count; i++) {
+          var game = input.Games[i];
           var limits = new int[] { 0, 0, 0 };
           foreach (var round in game.Rounds) {
             foreach (var result in round.Results) {
@@ -45,6 +48,7 @@ public partial class Day02: ISolution<string[], int> {
             }
           }
           sum += limits[0] * limits[1] * limits[2];
+          log.Progress(i, input.Games.Count);
         }
         return sum;
     }
