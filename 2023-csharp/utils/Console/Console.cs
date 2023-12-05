@@ -60,7 +60,7 @@ public class Console {
   }
   public void Progress (double? progress) {
     if (this.SuppressProgress) return;
-    if ((DateTime.Now - this.CreatedDateTime).TotalSeconds <= 1) return;
+    if ((DateTime.Now - this.CreatedDateTime).TotalMilliseconds <= 100) return;
     var length = System.Console.WindowWidth - (14 + this.ProgressPrompt.Length + (this.ProgressPrompt.Length > 0 ? 1 : 0));
     var rounded = (int)Math.Ceiling(length * (double)progress!);
     System.Console.SetCursorPosition(0, System.Console.CursorTop);
