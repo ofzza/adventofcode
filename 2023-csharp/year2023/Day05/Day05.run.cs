@@ -2,7 +2,7 @@ namespace ofzza.aoc.year2023.day05;
 
 using System.Linq;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.range;
+using ofzza.aoc.utils.interval;
 
 public partial class Day05: ISolution<string, long> {
   public long Run(SolutionExecutionRunInfo<string> info, Console log, bool verbose, bool obfuscate) {
@@ -19,8 +19,8 @@ public partial class Day05: ISolution<string, long> {
             var mapped = false;
             var id = mappings[seedId].Last();
             foreach (var idMapping in keyMapping.Mappings) {
-              if (idMapping.SourceRange.Start <= id && (idMapping.SourceRange.End >= id)) {
-                mappings[seedId].Add(id + (idMapping.DestinationRange.Start - idMapping.SourceRange.Start));
+              if (idMapping.SourceInterval.Start <= id && (idMapping.SourceInterval.End >= id)) {
+                mappings[seedId].Add(id + (idMapping.DestinationInterval.Start - idMapping.SourceInterval.Start));
                 mapped = true;
                 break;
               }
@@ -35,34 +35,34 @@ public partial class Day05: ISolution<string, long> {
     }
     // Second
     else if (info.ExecutionIndex == 2) {
-        var ranges = new List<Range<long>>(parsed.SeedRanges);
+        var intervals = new List<Interval<long>>(parsed.SeedIntervals);
         for (var i=0; i<parsed.Mappings.Length; i++) {
           var keyMapping = parsed.Mappings[i];
-          var convertedRanges = new List<Range<long>>();
+          var convertedIntervals = new List<Interval<long>>();
           foreach (var idMapping in keyMapping.Mappings) {
-            var remainingRanges = new List<Range<long>>();
-            foreach (var range in ranges) {
-              var overlap = Range<long>.GetOverlap(range, idMapping.SourceRange);
+            var remainingIntervals = new List<Interval<long>>();
+            foreach (var interval in intervals) {
+              var overlap = Interval<long>.GetOverlap(interval, idMapping.SourceInterval);
               if (overlap.Overlap == null) {
-                remainingRanges.Add(new Range<long>() { Start = range.Start, End = range.End });
+                remainingIntervals.Add(new Interval<long>() { Start = interval.Start, End = interval.End });
               }
               else {
-                var offset = idMapping.DestinationRange.Start - idMapping.SourceRange.Start;
-                convertedRanges.Add(new Range<long>() {
+                var offset = idMapping.DestinationInterval.Start - idMapping.SourceInterval.Start;
+                convertedIntervals.Add(new Interval<long>() {
                   Start = overlap.Overlap.Start + offset,
                   End = overlap.Overlap.End + offset
                 });
                 foreach (var remainder in overlap.Remainders.Item1) {
-                  remainingRanges.Add(new Range<long>() { Start = remainder.Start, End = remainder.End });
+                  remainingIntervals.Add(new Interval<long>() { Start = remainder.Start, End = remainder.End });
                 }
               }
             }
-            ranges = remainingRanges;
+            intervals = remainingIntervals;
           }
-          ranges.AddRange(convertedRanges);
+          intervals.AddRange(convertedIntervals);
           log.Progress(i, parsed.Mappings.Length);
         }
-        return ranges.ToList().Min(m => m.Start);
+        return intervals.ToList().Min(m => m.Start);
     }
     // No other index supported
     else {
