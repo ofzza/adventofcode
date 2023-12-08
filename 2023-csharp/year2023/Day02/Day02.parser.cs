@@ -1,7 +1,6 @@
 namespace ofzza.aoc.year2023.day02;
 
 using System.Linq;
-using ofzza.aoc;
 using ofzza.aoc.utils;
 
 public partial class Day02: ISolution<string[], int> {

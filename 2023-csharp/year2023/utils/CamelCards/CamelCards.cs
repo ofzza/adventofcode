@@ -1,6 +1,5 @@
 namespace ofzza.aoc.year2023.utils.camelcards;
 
-using System.Runtime.InteropServices;
 using ofzza.aoc.year2023.day07;
 
 /// <summary>

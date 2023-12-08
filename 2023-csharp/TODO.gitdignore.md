@@ -1,6 +1,7 @@
 ### README.md
 
 - [x] `--progress`
+- [x] `--verbose [int]`
 
 ### Runner
 
@@ -10,7 +11,8 @@
 - [x] Timing
 - [ ] `--input-file`
 - [ ] `--input-value`
-- [ ] Summary
+- [x] Summary
+- [x] `--verbose [int]`
 
 ### Solutions
 

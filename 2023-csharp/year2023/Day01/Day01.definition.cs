@@ -1,8 +1,5 @@
 namespace ofzza.aoc.year2023.day01;
 
-using System.Linq;
-using System.Text.RegularExpressions;
-using ofzza.aoc;
 using ofzza.aoc.utils;
 
 public partial class Day01: ISolution<string[], int> {

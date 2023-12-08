@@ -8,5 +8,6 @@
     "**/Thumbs.db": true,
     "**/bin": true,
     "**/obj": true
-  }
+  },
+  "cSpell.words": ["iface"]
 }

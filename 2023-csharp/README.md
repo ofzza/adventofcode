@@ -37,12 +37,12 @@ Available arguments:
 
 - Format output:
 
-  | Description | Syntax                        | Explanation                            |
-  | ----------- | ----------------------------- | -------------------------------------- |
-  | --verbose   | `$ dotnet run -- --verbose`   | Will output more information           |
-  | --obfuscate | `$ dotnet run -- --obfuscate` | Will obfuscate the final result        |
-  | --progress  | `$ dotnet run -- --progress`  | Will show progress bar while executing |
-  | --summary   | `$ dotnet run -- --summary`   | Will print summary at end of execution |
+  | Description   | Syntax                          | Explanation                                                                                              |
+  | ------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------- |
+  | --verbose[:N] | `$ dotnet run -- --verbose[:N]` | Will output more information (N is an optional logging level: 0 No logging, 1 Reduced, 2 Verbose, 9 All) |
+  | --obfuscate   | `$ dotnet run -- --obfuscate`   | Will obfuscate the final result                                                                          |
+  | --progress    | `$ dotnet run -- --progress`    | Will show progress bar while executing                                                                   |
+  | --summary     | `$ dotnet run -- --summary`     | Will print summary at end of execution                                                                   |
 
 For example:
 

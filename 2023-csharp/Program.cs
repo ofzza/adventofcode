@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using ofzza.aoc.utils;
-using ofzza.aoc.year2023;
-using ofzza.aoc.year2023.day03;
 
 public class Program
 {
@@ -34,8 +32,8 @@ public class Program
     [Option("--repeat", CommandOptionType.SingleValue)]
     public int Repeat { get; } = 1;
 
-    [Option("--verbose", CommandOptionType.NoValue)]
-    public bool Verbose { get; } = false;
+    [Option("--verbose", CommandOptionType.SingleOrNoValue)]
+    public int? Verbose { get; } = 0;
 
     [Option("--obfuscate", CommandOptionType.NoValue)]
     public bool Obfuscate { get; } = false;
@@ -121,7 +119,15 @@ public class Program
                 object? output = null;
                 var executionSW = new Stopwatch();
                 for (var i=0; i<this.Repeat; i++) {
-                    var console = new Console() { ProgressPrompt = $"""{i + 1}/{this.Repeat}""", FgColor = ConsoleColor.DarkGray, Padding = 4, SuppressWrite = !this.Verbose, SuppressProgress = !this.Progress };
+                    var verbose = this.Verbose == null ? (int)ConsoleLoggingLevel.Verbose : this.Verbose;
+                    var console = new Console() {
+                        ProgressPrompt = $"""{i + 1}/{this.Repeat}""",
+                        FgColor = ConsoleColor.DarkGray,
+                        Padding = 4,
+                        SuppressWrite = verbose <= 0,
+                        LoggingLevel = (ConsoleLoggingLevel)verbose,
+                        SuppressProgress = !this.Progress
+                    };
                     executionSW.Start();
                     output = runMethod!.Invoke(solution, new object[] { info, console, true, true })!;
                     executionSW.Stop();

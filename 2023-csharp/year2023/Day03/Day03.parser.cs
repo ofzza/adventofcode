@@ -1,10 +1,7 @@
 namespace ofzza.aoc.year2023.day03;
 
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
-using ofzza.aoc;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.matrix;
 

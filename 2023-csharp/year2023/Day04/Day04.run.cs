@@ -1,10 +1,7 @@
 namespace ofzza.aoc.year2023.day04;
 
 using System.Linq;
-using System.Runtime.InteropServices;
-using ofzza.aoc;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.matrix;
 
 public partial class Day04: ISolution<string[], int> {
   public int Run(SolutionExecutionRunInfo<string[]> info, Console log, bool verbose, bool obfuscate) {

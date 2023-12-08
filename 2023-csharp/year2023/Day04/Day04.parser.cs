@@ -1,12 +1,7 @@
 namespace ofzza.aoc.year2023.day04;
 
-using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
-using ofzza.aoc;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.matrix;
 
 public partial class Day04: ISolution<string[], int> {
   private static Card[] parse (string[] input) {
