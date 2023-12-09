@@ -1,12 +1,10 @@
 namespace ofzza.aoc.utils.primes;
 
 using System;
-using System.Numerics;
 
 /// <summary>
 /// Utility class containing typical prime manipulation functions
 /// </summary>
-/// <typeparam name="T">Prime numbers' numeric type</typeparam>
 public class Primes {
 
   /// <summary>

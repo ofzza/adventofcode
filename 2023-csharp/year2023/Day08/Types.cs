@@ -1,6 +1,6 @@
-using System.Net;
-
 namespace ofzza.aoc.year2023.day08;
+
+using ofzza.aoc.utils;
 
 public class Input {
   public required Direction[] Directions { init; get; }
@@ -76,10 +76,4 @@ public class Node {
   public Node RightNode {
     get { return this.rightNode != null ? this.rightNode : this.rightNode = Node.nodes[this.RightNodeId!]; }
   }
-}
-  
-
-public enum Direction {
-  Left = 'L',
-  Right = 'R'
 }
