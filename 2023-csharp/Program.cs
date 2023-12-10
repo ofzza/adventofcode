@@ -54,7 +54,7 @@ public class Program
         var solutionTypes = Assembly.GetExecutingAssembly().GetTypes()
             .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISolution<,>)));
         // Instantiate all available types and sort by year/day
-        var typesDictionary = new SortedDictionary<string, Type>();
+        var typesDictionary = new SortedDictionary<int, Type>();
         foreach (Type solutionType in solutionTypes) {
             // Instantiate a solution
             var solution = Activator.CreateInstance(solutionType);
@@ -64,13 +64,13 @@ public class Program
             var yearDay = solutionType.GetProperty("SolutionDay")!.GetAccessors().First(m => m.ReturnType != typeof(void));
             var day = (int)yearDay.Invoke(solution, new object[] { })!;
             // Set solution type by year-day
-            typesDictionary.Add($"""{year}-{day}""", solutionType);
+            typesDictionary.Add(1000 * year + day, solutionType);
         }
         // Initialize summary
-        var successByTag = new Dictionary<string, int>() { { "*", 0 } };
-        var failByTag = new Dictionary<string, int>() { { "*", 0 } };
-        var unknownByTag = new Dictionary<string, int>() { { "*", 0 } };
-        var timeByTag = new Dictionary<string, int>() { { "*", 0 } };
+        var successByTag = new Dictionary<string, long>() { { "*", 0 } };
+        var failByTag = new Dictionary<string, long>() { { "*", 0 } };
+        var unknownByTag = new Dictionary<string, long>() { { "*", 0 } };
+        var timeByTag = new Dictionary<string, long>() { { "*", 0 } };
         foreach (var tag in Enum.GetValues(typeof(Tag))) {
             successByTag.Add(tag.ToString()!.ToLower(), 0);
             failByTag.Add(tag.ToString()!.ToLower(), 0);
@@ -140,21 +140,21 @@ public class Program
                     Console.Create(ConsoleColor.Green).WriteLine($"""   ✅ {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms)""");
                     successByTag[tag?.ToLower()!] += 1;
                     successByTag["*"] += 1;
-                    timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
-                    timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag[tag?.ToLower()!] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag["*"] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                 }
                 else if (expect != null && !object.Equals(output, expect)) {
                     Console.Create(ConsoleColor.Red).WriteLine($"""   ❌ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms, Expected {expectString})""");
                     failByTag[tag?.ToLower()!] += 1;
                     failByTag["*"] += 1;
-                    timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
-                    timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag[tag?.ToLower()!] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag["*"] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                 } else {
                     Console.Create(ConsoleColor.Yellow).WriteLine($"""   ❔ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms, Expected {expectString})""");
                     unknownByTag[tag?.ToLower()!] += 1;
                     unknownByTag["*"] += 1;
-                    timeByTag[tag?.ToLower()!] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
-                    timeByTag["*"] += (int)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag[tag?.ToLower()!] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
+                    timeByTag["*"] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                 }
             }
         }

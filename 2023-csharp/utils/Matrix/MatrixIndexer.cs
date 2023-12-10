@@ -80,6 +80,7 @@ public class MatrixIndexer {
   /// <param name="index">Linear index</param>
   /// <returns>N-dimensional coordinate</returns>
   public int[] IndexToCoordinates (int index) {
+    if (!this.CheckIfValidIndex(index)) throw new Exception("Invalid index provided!");
     var coords = new int[this.Dimensions.Length];
     var remainder = index;
     for (var i=0; i<this.Dimensions.Length; i++) {
@@ -96,6 +97,7 @@ public class MatrixIndexer {
   /// <param name="coords">N-dimensional coordinate</param>
   /// <returns>Linear index</returns>
   public int CoordinatesToIndex (int[] coords) {
+    if (!this.CheckIfValidCoordinates(coords)) throw new Exception("Invalid coordinates provided!");
     int index = 0;
     for (var i=0; i<this.Dimensions.Length; i++) {
       index += this.DimensionOffsets[i] * coords[i];
@@ -131,6 +133,7 @@ public class MatrixIndexer {
   /// <param name="diagonal">If diagonally adjacent cells could as neighbors</param>
   /// <returns>Coordinates of all neighbor cells</returns>
   public int[][] GetNeighboringCoordinates (int[] coords, bool diagonal) {
+    if (!this.CheckIfValidCoordinates(coords)) throw new Exception("Invalid coordinates provided!");
     var neighbors = new List<List<int>>();
     foreach (var relative in (diagonal ? this.RelativeNeighborCoordsWithDiagonals : this.RelativeNeighborCoordsWithoutDiagonals)!) {
       var valid = true;
@@ -146,5 +149,26 @@ public class MatrixIndexer {
       if (valid) neighbors.Add(neighbor);
     }
     return neighbors.Select(c => c.ToArray()).ToArray();
+  }
+
+  /// <summary>
+  /// Checks if index is a valid index inside the scope of the matrix
+  /// </summary>
+  /// <param name="index">Index to verify</param>
+  /// <returns>If provided index is a valid index inside the scope of the matrix</returns>
+  public bool CheckIfValidIndex (int index) {
+    return index >= 0 && index < this.Length;
+  }
+  /// <summary>
+  /// Checks if coordinates are valid and inside the scope of the matrix
+  /// </summary>
+  /// <param name="index">Coordinates to verify</param>
+  /// <returns>If provided coordinates are valid and inside the scope of the matrix</returns>
+  public bool CheckIfValidCoordinates (int[] coords) {
+    if (coords.Length != this.Dimensions.Length) return false;
+    for (var i=0; i<coords.Length; i++) {
+      if (coords[i] < 0 || coords[i] >= this.Dimensions[i]) return false;
+    }
+    return true;
   }
 }

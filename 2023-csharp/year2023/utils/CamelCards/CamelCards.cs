@@ -1,7 +1,5 @@
 namespace ofzza.aoc.year2023.utils.camelcards;
 
-using ofzza.aoc.year2023.day07;
-
 /// <summary>
 /// Implements functionality required for playing Camel Cards
 /// </summary>

@@ -52,7 +52,7 @@ public partial class Day05: ISolution<string, long> {
                   Start = overlap.Overlap.Start + offset,
                   End = overlap.Overlap.End + offset
                 });
-                foreach (var remainder in overlap.Remainders.Item1) {
+                foreach (var remainder in overlap.Remainders.FirstRemainder) {
                   remainingIntervals.Add(new Interval<long>() { Start = remainder.Start, End = remainder.End });
                 }
               }

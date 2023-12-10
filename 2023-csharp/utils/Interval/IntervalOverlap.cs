@@ -14,7 +14,7 @@ public class IntervalOverlap<T> where T: IBinaryInteger<T> {
   /// <summary>
   /// Array of remaining intervals after taking an overlap of two other intervals
   /// </summary>
-  public (Interval<T>[], Interval<T>[]) Remainders { init; get; }
+  public (Interval<T>[] FirstRemainder, Interval<T>[] SecondRemainder) Remainders { init; get; }
 }
 
 public partial class Interval<T> where T: IBinaryInteger<T> {
