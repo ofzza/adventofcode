@@ -11,14 +11,14 @@ public partial class Day10: ISolution<string, long> {
     // First
     if (info.ExecutionIndex == 1) {        
       // Output maze
-      maze.Log(log, ConsoleLoggingLevel.Verbose);
+      maze.Log(log);
       // Find path
       var path = maze.FindClosedLoopPath();
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
       maze.Log(log, ConsoleLoggingLevel.Verbose, path);
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""- Path:""", ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""  - Length: {path.Length}""", ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
+      log.WriteLine($"""- Path:""");
+      log.WriteLine($"""  - Length: {path.Length}""");
       log.WriteLine($"""  - Coordinates: {string.Join(", ", path.Select(t => $"""{t.Coordinates[1]}x{t.Coordinates[0]} {t.Direction.ToString()}"""))}""", ConsoleLoggingLevel.All);
       // Output farthest distance
       return (int)Math.Floor((double)path.Length / (double)2);
@@ -29,20 +29,20 @@ public partial class Day10: ISolution<string, long> {
       maze.Log(log, ConsoleLoggingLevel.Verbose);
       // Find path
       var path = maze.FindClosedLoopPath();
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
       maze.Log(log, ConsoleLoggingLevel.Verbose, path);
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""- Path:""", ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""  - Length: {path.Length}""", ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
+      log.WriteLine($"""- Path:""");
+      log.WriteLine($"""  - Length: {path.Length}""");
       log.WriteLine($"""  - Coordinates: {string.Join(", ", path.Select(t => $"""{t.Coordinates[1]}x{t.Coordinates[0]} {t.Direction.ToString()}"""))}""", ConsoleLoggingLevel.All);
       // Fill inside/outside path
       var areas = maze.FindAreas(path);
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
       maze.Log(log, ConsoleLoggingLevel.Verbose, path, areas.InsideCoordinates, areas.OutsideCoordinates);
-      log.WriteLine(ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""- Areas:""", ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""  - Inside: {areas.InsideCoordinates.Length}""", ConsoleLoggingLevel.Verbose);
-      log.WriteLine($"""  - Outside: {areas.OutsideCoordinates.Length}""", ConsoleLoggingLevel.Verbose);
+      log.WriteLine();
+      log.WriteLine($"""- Areas:""");
+      log.WriteLine($"""  - Inside: {areas.InsideCoordinates.Length}""");
+      log.WriteLine($"""  - Outside: {areas.OutsideCoordinates.Length}""");
       // Output inside area
       return areas.InsideCoordinates.Length;
     }

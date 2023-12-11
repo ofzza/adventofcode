@@ -23,27 +23,27 @@ public class NumericSequence<T> where T: IBinaryInteger<T> {
   public T ExtrapolateUsingDifferencesTableMethod (Direction direction = Direction.Right) {
     // Initialize differences table
     var table = new T[this.Sequence.Length * this.Sequence.Length];
-    var index = new MatrixIndexer(new int[] { this.Sequence.Length, this.Sequence.Length });
+    var index = new MatrixIndexer(new long[] { this.Sequence.Length, this.Sequence.Length });
     // Write first row into the differences table
-    for (var i=0; i<this.Sequence.Length; i++) table[index.CoordinatesToIndex(new int[] { 0, i })] =this.Sequence[i];
+    for (var i=0; i<this.Sequence.Length; i++) table[index.CoordinatesToIndex(new long[] { 0, i })] =this.Sequence[i];
     // Calculate difference rows
     var level = 0;
     var zeroed = true;
     do {
       zeroed = true;
       for (var i=1; i<this.Sequence.Length - level; i++) {
-        var a = table[index.CoordinatesToIndex(new int[] { level, i - 1 })];
-        var b = table[index.CoordinatesToIndex(new int[] { level, i })];
+        var a = table[index.CoordinatesToIndex(new long[] { level, i - 1 })];
+        var b = table[index.CoordinatesToIndex(new long[] { level, i })];
         var diff = b - a;
         if (diff != null && diff != T.Zero) zeroed = false;
-        table[index.CoordinatesToIndex(new int[] { level + 1, i - 1 })] = diff!;
+        table[index.CoordinatesToIndex(new long[] { level + 1, i - 1 })] = diff!;
       }
       level ++;
     } while (!zeroed);
     // Extrapolate value
     var extrapolation = new T[level];
     for (var i=level; i>0; i--) {
-      var val = table[index.CoordinatesToIndex(new int[] { i - 1, direction == Direction.Right ? this.Sequence.Length - i : 0 })];      
+      var val = table[index.CoordinatesToIndex(new long[] { i - 1, direction == Direction.Right ? this.Sequence.Length - i : 0 })];      
       var diff = (i > level - 1 ? T.Zero : extrapolation[i]);
       extrapolation[i - 1] = direction == Direction.Right ? val + diff : val - diff;
     }

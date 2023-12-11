@@ -3,11 +3,11 @@ namespace ofzza.aoc.year2023.day03;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.matrix;
 
-public partial class Day03: ISolution<string[], int> {
-  public int Run(SolutionExecutionRunInfo<string[]> info, Console log, bool verbose, bool obfuscate) {
+public partial class Day03: ISolution<string[], long> {
+  public long Run(SolutionExecutionRunInfo<string[]> info, Console log, bool verbose, bool obfuscate) {
     // Parse input
     var parsed = parse(info.InputValue!);
-    var indexer = new MatrixIndexer(new[] { info.InputValue!.Length, info.InputValue![0].Length });
+    var indexer = new MatrixIndexer(new long[] { info.InputValue!.Length, info.InputValue![0].Length });
     // First
     if (info.ExecutionIndex == 1) {
         // Find all serial numbers adjecent to parts

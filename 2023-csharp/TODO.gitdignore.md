@@ -18,3 +18,6 @@
 
 - [ ] Optimize day #1 by at least searching reversed string for last digit
 - [x] Optimize day #10 to execute in under 1sec (currently ~5sec)
+- [x] Rework day #10 to:
+  - [x] Use correct order of coordinates: (x, y)
+  - [x] Use ConsoleCanvas to output maze

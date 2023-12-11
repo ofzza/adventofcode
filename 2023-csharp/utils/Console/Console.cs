@@ -2,7 +2,6 @@ namespace ofzza.aoc.utils;
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
 
 /// <summary>
 /// Console logging service
@@ -64,7 +63,7 @@ public class Console {
   #endregion
 
   #region Progress
-  public void Progress (int done, int total, ConsoleLoggingLevel level = ConsoleLoggingLevel.Verbose) {
+  public void Progress (long done, long total, ConsoleLoggingLevel level = ConsoleLoggingLevel.Verbose) {
     this.Progress((double)done / (double)total, level);
   }
   public void Progress (double? progress, ConsoleLoggingLevel level = ConsoleLoggingLevel.Verbose) {

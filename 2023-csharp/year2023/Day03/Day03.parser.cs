@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.matrix;
 
-public partial class Day03: ISolution<string[], int> {
+public partial class Day03: ISolution<string[], long> {
   private static Value[] parse (string[] input) {
     // Initialize values for all indices
     var values = new Value[input.Length * input[0].Length];
@@ -21,12 +21,12 @@ public partial class Day03: ISolution<string[], int> {
       serials.Add(lineSerials);
     }
     // Process values for all grid indices
-    var indexer = new MatrixIndexer(new int[] { input.Length, input[0].Length });
+    var indexer = new MatrixIndexer(new long[] { input.Length, input[0].Length });
     for (var y=0; y<input.Length; y++) {
       var serialNumberReadyForNext = false;
       var serialNumberCurrentIndex = 0;
       for (var x=0; x<input[y].Length; x++) {
-        var i = indexer.CoordinatesToIndex(new[] { y, x });
+        var i = indexer.CoordinatesToIndex(new long[] { y, x });
         // Process empty cell
         if (input[y][x] == '.') {
           // Register cell
