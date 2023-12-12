@@ -3,10 +3,10 @@ namespace ofzza.aoc.year2023.day11;
 using ofzza.aoc.utils;
 using ofzza.aoc.year2023.utils.cosmicexpansion;
 
-public partial class Day11: ISolution<(long, string), long> {
-  public long Run(SolutionExecutionRunInfo<(long, string)> info, Console log, bool verbose, bool obfuscate) {
+public partial class Day11: ISolution<(long Expansion, string Space), long> {
+  public long Run(SolutionExecutionRunInfo<(long Expansion, string Space)> info, Console log, bool verbose, bool obfuscate) {
     // Parse input
-    var input = parse(info.InputValue.Item2!);    
+    var input = parse(info.InputValue.Space!);    
     // Initialize cosmic expansion
     var cosmos = new CosmicExpansion(input.Size) {
       Galaxies = input.Coordinates
@@ -15,7 +15,7 @@ public partial class Day11: ISolution<(long, string), long> {
     cosmos.Log(log);
     log.WriteLine();
     // Expand the cosmos
-    var expanded = cosmos.ExpandEmptyRowsAndColumns(info.InputValue.Item1, info.InputValue.Item1);
+    var expanded = cosmos.ExpandEmptyRowsAndColumns(info.InputValue.Expansion, info.InputValue.Expansion);
     // Only try drawing expanded cosmos if first index (too large to draw otherwise)
     if (info.ExecutionIndex == 1) {        
       // Draw the expanded cosmos

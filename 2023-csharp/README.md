@@ -19,7 +19,7 @@ Available arguments:
   | --index     | `$ dotnet run -- --index 1`      | Will run only puzzles marked with `index: 1`        |
   | --tag       | `$ dotnet run -- --tag solution` | Will run only puzzles marked with `tag: "solution"` |
 
-- Specify input data (TODO: Not implemented):
+- Specify input data
 
   | Description   | Syntax                                            | Explanation                                        |
   | ------------- | ------------------------------------------------- | -------------------------------------------------- |
@@ -53,5 +53,5 @@ dotnet run -- --tag "demo" --expect "Hello world" --verbose --obfuscate
 ... or to run a release version with compiler optimizations enabled:
 
 ```sh
-dotnet run --profile release -- --tag "demo" --expect "Hello world" --verbose --obfuscate --progress
+dotnet run -c Release -- --tag "demo" --expect "Hello world" --verbose --obfuscate --progress
 ```

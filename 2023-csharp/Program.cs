@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using ofzza.aoc.utils;
+using ofzza.aoc.utils.interval;
 
 public class Program
 {
@@ -20,11 +21,11 @@ public class Program
     [Option("-t|--tag", CommandOptionType.SingleValue)]
     public string? FilteringTag { get; } = null;
 
-    // [Option("--input-value", CommandOptionType.SingleValue)]
-    // public string? InputValue { get; } = null;
+    [Option("--input-value", CommandOptionType.SingleValue)]
+    public string? InputValue { get; } = null;
 
-    // [Option("--input-file", CommandOptionType.SingleValue)]
-    // public string? InputFile { get; } = null;
+    [Option("--input-file", CommandOptionType.SingleValue)]
+    public string? InputFile { get; } = null;
 
     [Option("--expect", CommandOptionType.SingleValue)]
     public string? Expect { get; } = null;
@@ -110,7 +111,10 @@ public class Program
                 if (this.FilteringTag != null && this.FilteringTag?.ToLower() != tag?.ToLower()) continue;
                 // Get execution run arguments
                 var getRunInfoMethod = executionType.GetMethod("GetRunInfo");
-                var info = getRunInfoMethod!.Invoke(execution, new object[] { })!;                
+                var infoValue = new object[] { false, null! };
+                if (this.InputValue != null) infoValue = new object[] { true, this.InputValue };
+                if (this.InputFile != null) infoValue = new object[] { true, File.ReadAllText(this.InputFile).Trim() };
+                var info = getRunInfoMethod!.Invoke(execution, infoValue)!;
                 var expectGetter = executionType.GetProperty("Expect")!.GetAccessors().First(m => m.ReturnType != typeof(void));
                 var expect = expectGetter.Invoke(execution, new object[] { });
                 // Run execution
@@ -121,7 +125,7 @@ public class Program
                 for (var i=0; i<this.Repeat; i++) {
                     var verbose = this.Verbose == null ? (int)ConsoleLoggingLevel.Verbose : this.Verbose;
                     var console = new Console() {
-                        ProgressPrompt = $"""{i + 1}/{this.Repeat}""",
+                        ProgressPrompt = this.Repeat > 1 ? $"""{i + 1}/{this.Repeat}""" : "",
                         FgColor = ConsoleColor.DarkGray,
                         Padding = 4,
                         SuppressWrite = verbose <= 0,

@@ -27,11 +27,13 @@ public class SolutionExecution<TInput, TOutput>: SolutionExecutionRunInfo<TInput
     /// <summary>
     /// Gets run information subsection of execution definition
     /// </summary>
+    /// <param name="customInputValue">If custom value is to be used in place of configured value</param>
+    /// <param name="value">Custom value to use in place of configured value (only if "customInputValue == true")</param>
     /// <returns>Run information subsection of execution definition</returns>
-    public SolutionExecutionRunInfo<TInput> GetRunInfo() {
+    public SolutionExecutionRunInfo<TInput> GetRunInfo(bool customInputValue, TInput? value) {
         return new SolutionExecutionRunInfo<TInput>() {
             ExecutionIndex = this.ExecutionIndex,
-            InputValue = this.InputValue
+            InputValue = customInputValue ? value : this.InputValue
         };
     }
 }

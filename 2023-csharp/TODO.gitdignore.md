@@ -9,8 +9,8 @@
 - [x] Console logger with obfuscation and verbosity built in, passed to each solution's runner
 - [x] Progress
 - [x] Timing
-- [ ] `--input-file`
-- [ ] `--input-value`
+- [x] `--input-file`
+- [x] `--input-value`
 - [x] Summary
 - [x] `--verbose [int]`
 

@@ -4,7 +4,7 @@ using System.Linq;
 using ofzza.aoc.utils;
 using ofzza.aoc.year2023.utils.cosmicexpansion;
 
-public partial class Day11: ISolution<(long, string), long> {
+public partial class Day11: ISolution<(long Expansion, string Space), long> {
   private static Input parse (string input) {
     // Find coordinates and empty rows and columns
     var parsed = input.Split('\n').Select(l => l.ToCharArray()).ToArray();
