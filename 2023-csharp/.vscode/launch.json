@@ -11,7 +11,16 @@
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/bin/Debug/net7.0/AdventOfCode2023.exe",
-      "args": ["--day", "11", "--index", "1", "--tag", "test", "--verbose:1"],
+      "args": [
+        "--summary",
+        "--verbose:2",
+        "--day",
+        "13",
+        "--index",
+        "2",
+        "--tag",
+        "test"
+      ],
       "cwd": "${workspaceFolder}",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",

@@ -1,13 +1,5 @@
 namespace ofzza.aoc.year2023.utils.hotsprings;
 
-using System.Data.Common;
-using System.Net.Http.Headers;
-using System.Runtime.Serialization;
-using System.Text;
-using McMaster.Extensions.CommandLineUtils;
-using ofzza.aoc.utils;
-using ofzza.aoc.year2023.day04;
-
 public class HotSprings {
 
   /// <summary>

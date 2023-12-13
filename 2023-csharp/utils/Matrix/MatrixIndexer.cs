@@ -42,13 +42,13 @@ public class MatrixIndexer {
   private void Initialize () {
     // Calculate length and offsets per dimension
     this.DimensionOffsets = new long[this.Dimensions.Length];
-    this.DimensionOffsets[this.Dimensions.Length - 1] = 1;
+    this.DimensionOffsets[0] = 1;
     long length = this.Dimensions[0];
     long offset = 1;
     for (var i=1; i<this.Dimensions.Length; i++) {
       length *= this.Dimensions[i];
-      offset *= this.Dimensions[this.Dimensions.Length - i];
-      this.DimensionOffsets[this.Dimensions.Length - 1 - i] = offset;
+      offset *= this.Dimensions[i - 1];
+      this.DimensionOffsets[i] = offset;
     }
     this.Length = length;
 
@@ -83,7 +83,7 @@ public class MatrixIndexer {
     if (!this.CheckIfValidIndex(index)) throw new Exception("Invalid index provided!");
     var coords = new long[this.Dimensions.Length];
     var remainder = index;
-    for (var i=0; i<this.Dimensions.Length; i++) {
+    for (var i=this.Dimensions.Length - 1; i>=0; i--) {
       var coord = remainder / this.DimensionOffsets[i];
       remainder = remainder % this.DimensionOffsets[i];
       coords[i] = coord;
