@@ -1,7 +1,7 @@
 namespace ofzza.aoc.year2023.day13;
 
 using ofzza.aoc.utils;
-using ofzza.aoc.year2023.utils.hotsprings;
+using ofzza.aoc.year2023.utils.pointsofincidence;
 
 public partial class Day13: ISolution<string, long> {
   public long Run(SolutionExecutionRunInfo<string> info, Console log, bool verbose, bool obfuscate) {

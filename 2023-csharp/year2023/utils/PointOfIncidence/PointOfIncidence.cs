@@ -1,6 +1,5 @@
-namespace ofzza.aoc.year2023.utils.hotsprings;
+namespace ofzza.aoc.year2023.utils.pointsofincidence;
 
-using System.Security.Cryptography.X509Certificates;
 using ofzza.aoc.utils.matrix;
 
 public class PointOfIncidence {
