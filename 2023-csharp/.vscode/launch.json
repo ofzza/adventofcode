@@ -15,11 +15,11 @@
         "--summary",
         "--verbose:2",
         "--day",
-        "15",
+        "16",
         "--index",
-        "2",
+        "1",
         "--tag",
-        "solution"
+        "test"
       ],
       "cwd": "${workspaceFolder}",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

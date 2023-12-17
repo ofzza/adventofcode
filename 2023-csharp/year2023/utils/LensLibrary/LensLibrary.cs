@@ -1,4 +1,5 @@
 namespace ofzza.aoc.year2023.utils.lenslibrary;
+
 public class LensLibrary {
   
   /// <summary>
