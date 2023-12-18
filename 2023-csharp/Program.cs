@@ -154,7 +154,7 @@ public class Program
                     timeByTag[tag?.ToLower()!] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                     timeByTag["*"] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
                 } else {
-                    Console.Create(ConsoleColor.Yellow).WriteLine($"""   ❔ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms, Expected {expectString})""");
+                    Console.Create(ConsoleColor.Yellow).WriteLine($"""   ❔ Output {outputString} (In {(executionSW.Elapsed.TotalNanoseconds / (1e6 * this.Repeat)).ToString("N2")}ms)""");
                     unknownByTag[tag?.ToLower()!] += 1;
                     unknownByTag["*"] += 1;
                     timeByTag[tag?.ToLower()!] += (long)(executionSW.Elapsed.TotalNanoseconds / (this.Repeat));
