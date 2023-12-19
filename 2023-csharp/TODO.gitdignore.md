@@ -21,4 +21,4 @@
 - [x] Rework day #10 to:
   - [x] Use correct order of coordinates: (x, y)
   - [x] Use ConsoleCanvas to output maze
-- [ ] Solve #17 in a way that executes without spending all the memory!
+- [ ] Solve #17 in under 1 sec
