@@ -1,4 +1,3 @@
-
 namespace ofzza.aoc.year2023.day18;
 
 using ofzza.aoc.utils;
