@@ -2,7 +2,6 @@ namespace ofzza.aoc.year2023.day11;
 
 using System.Linq;
 using ofzza.aoc.utils;
-using ofzza.aoc.year2023.utils.cosmicexpansion;
 
 public partial class Day11: ISolution<(long Expansion, string Space), long> {
   private static Input parse (string input) {

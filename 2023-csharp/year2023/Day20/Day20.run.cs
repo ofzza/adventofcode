@@ -1,6 +1,5 @@
 namespace ofzza.aoc.year2023.day20;
 
-using McMaster.Extensions.CommandLineUtils;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.primes;
 using ofzza.aoc.year2023.utils.pulspropagation;

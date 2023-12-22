@@ -1,8 +1,6 @@
 namespace ofzza.aoc.utils.matrix;
 
 using System;
-using System.Diagnostics;
-using Microsoft.VisualBasic;
 
 /// <summary>
 /// Helps manipulating a N-dimensional matrix, by:
@@ -16,6 +14,11 @@ public class MatrixIndexer {
   /// Dimensions of a N-dimensional matrix
   /// </summary>
   public long[] Dimensions { init; get; }
+  /// <summary>
+  /// If infinite plain mode is used.
+  /// When enabled, all coordinates are mapped back to the indexed area as if the edges of the area were connected on a torus.
+  /// </summary>
+  public bool InfinitePlain { init; get; }
   /// <summary>
   /// Gets total length of all cells in the matrix
   /// </summary>
@@ -81,6 +84,7 @@ public class MatrixIndexer {
   /// <returns>N-dimensional coordinate</returns>
   public long[] IndexToCoordinates (long index) {
     if (!this.CheckIfValidIndex(index)) throw new Exception("Invalid index provided!");
+    index = index >= 0 ? index % this.Length : ((-1 * ((-1 * index) % this.Length)) + this.Length) % this.Length;
     var coords = new long[this.Dimensions.Length];
     var remainder = index;
     for (var i=this.Dimensions.Length - 1; i>=0; i--) {
@@ -98,6 +102,10 @@ public class MatrixIndexer {
   /// <returns>Linear index</returns>
   public long CoordinatesToIndex (long[] coords) {
     if (!this.CheckIfValidCoordinates(coords)) throw new Exception("Invalid coordinates provided!");
+    coords = new long[] {
+      coords[0] >= 0 ? coords[0] % this.Dimensions[0] : ((-1 * ((-1 * coords[0]) % this.Dimensions[0])) + this.Dimensions[0]) % this.Dimensions[0],
+      coords[1] >= 0 ? coords[1] % this.Dimensions[1] : ((-1 * ((-1 * coords[1]) % this.Dimensions[1])) + this.Dimensions[1]) % this.Dimensions[1]
+    };
     long index = 0;
     for (var i=0; i<this.Dimensions.Length; i++) {
       index += this.DimensionOffsets[i] * coords[i];
@@ -141,7 +149,7 @@ public class MatrixIndexer {
       for (var i=0; i<this.Dimensions.Length; i++) {
         var x = coords[i] + relative[i];
         neighbor.Add(x);
-        if (!((x >= 0) && (x < this.Dimensions[i]))) {
+        if (!this.InfinitePlain && !((x >= 0) && (x < this.Dimensions[i]))) {
           valid = false;
           break;
         }
@@ -157,6 +165,7 @@ public class MatrixIndexer {
   /// <param name="index">Index to verify</param>
   /// <returns>If provided index is a valid index inside the scope of the matrix</returns>
   public bool CheckIfValidIndex (long index) {
+    if (this.InfinitePlain) return true;
     return index >= 0 && index < this.Length;
   }
   /// <summary>
@@ -165,6 +174,7 @@ public class MatrixIndexer {
   /// <param name="index">Coordinates to verify</param>
   /// <returns>If provided coordinates are valid and inside the scope of the matrix</returns>
   public bool CheckIfValidCoordinates (long[] coords) {
+    if (this.InfinitePlain) return true;
     if (coords.Length != this.Dimensions.Length) return false;
     for (var i=0; i<coords.Length; i++) {
       if (coords[i] < 0 || coords[i] >= this.Dimensions[i]) return false;

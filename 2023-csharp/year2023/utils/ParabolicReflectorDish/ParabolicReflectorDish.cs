@@ -1,6 +1,5 @@
 namespace ofzza.aoc.year2023.utils.parabolicreflectordish;
 
-using System.Xml;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.matrix;
 

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.interval;
 
 public class Program
 {

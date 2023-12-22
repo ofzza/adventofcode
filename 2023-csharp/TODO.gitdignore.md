@@ -22,3 +22,5 @@
   - [x] Use correct order of coordinates: (x, y)
   - [x] Use ConsoleCanvas to output maze
 - [ ] Solve #17 in under 1 sec
+- [ ] Solve #19.2
+- [ ] Solve #21.2

@@ -2,7 +2,6 @@ namespace ofzza.aoc.utils.primes;
 
 using System.Numerics;
 using ofzza.aoc.utils.matrix;
-using ofzza.aoc.year2023.day08;
 
 /// <summary>
 /// Utility class containing typical numeric sequence manipulation functions

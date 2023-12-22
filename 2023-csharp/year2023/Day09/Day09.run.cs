@@ -1,6 +1,5 @@
 namespace ofzza.aoc.year2023.day09;
 
-using System.Linq;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.primes;
 

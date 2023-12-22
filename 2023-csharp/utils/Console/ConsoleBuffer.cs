@@ -1,7 +1,4 @@
 namespace ofzza.aoc.utils;
-
-using System;
-using System.Diagnostics.CodeAnalysis;
 using ofzza.aoc.utils.matrix;
 
 /// <summary>

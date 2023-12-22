@@ -2,7 +2,6 @@ namespace ofzza.aoc.year2023.day06;
 
 using System.Linq;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.interval;
 
 public partial class Day06: ISolution<string, long> {
   public long Run(SolutionExecutionRunInfo<string> info, Console log, bool verbose, bool obfuscate) {

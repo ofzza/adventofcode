@@ -1,6 +1,5 @@
 namespace ofzza.aoc.year2023.utils.clumsycrucible;
 
-using System.Reflection.Metadata.Ecma335;
 using ofzza.aoc.utils;
 using ofzza.aoc.utils.matrix;
 
