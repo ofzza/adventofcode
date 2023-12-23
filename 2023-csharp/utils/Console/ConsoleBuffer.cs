@@ -1,10 +1,22 @@
 namespace ofzza.aoc.utils;
+
+using System.Net;
 using ofzza.aoc.utils.matrix;
 
 /// <summary>
 /// Console canvas is used to prepare Console output in a memory buffer before outputting to console
 /// </summary>
 public class ConsoleBuffer {
+
+  /// <summary>
+  /// Converts a numeric index into a letter for easier displaying
+  /// </summary>
+  /// <param name="index">Index to map to a letter</param>
+  /// <returns>A letter the index provided was mapped to</returns>
+  public static char IndexToLetter (long? index) {
+    return index == null ? '0' : index < 26 ? (char)(65 + index!) : index < 52 ? (char)(97 + index! - 26) : '?';
+  }
+
   /// <summary>
   /// Matrix index for the output canvas
   /// </summary>
@@ -30,6 +42,13 @@ public class ConsoleBuffer {
   public ConsoleBuffer (MatrixIndexer index) {
     this.Index = index;
     this.Buffer = new char[index.Dimensions[1] * index.Dimensions[0]];
+  }
+
+  /// <summary>
+  /// Clears the buffer by filling it with whitespace characters
+  /// </summary>
+  public void ClearBuffer() {
+    this.FillBuffer(' ');
   }
 
   /// <summary>
