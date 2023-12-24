@@ -38,7 +38,7 @@ public partial class Day20: ISolution<string, long> {
       var cycle = new int[] { 0, 0, 0, 0, 0, 0 };
       var offset = new int[] { 0, 0, 0, 0, 0, 0 };
       // Track cycles for relevant output modules
-      pulse.NewSignal += s => {
+      pulse.OnNewSignal += s => {
         // Track signal changes
         var index = Array.IndexOf(names, s.Source?.Name);
         if (index != -1) {

@@ -14,15 +14,15 @@ public class PulsePropagation {
   /// <summary>
   /// Event triggering every time there is a signal generated in the system
   /// </summary>
-  public event Action<Signal>? NewSignal;
+  public event Action<Signal>? OnNewSignal;
   /// <summary>
   /// Event triggering every time there is a signal is being processed in the system
   /// </summary>
-  public event Action<Signal>? ProcessingSignal;
+  public event Action<Signal>? OnProcessingSignal;
   /// <summary>
   /// Event triggering every time there is a signal was processed in the system
   /// </summary>
-  public event Action<Signal>? ProcessedSignal;
+  public event Action<Signal>? OnProcessedSignal;
 
   /// <summary>
   /// Triggers initial signal for a module and processes the consequences
@@ -46,7 +46,7 @@ public class PulsePropagation {
   public Signal[] TriggerSignal (Module targetModule, SignalType signalType, Console log, ConsoleLoggingLevel level = ConsoleLoggingLevel.Verbose) {
     // Initialize signals log and pointer
     var signals = new List<Signal>() { new Signal() { Target = targetModule, Type = signalType }};
-    if (this.NewSignal != null) this.NewSignal(signals[0]);
+    if (this.OnNewSignal != null) this.OnNewSignal(signals[0]);
     // Execute signals
     for (var i=0; i<signals.Count; i++) {
       // Get signal info
@@ -55,7 +55,7 @@ public class PulsePropagation {
       // Log processing module
       log.WriteLine($"""- Processing: {signal.Source?.Name ?? "button"} -[{signal.Type.ToString()}]-> {signal.Target.Name}""", level);
       // Trigger signal event for processing signal
-      if (this.ProcessingSignal != null) this.ProcessingSignal(signal);
+      if (this.OnProcessingSignal != null) this.OnProcessingSignal(signal);
       // Let target module process incoming signal      
       var additionalSignals =        
           target!.Type == ModuleType.Broadcaster ? this.ProcessIncomingSignal((BroadcastModule)target!, signal)
@@ -63,10 +63,10 @@ public class PulsePropagation {
         : target!.Type == ModuleType.Conjunction ? this.ProcessIncomingSignal((ConjunctionModule)target!, signal)
         : this.ProcessIncomingSignal((Module)target, signal);
       // Trigger signal event for processing signal
-      if (this.ProcessedSignal != null) this.ProcessedSignal(signal);
+      if (this.OnProcessedSignal != null) this.OnProcessedSignal(signal);
       // Trigger signal event for each new signal
       foreach (var additionalSignal in additionalSignals) {
-        if (this.NewSignal != null) this.NewSignal(additionalSignal);
+        if (this.OnNewSignal != null) this.OnNewSignal(additionalSignal);
       }
       // Log newly created signals
       if (log.CheckLogLevel(level)) {

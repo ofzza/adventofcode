@@ -12,7 +12,8 @@ public enum Direction {
   Top = 0b1000,
   Bottom = 0b0010,
   Left = 0b0100,
-  Right = 0b0001
+  Right = 0b0001,
+  Any = 0b1111,
 }
 
 /// <summary>

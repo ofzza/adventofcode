@@ -13,11 +13,11 @@
       "program": "${workspaceFolder}/bin/Debug/net7.0/AdventOfCode2023.exe",
       "args": [
         "--summary",
-        "--verbose:2",
+        "--verbose:9",
         "--day",
-        "22",
+        "23",
         "--index",
-        "2",
+        "1",
         "--tag",
         "test"
       ],

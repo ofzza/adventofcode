@@ -24,3 +24,5 @@
 - [ ] Solve #17 in under 1 sec
 - [ ] Solve #19.2
 - [ ] Solve #21.2
+- [ ] Solve #23.1 in under 1 sec
+- [ ] Solve #23.2
