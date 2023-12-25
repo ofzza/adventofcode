@@ -22,7 +22,9 @@
   - [x] Use correct order of coordinates: (x, y)
   - [x] Use ConsoleCanvas to output maze
 - [ ] Solve #17 in under 1 sec
-- [ ] Solve #19.2
-- [ ] Solve #21.2
+- [ ] Solve #19.2 !!!
+- [ ] Solve #21.2 !!!
 - [ ] Solve #23.1 in under 1 sec
-- [ ] Solve #23.2
+- [ ] Solve #23.2 !!!
+- [ ] Solve #24.2 !!!
+- [ ] Solve #25.1 in under 1 sec

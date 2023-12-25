@@ -1,9 +1,6 @@
 namespace ofzza.aoc.year2023.day24;
 
-using System.Numerics;
-using System.Reflection.Metadata;
 using ofzza.aoc.utils;
-using ofzza.aoc.utils.vector;
 using Vector = ofzza.aoc.utils.vector.Vector;
 
 public partial class Day24: ISolution<(double[] Min, double[] Max, string Input), long> {

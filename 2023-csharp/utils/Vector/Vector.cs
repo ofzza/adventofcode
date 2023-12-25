@@ -1,7 +1,6 @@
 namespace ofzza.aoc.utils.vector;
 
 using System;
-using System.Runtime.Intrinsics.X86;
 
 /// <summary>
 /// Helps manipulating a N-dimensional vectors, by:
