@@ -15,7 +15,7 @@
         "--summary",
         "--verbose:9",
         "--day",
-        "23",
+        "24",
         "--index",
         "1",
         "--tag",
