@@ -4,8 +4,7 @@ import (
 	// Import built in packages
 	"flag"
 	"fmt"
-
-	// Import custom packages
+	"time"
 
 	// Import solutions
 	Days "adventofcode/year2024"
@@ -17,7 +16,6 @@ var (
 	pDay   			*int				= flag.Int(		"day", 					0, 			"Will run only puzzles marked as with specified day")
 	pIndex 			*int				= flag.Int(		"index", 				0, 			"Will run only puzzles marked with specified index")
 	pTag 				*string			= flag.String("tag", 					"", 		"Will run only puzzles marked with specified tag")
-	pExpect 		*string			= flag.String("expect", 			"", 		"Expected result of the puzzle")
 	pVerbose 		*bool				= flag.Bool(	"verbose", 			false, 	"If execution output should be verbose")
 	pObfuscate 	*bool				= flag.Bool(	"obfuscate", 		false, 	"If execution output should be obfuscated")
 	pSummary 		*bool				= flag.Bool(	"summary", 			false, 	"If execution summary should be output")
@@ -27,28 +25,24 @@ var (
 // Main entry point
 func main () {
 
-	// Process runtime arguments
-	{
-		// Parse arguments
-		flag.Parse()	
-		// Output arguments
-		fmt.Println("Running with args: ")
-		fmt.Println("  - year:        ", *pYear)
-		fmt.Println("  - day:         ", *pDay)
-		fmt.Println("  - index:       ", *pIndex)
-		fmt.Println("  - tag:         ", *pTag)
-		fmt.Println("  - expect:      ", *pExpect)
-		fmt.Println("  - verbose:     ", *pVerbose)
-		fmt.Println("  - obfuscate:   ", *pObfuscate)
-		fmt.Println("  - summary:     ", *pSummary)
-    fmt.Println()
-	} 
+  // Parse arguments
+  flag.Parse()	
   
 	// Initialize summary
-	// TODO: ...
-
-  // Ready parameter input
-
+  var tags          = map[string]bool { };
+  var successByTag  = map[string]int  { "*": 0 };
+  var failByTag     = map[string]int  { "*": 0 };
+  var unknownByTag  = map[string]int  { "*": 0 };
+  var timeByTag     = map[string]int64{ "*": 0 };
+  for _, day := range Days.Days {
+    for _, execution := range day.GetExecutions(0, "") {
+      tags[execution.Tag]         = true
+      successByTag[execution.Tag] = 0
+      failByTag[execution.Tag]    = 0
+      unknownByTag[execution.Tag] = 0
+      timeByTag[execution.Tag]    = 0
+    }
+  }
 
 	// Process all available solutions
   for _, day := range Days.Days {
@@ -58,25 +52,79 @@ func main () {
     // Execute solution
     for _, execution := range day.GetExecutions(*pIndex, *pTag) {
 
+      // Initialize stopwatch
+      var startTime = time.Now()
 
       // Get execution result
       var result, err = day.Run(execution.Index, execution.Input);
-      if err != nil {
-        fmt.Printf("> %v/%v Part #%v (%v): ERROR %v\n", info.Year, info.Day, execution.Index, execution.Tag, err.Error())
-        return
-      }
+      var duration = time.Since(startTime)
+      if err != nil { fmt.Printf("  ERROR %v\n", err.Error()); return }
+
+      // Update summary timing
+      timeByTag[execution.Tag] += duration.Microseconds()
+      timeByTag["*"] += duration.Microseconds()
+
+      // Output execution result
+      fmt.Printf("➡️ Year %v, Day %v, Index %v, Tag \"%v\":\n", info.Year, info.Day, execution.Index, execution.Tag)
 
       // Check and output execution result
-      if result == execution.Expect {
-        fmt.Printf("> %v/%v Part #%v (%v): %v (CORRECT)\n", info.Year, info.Day, execution.Index, execution.Tag, result)
-      } else {
-        fmt.Printf("> %v/%v Part #%v (%v): %v (WRONG!!!)\n", info.Year, info.Day, execution.Index, execution.Tag, result)
+      if execution.Expect != nil && execution.Expect == result {
+        // Update summary
+        successByTag[execution.Tag] += 1
+        successByTag["*"] += 1
+        // Output result
+        var resultOutput string
+        if !*pObfuscate { resultOutput = fmt.Sprintf("%v == %v", result, execution.Expect) } else { resultOutput = "###### == ######" }
+        fmt.Printf("   ✅ %v (In %vμs)\n", resultOutput, duration.Microseconds())
+      } else
+      if execution.Expect != nil && execution.Expect != result {
+        // Update summary
+        failByTag[execution.Tag] += 1
+        failByTag["*"] += 1
+        // Output result
+        var resultOutput string
+        if !*pObfuscate { resultOutput = fmt.Sprintf("%v != %v", result, execution.Expect) } else { resultOutput = "###### != ######" }
+        fmt.Printf("   ❌ %v (In %vμs)\n", resultOutput, duration.Microseconds())
+      } else
+      {
+        // Update summary
+        unknownByTag[execution.Tag] += 1
+        unknownByTag["*"] += 1
+        // Output result
+        var resultOutput string
+        if !*pObfuscate { resultOutput = fmt.Sprintf("%v", result) } else { resultOutput = "######" }
+        fmt.Printf("   ❔ %v (In %vμs)\n", resultOutput, duration.Microseconds())
       }
 
     }
   }
 
 	// Print out summary
-	// TODO: ...
+	fmt.Printf("\n")
+	fmt.Printf("--- SUMMARY ---\n")
+	fmt.Printf("\n")
+  fmt.Printf("- ✅ Successful executions: %v/%v\n", successByTag["*"], (successByTag["*"] + failByTag["*"] + unknownByTag["*"]))
+  for tag, _ := range tags {
+    fmt.Printf("   - %v: %v/%v\n", tag, successByTag[tag], (successByTag[tag] + failByTag[tag] + unknownByTag[tag]))
+  }
+  if unknownByTag["*"] > 0 {
+    fmt.Printf("\n")
+    fmt.Printf("- ❔ Unknown executions: %v/%v\n", unknownByTag["*"], (successByTag["*"] + failByTag["*"] + unknownByTag["*"]))
+    for tag, _ := range tags {
+      fmt.Printf("   - %v: %v/%v\n", tag, unknownByTag[tag], (successByTag[tag] + failByTag[tag] + unknownByTag[tag]))
+    }
+  }
+  if failByTag["*"] > 0 {
+    fmt.Printf("\n")
+    fmt.Printf("- ❌ Failed executions: %v/%v\n", failByTag["*"], (successByTag["*"] + failByTag["*"] + unknownByTag["*"]))
+    for tag, _ := range tags {
+      fmt.Printf("   - %v: %v/%v\n", tag, failByTag[tag], (successByTag[tag] + failByTag[tag] + unknownByTag[tag]))
+    }
+  }
+  fmt.Printf("\n")
+  fmt.Printf("- 🕐 Execution time: %vμs\n", timeByTag["*"])
+  for tag, _ := range tags {
+    fmt.Printf("   - %v: Execution time: %vμs\n", tag, timeByTag[tag])
+  }
 
 }
