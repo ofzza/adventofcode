@@ -14,7 +14,7 @@ Available arguments:
 
   | Description | Syntax                           | Explanation                                         |
   | ----------- | -------------------------------- | --------------------------------------------------- |
-  | --year      | `$ dotnet run -- --year 2021`    | Will run only puzzles marked as `year: 1`           |
+  | --year      | `$ dotnet run -- --year 2023`    | Will run only puzzles marked as `year: 2023`        |
   | --day       | `$ dotnet run -- --day 3`        | Will run only puzzles marked as `day: 3` of a year  |
   | --index     | `$ dotnet run -- --index 1`      | Will run only puzzles marked with `index: 1`        |
   | --tag       | `$ dotnet run -- --tag solution` | Will run only puzzles marked with `tag: "solution"` |

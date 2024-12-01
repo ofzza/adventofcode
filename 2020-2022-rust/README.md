@@ -14,7 +14,7 @@ Available arguments:
 
   | Description | Syntax                          | Explanation                                         |
   | ----------- | ------------------------------- | --------------------------------------------------- |
-  | --year      | `$ cargo run -- --year 2021`    | Will run only puzzles marked as `year: 1`           |
+  | --year      | `$ cargo run -- --year 2021`    | Will run only puzzles marked as `year: 2021`        |
   | --day       | `$ cargo run -- --day 3`        | Will run only puzzles marked as `day: 3` of a year  |
   | --index     | `$ cargo run -- --index 1`      | Will run only puzzles marked with `index: 1`        |
   | --tag       | `$ cargo run -- --tag solution` | Will run only puzzles marked with `tag: "solution"` |
