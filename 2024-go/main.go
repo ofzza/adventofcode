@@ -56,7 +56,7 @@ func main () {
       var startTime = time.Now()
 
       // Get execution result
-      var result, err = day.Run(execution.Index, execution.Input);
+      var result, output, err = day.Run(execution.Index, execution.Input, *pVerbose);
       var duration = time.Since(startTime)
       if err != nil { fmt.Printf("  ERROR %v\n", err.Error()); return }
 
@@ -66,6 +66,11 @@ func main () {
 
       // Output execution result
       fmt.Printf("➡️ Year %v, Day %v, Index %v, Tag \"%v\":\n", info.Year, info.Day, execution.Index, execution.Tag)
+      if output != "" {
+        fmt.Print("\033[34m")
+        fmt.Printf("\n%v\n", output)
+        fmt.Print("\033[0m")
+      }
 
       // Check and output execution result
       if execution.Expect != nil && execution.Expect == result {
@@ -102,10 +107,12 @@ func main () {
 	// Print out summary
 	fmt.Printf("\n")
 	fmt.Printf("--- SUMMARY ---\n")
-	fmt.Printf("\n")
-  fmt.Printf("- ✅ Successful executions: %v/%v\n", successByTag["*"], (successByTag["*"] + failByTag["*"] + unknownByTag["*"]))
-  for tag, _ := range tags {
-    fmt.Printf("   - %v: %v/%v\n", tag, successByTag[tag], (successByTag[tag] + failByTag[tag] + unknownByTag[tag]))
+	if successByTag["*"] > 0 {
+    fmt.Printf("\n")
+    fmt.Printf("- ✅ Successful executions: %v/%v\n", successByTag["*"], (successByTag["*"] + failByTag["*"] + unknownByTag["*"]))
+    for tag, _ := range tags {
+      fmt.Printf("   - %v: %v/%v\n", tag, successByTag[tag], (successByTag[tag] + failByTag[tag] + unknownByTag[tag]))
+    }
   }
   if unknownByTag["*"] > 0 {
     fmt.Printf("\n")

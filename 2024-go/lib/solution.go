@@ -4,7 +4,7 @@ package solution
 type ISolution interface {
 	GetInfo() SolutionInfo
 	GetExecutions(index int, tag string) []SolutionExecution
-	Run(index int, input any) (any, error)
+	Run(index int, input any, verbose bool) (any, string, error)
 }
 
 // Solution info

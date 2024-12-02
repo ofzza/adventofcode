@@ -11,7 +11,7 @@ import (
 
 // Day one definition
 type Day01 struct {}
-var Day Day01 = Day01 {}
+var Day = Day01 {}
 
 // Year and day
 func (day Day01) GetInfo() solution.SolutionInfo {
@@ -82,9 +82,11 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day01) Run (index int, input any) (any, error) {
+func (day Day01) Run (index int, input any, verbose bool) (any, string, error) {
+	// Initialize
+	var output = ""
 	var value, ok = input.(string)
-	if !ok { return nil, errors.New("failed casting execution to correct Input/Output types") }
+	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse inputs
 	var lines = strings.Split(strings.Trim(value, " "), "\n")
@@ -118,25 +120,29 @@ func (day Day01) Run (index int, input any) (any, error) {
 		}
 	
 		// Return solution
-		return distances, nil
+		return distances, output, nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
+
+		// Group
 		var countB map[int]int = map[int]int{}
 		for _, val := range listB {
 			countB[val] += 1
 		}
 
+		// Calculate similarity
 		var similarity int = 0
 		for _, val := range listA {
 			similarity += val * countB[val]
 		}
 
-		return similarity, nil
+		// Return solution
+		return similarity, output, nil
 	}
 
 	// Missing implementation
-	return nil, errors.New("missing implementation for required index")
+	return nil, output, errors.New("missing implementation for required index")
 
 }
