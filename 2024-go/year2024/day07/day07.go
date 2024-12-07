@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // Day one definition
@@ -81,6 +82,8 @@ func (day Day07) GetExecutions(index int, tag string) []solution.SolutionExecuti
 	return executions
 }
 
+type Equation struct { result *big.Int; operands []*big.Int }
+
 // Implementation
 func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 	// Initialize
@@ -90,7 +93,7 @@ func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 
 	// Parse inputs
 	var lines = strings.Split(strings.Trim(value, " "), "\n")
-	var equations []struct{ result *big.Int; operands []*big.Int } = []struct{ result *big.Int; operands []*big.Int }{ }
+	var equations []Equation = []Equation{ }
 	for _, line := range lines {
 		if len(line) > 0 {
 			var parts = strings.Split(strings.Trim(line, " "), ":")
@@ -109,10 +112,18 @@ func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 	// Part 1/2
 	if index == 1 {
 
-		// Check all equasions
+		// Check all equations
+		var results = make(chan *big.Int, len(equations))
+		var wg sync.WaitGroup
 		var sum = big.NewInt(0)
 		for _, equasion := range equations {
-			if testOperators(equasion.result, equasion.operands, false) { sum.Add(sum, equasion.result) }
+			wg.Add(1)
+			go testOperatorsRutine(results, &wg, equasion, false)
+		}
+		wg.Wait()
+		for i:=0; i<len(equations); i++ {
+			var result = <-results
+			if (result != nil) { sum.Add(sum, result) }
 		}
 
 		// Return count
@@ -122,10 +133,18 @@ func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 	// Part 2/2
 	if index == 2 {
 
-		// Check all equasions
+		// Check all equations
+		var results = make(chan *big.Int, len(equations))
+		var wg sync.WaitGroup
 		var sum = big.NewInt(0)
 		for _, equasion := range equations {
-			if testOperators(equasion.result, equasion.operands, true) { sum.Add(sum, equasion.result) }
+			wg.Add(1)
+			go testOperatorsRutine(results, &wg, equasion, true)
+		}
+		wg.Wait()
+		for i:=0; i<len(equations); i++ {
+			var result = <-results
+			if (result != nil) { sum.Add(sum, result) }
 		}
 
 		// Return count
@@ -137,22 +156,33 @@ func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 
 }
 
-func testOperators (result *big.Int, operands []*big.Int, concatenate bool) bool {
+func testOperatorsRutine (channel chan *big.Int, wg *sync.WaitGroup, equation Equation, concatenate bool) *big.Int {
+	// Ready to un-wait
+	defer wg.Done()
+	// Get result
+	var result = testOperatorsRecursive(equation, concatenate);
+	// Pipe and return result
+	if channel != nil { channel <- result };
+	return result
+}
+
+func testOperatorsRecursive (equation Equation, concatenate bool) *big.Int {
 	// Check number of operands
-	if len(operands) < 1 { return false }
-	if len(operands) == 1 { return result.Cmp(operands[0]) == 0 }
+	if len(equation.operands) < 1 { return nil }
+	if len(equation.operands) == 1 { if equation.result.Cmp(equation.operands[0]) == 0 { return equation.result } else { return nil } }
 	// Extract first 2 operands
-	var a = operands[0]
-	var b = operands[1]
-	var remaining = operands[2:]
+	var a = equation.operands[0]
+	var b = equation.operands[1]
+	// Check if operands already too large
+	if equation.result.Cmp(a) == -1 || equation.result.Cmp(b) == -1 { return nil }
 	// Test out "+"" and "*"" operators
-	if (testOperators(result, append([]*big.Int { new(big.Int).Add(a, b) }, remaining...), concatenate)) { return true }
-	if (testOperators(result, append([]*big.Int { new(big.Int).Mul(a, b) }, remaining...), concatenate)) { return true }
+	if (testOperatorsRecursive(Equation { result: equation.result, operands: append([]*big.Int { new(big.Int).Add(a, b) }, equation.operands[2:]... ) }, concatenate) != nil) { return equation.result }
+	if (testOperatorsRecursive(Equation { result: equation.result, operands: append([]*big.Int { new(big.Int).Mul(a, b) }, equation.operands[2:]... ) }, concatenate) != nil) { return equation.result }
 	// Test out concatenation operator
 	if (concatenate) {
 		var concat, _ = new(big.Int).SetString(a.String() + b.String(), 10);
-		if (testOperators(result, append([]*big.Int { concat }, remaining...), concatenate)) { return true }
+		if (testOperatorsRecursive(Equation { result: equation.result, operands: append([]*big.Int { concat }, equation.operands[2:]...) }, concatenate) != nil) { return equation.result }
 	}
-
-	return false
+	// Return fail
+	return nil
 }
