@@ -81,6 +81,16 @@ func (indexer *MatrixIndexer) initialize () {
 	}
 }
 
+// Gets set length
+func (indexer *MatrixIndexer) GetLength() int {
+	return indexer.length
+}
+
+// Gets set dimensions
+func (indexer *MatrixIndexer) GetDimensions() []int {
+	return indexer.dimensions
+}
+
 // Converts a linear index into a N-dimensional coordinate
 func (indexer *MatrixIndexer) IndexToCoordinates (index int) ([]int, error) {
 	if !indexer.CheckIfValidIndex(index) { return nil, errors.New("invalid index provided") }
@@ -171,9 +181,9 @@ func (indexer *MatrixIndexer) CheckIfValidIndex (index int) bool {
 // Checks if coordinates are valid and inside the scope of the matrix
 func (indexer *MatrixIndexer) CheckIfValidCoordinates (coords []int) bool {
 	if indexer.infinitePlain { return true }
-    if len(coords) != len(indexer.dimensions) { return false }
-    for i:=0; i<len(coords); i++ {
-      if coords[i] < 0 || coords[i] >= indexer.dimensions[i] { return false }
-    }
-    return true;
+	if len(coords) != len(indexer.dimensions) { return false }
+	for i:=0; i<len(coords); i++ {
+		if coords[i] < 0 || coords[i] >= indexer.dimensions[i] { return false }
+	}
+	return true;
 }
