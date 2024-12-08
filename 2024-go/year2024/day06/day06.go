@@ -92,7 +92,7 @@ func (day Day06) Run (index int, input any, verbose bool) (any, string, error) {
 	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse and initialize inputs
-	var lines = strings.Split(strings.Trim(value, " "), "\n")
+	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
 	var obstacles = map[int]bool {}
 	var obstaclesXY = map[int][]int {}
 	var obstaclesYX = map[int][]int {}
@@ -101,10 +101,9 @@ func (day Day06) Run (index int, input any, verbose bool) (any, string, error) {
 	var boundsVertical = []int { 0, 0 }
 	
 	// Process inputs
-	var indexer = matrix.CreateIndexer([]int { len(lines[0]), len(lines) - 1 })
+	var indexer = matrix.CreateIndexer([]int { len(lines[0]), len(lines) })
 	var traversed = make(map[int]bool)
 	for y, line := range lines {
-		if len(line) == 0 { continue }
 		boundsVertical[1] = y
 		for x, r := range line {
 			boundsHorizontal[1] = x

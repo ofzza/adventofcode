@@ -89,18 +89,16 @@ func (day Day02) Run (index int, input any, verbose bool) (any, string, error) {
 	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse inputs
-	var lines = strings.Split(strings.Trim(value, " "), "\n")
+	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
 	var reports = [][]int{ }
 	for _, line := range lines {
-		if len(strings.Trim(line, " ")) > 0 {
-			var items = strings.Split(strings.Trim(line, " "), " ")
-			var report = make([]int, 0, len(items))
-			for _, item := range items {
-				var n, _ = strconv.Atoi(strings.Trim(item, " "))
-				report = append(report, n)
-			}
-			reports = append(reports, report)
+		var items = strings.Split(strings.Trim(line, " "), " ")
+		var report = make([]int, 0, len(items))
+		for _, item := range items {
+			var n, _ = strconv.Atoi(strings.Trim(item, " "))
+			report = append(report, n)
 		}
+		reports = append(reports, report)
 	}
 
 	// Part 1/2

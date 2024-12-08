@@ -89,11 +89,10 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse inputs
-	var sections = strings.Split(strings.Trim(value, " "), "\n\n")
+	var sections = strings.Split(strings.Trim(value, " \n"), "\n\n")
 	var rulesLines = strings.Split(strings.Trim(sections[0], " "), "\n")
 	var rules [][]int = make([][]int, 0, len(rulesLines))
 	for _, line := range rulesLines {
-		if len(line) == 0 { continue }
 		var items = strings.Split(strings.Trim(line, " "), "|")
 		var a, _ = strconv.Atoi(items[0])
 		var b, _ = strconv.Atoi(items[1])
@@ -102,7 +101,6 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 	var manualsLines = strings.Split(strings.Trim(sections[1], " "), "\n")
 	var manuals [][]int = make([][]int, 0, len(manualsLines))
 	for _, line := range manualsLines {
-		if len(line) == 0 { continue }
 		var pages = strings.Split(strings.Trim(line, " "), ",")
 		var ps []int = make([]int, 0, len(pages))
 		for _, page := range pages {
@@ -123,10 +121,8 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 			if valid {
 				var middleValue = pages[len(pages) / 2]
 				sum += middleValue
-				if (verbose) { fmt.Printf("- %v: Valid -> += %v\n", pages, middleValue) }
-			} else if (verbose) {
-				fmt.Printf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
-			}
+				if (verbose) { output += fmt.Sprintf("- %v: Valid -> += %v\n", pages, middleValue) }
+			} else if (verbose) { output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]) }
 		}
 
 		// Return count
@@ -142,22 +138,20 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 			// Check against all rules
 			var valid, indexA, indexB = checkPages(pages, rules)
 			if valid {
-				if (verbose) { fmt.Printf("- %v: Valid\n", pages) }
-			} else if (verbose) {
-				fmt.Printf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
+				if (verbose) { output += fmt.Sprintf("- %v: Valid\n", pages) }
+			} else {
+				if (verbose) { output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]) }
 				var fixed = pages
 				for {
 					fixed = attemptFix(fixed, indexA, indexB)
-					fmt.Printf("  - Attempting fix", fixed)
+					if (verbose) { output += fmt.Sprintf("  - Attempting fix: %v", fixed) }
 					valid, indexA, indexB = checkPages(fixed, rules)
 					if (valid) {
 						var middleValue = fixed[len(fixed) / 2]
 						sum += middleValue
-								if (verbose) { fmt.Printf(" ... succedeed -> %v!\n", middleValue) }
+								if (verbose) { output += fmt.Sprintf(" ... succedeed -> %v!\n", middleValue) }
 						break;
-					} else {
-						if (verbose) { fmt.Printf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB]) }
-					}
+					} else if (verbose) { output += fmt.Sprintf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB]) }
 				}
 			}
 		}

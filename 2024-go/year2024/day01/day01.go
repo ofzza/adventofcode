@@ -89,7 +89,7 @@ func (day Day01) Run (index int, input any, verbose bool) (any, string, error) {
 	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse inputs
-	var lines = strings.Split(strings.Trim(value, " "), "\n")
+	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
 	var listA []int = make([]int, 0, len(lines))
 	var listB []int = make([]int, 0, len(lines))
 	for _, line := range lines {

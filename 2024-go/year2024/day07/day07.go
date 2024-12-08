@@ -92,21 +92,19 @@ func (day Day07) Run (index int, input any, verbose bool) (any, string, error) {
 	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
 
 	// Parse inputs
-	var lines = strings.Split(strings.Trim(value, " "), "\n")
+	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
 	var equations []Equation = []Equation{ }
 	for _, line := range lines {
-		if len(line) > 0 {
-			var parts = strings.Split(strings.Trim(line, " "), ":")
-			var resultParsed, _ = strconv.Atoi(strings.Trim(parts[0], " "))
-			var result = big.NewInt(int64(resultParsed))
-			var operandStrings = strings.Split(strings.Trim(parts[1], " "), " ")
-			var operands = make([]*big.Int, 0, len(operandStrings))
-			for _, operandString := range operandStrings {
-				var operand, _ = strconv.Atoi(strings.Trim(operandString, " "))
-				operands = append(operands, big.NewInt(int64(operand)))
-			}
-			equations = append(equations, struct{ result *big.Int; operands []*big.Int }{ result: result, operands: operands })
+		var parts = strings.Split(strings.Trim(line, " "), ":")
+		var resultParsed, _ = strconv.Atoi(strings.Trim(parts[0], " "))
+		var result = big.NewInt(int64(resultParsed))
+		var operandStrings = strings.Split(strings.Trim(parts[1], " "), " ")
+		var operands = make([]*big.Int, 0, len(operandStrings))
+		for _, operandString := range operandStrings {
+			var operand, _ = strconv.Atoi(strings.Trim(operandString, " "))
+			operands = append(operands, big.NewInt(int64(operand)))
 		}
+		equations = append(equations, struct{ result *big.Int; operands []*big.Int }{ result: result, operands: operands })
 	}
 
 	// Part 1/2
