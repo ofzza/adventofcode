@@ -21,14 +21,14 @@ Available arguments:
 
 - Format output:
 
-  | Description   | Syntax                              | Explanation                                                                                              |
-  | ------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-  | --verbose[:N] | `$ go run main.go -- --verbose[:N]` | Will output more information (N is an optional logging level: 0 No logging, 1 Reduced, 2 Verbose, 9 All) |
-  | --obfuscate   | `$ go run main.go -- --obfuscate`   | Will obfuscate the final result                                                                          |
-  | --summary     | `$ go run main.go -- --summary`     | Will print summary at end of execution                                                                   |
+  | Description | Syntax                              | Explanation                            |
+  | ----------- | ----------------------------------- | -------------------------------------- |
+  | --verbose   | `$ go run main.go -- --verbose[:N]` | Will output more information           |
+  | --obfuscate | `$ go run main.go -- --obfuscate`   | Will obfuscate the final result        |
+  | --summary   | `$ go run main.go -- --summary`     | Will print summary at end of execution |
 
 For example:
 
 ```sh
-go run main.go -- --tag "demo" --verbose --obfuscate
+go run main.go -- --tag "solution" --verbose --obfuscate
 ```
