@@ -98,6 +98,7 @@ func main () {
         // Output result
         var resultOutput string
         if !*pObfuscate { resultOutput = fmt.Sprintf("%v", result) } else { resultOutput = "######" }
+        if len(resultOutput) > 16 { resultOutput = resultOutput[:16] }
         fmt.Printf("   ❔ %v (In %vμs)\n", resultOutput, duration.Microseconds())
       }
 

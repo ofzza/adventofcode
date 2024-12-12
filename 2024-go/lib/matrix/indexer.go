@@ -126,21 +126,32 @@ func (indexer *MatrixIndexer) CoordinatesToIndex (coords []int) (int, error) {
 
 // Returns indices of all neighboring cells
 func (indexer *MatrixIndexer) GetNeighboringIndicesForIndex (index int, diagonal bool) ([]int, error) {
+	return indexer.GetNeighboringIndicesForIndexWithValidation(index, diagonal, true)
+}
+func (indexer *MatrixIndexer) GetNeighboringIndicesForIndexWithValidation (index int, diagonal bool, validate bool) ([]int, error) {
 	var coords, err = indexer.IndexToCoordinates(index)
 	if err != nil { return nil, err }
-	return indexer.GetNeighboringIndicesForCoords(coords, diagonal)
+	return indexer.GetNeighboringIndicesForCoordsWithValidation(coords, diagonal, validate)
 }
 
 // Returns coordinates of all neighboring cells
 func (indexer *MatrixIndexer) GetNeighboringCoordinatesForIndex (index int, diagonal bool) ([][]int, error) {
+	return indexer.GetNeighboringCoordinatesForIndexWithValidation(index, diagonal, true)
+}
+// Returns coordinates of all neighboring cells
+func (indexer *MatrixIndexer) GetNeighboringCoordinatesForIndexWithValidation (index int, diagonal bool, validate bool) ([][]int, error) {
 	var coords, err = indexer.IndexToCoordinates(index)
 	if err != nil { return nil, err }
-	return indexer.GetNeighboringCoordinatesForCoords(coords, diagonal)
+	return indexer.GetNeighboringCoordinatesForCoordsWithValidation(coords, diagonal, validate)
 }
 
 // Returns indices of all neighboring cells
 func (indexer *MatrixIndexer) GetNeighboringIndicesForCoords (coords []int, diagonal bool) ([]int, error) {
-	var neighborCoords, err = indexer.GetNeighboringCoordinatesForCoords(coords, diagonal)
+	return indexer.GetNeighboringIndicesForCoordsWithValidation(coords, diagonal, true)
+}
+// Returns indices of all neighboring cells
+func (indexer *MatrixIndexer) GetNeighboringIndicesForCoordsWithValidation (coords []int, diagonal bool, validate bool) ([]int, error) {
+	var neighborCoords, err = indexer.GetNeighboringCoordinatesForCoordsWithValidation(coords, diagonal, validate)
 	if err != nil { return nil, err }
 	var neighborIndices = make([]int, 0, len(neighborCoords))
 	for _, neighborCoord := range neighborCoords {
@@ -153,7 +164,11 @@ func (indexer *MatrixIndexer) GetNeighboringIndicesForCoords (coords []int, diag
 
 // Returns coordinates of all neighboring cells
 func (indexer *MatrixIndexer) GetNeighboringCoordinatesForCoords (coords []int, diagonal bool) ([][]int, error) {
-	if !indexer.CheckIfValidCoordinates(coords) { return nil, errors.New("invalid coordinates provided") }
+	return indexer.GetNeighboringCoordinatesForCoordsWithValidation(coords, diagonal, true)
+}
+// Returns coordinates of all neighboring cells
+func (indexer *MatrixIndexer) GetNeighboringCoordinatesForCoordsWithValidation (coords []int, diagonal bool, validate bool) ([][]int, error) {
+	if validate && !indexer.CheckIfValidCoordinates(coords) { return nil, errors.New("invalid coordinates provided") }
 	var neighbors = make([][]int, 0, len(indexer.relativeNeighborCoordsWithDiagonals))
 	var relatives [][]int
 	if diagonal { relatives = indexer.relativeNeighborCoordsWithDiagonals } else { relatives = indexer.relativeNeighborCoordsWithoutDiagonals }
@@ -163,7 +178,7 @@ func (indexer *MatrixIndexer) GetNeighboringCoordinatesForCoords (coords []int, 
 		for i:=0; i<len(indexer.dimensions); i++ {
 			var x = coords[i] + relative[i]
 			neighbor = append(neighbor, x)
-			if !indexer.infinitePlain && !((x >= 0) && (x < indexer.dimensions[i])) {
+			if validate && !indexer.infinitePlain && !((x >= 0) && (x < indexer.dimensions[i])) {
 				valid = false
 				break
 			}

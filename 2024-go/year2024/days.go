@@ -13,6 +13,7 @@ import (
 	Day09 "adventofcode/year2024/day09"
 	Day10 "adventofcode/year2024/day10"
 	Day11 "adventofcode/year2024/day11"
+	Day12 "adventofcode/year2024/day12"
 )
 
 var Days []solution.ISolution = []solution.ISolution{
@@ -27,4 +28,5 @@ var Days []solution.ISolution = []solution.ISolution{
 	Day09.Day,
 	Day10.Day,
 	Day11.Day,
+	Day12.Day,
 }
