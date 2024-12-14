@@ -1,4 +1,4 @@
-package day02
+package year2024
 
 import (
 	solution "adventofcode/lib"
@@ -10,20 +10,21 @@ import (
 )
 
 // Day one definition
-type Day05 struct {}
-var Day = Day05 {}
+type Day05 struct{}
+
+var Day = Day05{}
 
 // Year and day
 func (day Day05) GetInfo() solution.SolutionInfo {
-	return solution.SolutionInfo {
+	return solution.SolutionInfo{
 		Year: 2024,
-		Day: 	5,
+		Day:  5,
 	}
 }
 
 // Executions
 func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecution {
-	var executions = []solution.SolutionExecution {};
+	var executions = []solution.SolutionExecution{}
 	// Part 1/2
 	if index == 0 || index == 1 {
 		// Test
@@ -31,10 +32,10 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day05/input-test.txt"); return string(b) }(),
-					Expect:	143,
+					Index:  1,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day05/input-test.txt"); return string(b) }(),
+					Expect: 143,
 				},
 			)
 		}
@@ -43,10 +44,10 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day05/input.txt"); return string(b) }(),
-					Expect:	6949,
+					Index:  1,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day05/input.txt"); return string(b) }(),
+					Expect: 6949,
 				},
 			)
 		}
@@ -58,10 +59,10 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day05/input-test.txt"); return string(b) }(),
-					Expect:	123,
+					Index:  2,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day05/input-test.txt"); return string(b) }(),
+					Expect: 123,
 				},
 			)
 		}
@@ -70,10 +71,10 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day05/input.txt"); return string(b) }(),
-					Expect:	4145,
+					Index:  2,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day05/input.txt"); return string(b) }(),
+					Expect: 4145,
 				},
 			)
 		}
@@ -82,11 +83,13 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
+func (day Day05) Run(index int, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, ok = input.(string)
-	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
+	if !ok {
+		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+	}
 
 	// Parse inputs
 	var sections = strings.Split(strings.Trim(value, " \n"), "\n\n")
@@ -96,7 +99,7 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 		var items = strings.Split(strings.Trim(line, " "), "|")
 		var a, _ = strconv.Atoi(items[0])
 		var b, _ = strconv.Atoi(items[1])
-		rules = append(rules, []int { a, b })
+		rules = append(rules, []int{a, b})
 	}
 	var manualsLines = strings.Split(strings.Trim(sections[1], " "), "\n")
 	var manuals [][]int = make([][]int, 0, len(manualsLines))
@@ -119,10 +122,14 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 			// Check against all rules
 			var valid, indexA, indexB = checkPages(pages, rules)
 			if valid {
-				var middleValue = pages[len(pages) / 2]
+				var middleValue = pages[len(pages)/2]
 				sum += middleValue
-				if (verbose) { output += fmt.Sprintf("- %v: Valid -> += %v\n", pages, middleValue) }
-			} else if (verbose) { output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]) }
+				if verbose {
+					output += fmt.Sprintf("- %v: Valid -> += %v\n", pages, middleValue)
+				}
+			} else if verbose {
+				output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
+			}
 		}
 
 		// Return count
@@ -138,20 +145,30 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 			// Check against all rules
 			var valid, indexA, indexB = checkPages(pages, rules)
 			if valid {
-				if (verbose) { output += fmt.Sprintf("- %v: Valid\n", pages) }
+				if verbose {
+					output += fmt.Sprintf("- %v: Valid\n", pages)
+				}
 			} else {
-				if (verbose) { output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]) }
+				if verbose {
+					output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
+				}
 				var fixed = pages
 				for {
 					fixed = attemptFix(fixed, indexA, indexB)
-					if (verbose) { output += fmt.Sprintf("  - Attempting fix: %v", fixed) }
+					if verbose {
+						output += fmt.Sprintf("  - Attempting fix: %v", fixed)
+					}
 					valid, indexA, indexB = checkPages(fixed, rules)
-					if (valid) {
-						var middleValue = fixed[len(fixed) / 2]
+					if valid {
+						var middleValue = fixed[len(fixed)/2]
 						sum += middleValue
-								if (verbose) { output += fmt.Sprintf(" ... succedeed -> %v!\n", middleValue) }
-						break;
-					} else if (verbose) { output += fmt.Sprintf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB]) }
+						if verbose {
+							output += fmt.Sprintf(" ... succedeed -> %v!\n", middleValue)
+						}
+						break
+					} else if verbose {
+						output += fmt.Sprintf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB])
+					}
 				}
 			}
 		}
@@ -162,10 +179,9 @@ func (day Day05) Run (index int, input any, verbose bool) (any, string, error) {
 
 	// Missing implementation
 	return nil, output, errors.New("missing implementation for required index")
-
 }
 
-func mapPageIndexes (pages []int) map[int]int {
+func mapPageIndexes(pages []int) map[int]int {
 	var mapped = make(map[int]int)
 	for i, page := range pages {
 		mapped[page] = i
@@ -173,7 +189,7 @@ func mapPageIndexes (pages []int) map[int]int {
 	return mapped
 }
 
-func checkPages (pages []int, rules [][]int) (bool, int, int) {
+func checkPages(pages []int, rules [][]int) (bool, int, int) {
 	// Map pages' indexes
 	var mapped = mapPageIndexes(pages)
 	// Check against all rules

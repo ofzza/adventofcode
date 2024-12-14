@@ -1,4 +1,4 @@
-package day01
+package year2024
 
 import (
 	solution "adventofcode/lib"
@@ -10,20 +10,21 @@ import (
 )
 
 // Day one definition
-type Day01 struct {}
-var Day = Day01 {}
+type Day01 struct{}
+
+var Day = Day01{}
 
 // Year and day
 func (day Day01) GetInfo() solution.SolutionInfo {
-	return solution.SolutionInfo {
+	return solution.SolutionInfo{
 		Year: 2024,
-		Day: 	1,
+		Day:  1,
 	}
 }
 
 // Executions
 func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecution {
-	var executions = []solution.SolutionExecution {};
+	var executions = []solution.SolutionExecution{}
 	// Part 1/2
 	if index == 0 || index == 1 {
 		// Test
@@ -31,10 +32,10 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day01/input-test.txt"); return string(b) }(),
-					Expect:	11,
+					Index:  1,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day01/input-test.txt"); return string(b) }(),
+					Expect: 11,
 				},
 			)
 		}
@@ -43,10 +44,10 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day01/input.txt"); return string(b) }(),
-					Expect:	1970720,
+					Index:  1,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day01/input.txt"); return string(b) }(),
+					Expect: 1970720,
 				},
 			)
 		}
@@ -58,10 +59,10 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day01/input-test.txt"); return string(b) }(),
-					Expect:	31,
+					Index:  2,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day01/input-test.txt"); return string(b) }(),
+					Expect: 31,
 				},
 			)
 		}
@@ -70,10 +71,10 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day01/input.txt"); return string(b) }(),
-					Expect:	17191599,
+					Index:  2,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day01/input.txt"); return string(b) }(),
+					Expect: 17191599,
 				},
 			)
 		}
@@ -82,11 +83,13 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day01) Run (index int, input any, verbose bool) (any, string, error) {
+func (day Day01) Run(index int, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, ok = input.(string)
-	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
+	if !ok {
+		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+	}
 
 	// Parse inputs
 	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
@@ -108,17 +111,17 @@ func (day Day01) Run (index int, input any, verbose bool) (any, string, error) {
 		// Sort inputs
 		sort.Ints(listA)
 		sort.Ints(listB)
-		
+
 		// Calculate distances
-		var distances int = 0;
-		for i:=0; i<len(listA); i++ {
-			if (listB[i] > listA[i]) {
+		var distances int = 0
+		for i := 0; i < len(listA); i++ {
+			if listB[i] > listA[i] {
 				distances += listB[i] - listA[i]
 			} else {
 				distances += listA[i] - listB[i]
 			}
 		}
-	
+
 		// Return solution
 		return distances, output, nil
 	} else
@@ -144,5 +147,4 @@ func (day Day01) Run (index int, input any, verbose bool) (any, string, error) {
 
 	// Missing implementation
 	return nil, output, errors.New("missing implementation for required index")
-
 }

@@ -1,4 +1,4 @@
-package day02
+package year2024
 
 import (
 	solution "adventofcode/lib"
@@ -11,20 +11,21 @@ import (
 )
 
 // Day one definition
-type Day10 struct {}
-var Day = Day10 {}
+type Day10 struct{}
+
+var Day = Day10{}
 
 // Year and day
 func (day Day10) GetInfo() solution.SolutionInfo {
-	return solution.SolutionInfo {
+	return solution.SolutionInfo{
 		Year: 2024,
-		Day: 	10,
+		Day:  10,
 	}
 }
 
 // Executions
 func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecution {
-	var executions = []solution.SolutionExecution {};
+	var executions = []solution.SolutionExecution{}
 	// Part 1/2
 	if index == 0 || index == 1 {
 		// Test
@@ -32,10 +33,10 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day10/input-test.txt"); return string(b) }(),
-					Expect:	36,
+					Index:  1,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day10/input-test.txt"); return string(b) }(),
+					Expect: 36,
 				},
 			)
 		}
@@ -44,10 +45,10 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	1,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day10/input.txt"); return string(b) }(),
-					Expect:	744,
+					Index:  1,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day10/input.txt"); return string(b) }(),
+					Expect: 744,
 				},
 			)
 		}
@@ -59,10 +60,10 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"test",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day10/input-test.txt"); return string(b) }(),
-					Expect:	81,
+					Index:  2,
+					Tag:    "test",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day10/input-test.txt"); return string(b) }(),
+					Expect: 81,
 				},
 			)
 		}
@@ -71,10 +72,10 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 			executions = append(
 				executions,
 				solution.SolutionExecution{
-					Index: 	2,
-					Tag: 		"solution",
-					Input: 	func () string { var b, _ = os.ReadFile("./year2024/data/day10/input.txt"); return string(b) }(),
-					Expect:	1651,
+					Index:  2,
+					Tag:    "solution",
+					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day10/input.txt"); return string(b) }(),
+					Expect: 1651,
 				},
 			)
 		}
@@ -83,28 +84,30 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day10) Run (index int, input any, verbose bool) (any, string, error) {
+func (day Day10) Run(index int, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, ok = input.(string)
-	if !ok { return nil, output, errors.New("failed casting execution to correct Input/Output types") }
+	if !ok {
+		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+	}
 
 	// Parse inputs
 	var lines = strings.Split(strings.Trim(value, " \n"), "\n")
-	var dimensions = []int { len(lines[0]), len(lines) }
+	var dimensions = []int{len(lines[0]), len(lines)}
 	var indexer = matrix.CreateIndexer(dimensions)
-	
+
 	// Compose map and find all starting positions
-	var topologicalMap = make([]int, 0, len(lines) * len(lines[0]))
-	var trailheads = make([]int, 0, len(lines) * len(lines[0]))
+	var topologicalMap = make([]int, 0, len(lines)*len(lines[0]))
+	var trailheads = make([]int, 0, len(lines)*len(lines[0]))
 	for y, line := range lines {
 		for x, r := range line {
 			// Add to map
 			var height, _ = strconv.Atoi(fmt.Sprintf("%c", r))
-			topologicalMap = append(topologicalMap, height) 
+			topologicalMap = append(topologicalMap, height)
 			// Check if trailhead
 			if r == '0' {
-				var index, _ = indexer.CoordinatesToIndex([]int { x, y })
+				var index, _ = indexer.CoordinatesToIndex([]int{x, y})
 				trailheads = append(trailheads, index)
 			}
 		}
@@ -122,14 +125,16 @@ func (day Day10) Run (index int, input any, verbose bool) (any, string, error) {
 			output += fmt.Sprintf("- Testing trailhead %v:", coords)
 		}
 		// Test trailhead
-		var c, o = climb(topologicalMap, indexer, trailhead, func (sumit int) {
+		var c, o = climb(topologicalMap, indexer, trailhead, func(sumit int) {
 			sumits[sumit] = true
 		})
 		output += o
 		trailsCount += c
 		// Count summits
 		var s int = 0
-		for range sumits { s++ }
+		for range sumits {
+			s++
+		}
 		summitsCount += s
 		// Prompt
 		if verbose {
@@ -153,10 +158,9 @@ func (day Day10) Run (index int, input any, verbose bool) (any, string, error) {
 
 	// Missing implementation
 	return nil, output, errors.New("missing implementation for required index")
-
 }
 
-func climb (topologicalMap []int, indexer matrix.MatrixIndexer, index int, callback func(sumit int)) (int, string) {
+func climb(topologicalMap []int, indexer matrix.MatrixIndexer, index int, callback func(sumit int)) (int, string) {
 	// Initialize output
 	var output string = ""
 	// Look for next steps
@@ -166,12 +170,14 @@ func climb (topologicalMap []int, indexer matrix.MatrixIndexer, index int, callb
 		// Check if reached the summit
 		if topologicalMap[index] == 8 && topologicalMap[neighbor] == 9 {
 			// Count sumit
-			count ++
+			count++
 			// Execute callback
-			if callback != nil { callback(neighbor) }
-		} else 
+			if callback != nil {
+				callback(neighbor)
+			}
+		} else
 		// Check if higher ground, allowed to continue the path
-		if topologicalMap[neighbor] == topologicalMap[index] + 1 {
+		if topologicalMap[neighbor] == topologicalMap[index]+1 {
 			var c, o = climb(topologicalMap, indexer, neighbor, callback)
 			count += c
 			output += o
