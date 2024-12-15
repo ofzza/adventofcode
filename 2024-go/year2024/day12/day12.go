@@ -40,8 +40,6 @@ func (day Day12) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Expect: 140,
 				},
 			)
-		}
-		if tag == "" || tag == "test" {
 			executions = append(
 				executions,
 				solution.SolutionExecution{
@@ -89,8 +87,6 @@ func (day Day12) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Expect: 80,
 				},
 			)
-		}
-		if tag == "" || tag == "test" {
 			executions = append(
 				executions,
 				solution.SolutionExecution{

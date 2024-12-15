@@ -10,7 +10,7 @@ type ISolution interface {
 // Solution info
 type SolutionInfo struct {
 	Year int
-	Day int
+	Day  int
 }
 
 // Solution execution definition
