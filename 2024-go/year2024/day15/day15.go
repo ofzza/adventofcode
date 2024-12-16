@@ -72,7 +72,7 @@ func (day Day15) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "test",
 					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day15/input-test-02.txt"); return string(b) }(),
-					Expect: 105,
+					Expect: 618,
 				},
 			)
 			executions = append(
@@ -93,7 +93,7 @@ func (day Day15) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day15/input.txt"); return string(b) }(),
-					Expect: nil,
+					Expect: 1437981,
 				},
 			)
 		}
@@ -280,11 +280,19 @@ func updateWarehouse(robot []int, warehouse []rune, indexer matrix.MatrixIndexer
 		updatedRobot = robot
 		updatedWarehouse = warehouse
 	} else
-	// If moving into a box or a double sided box, check if box(es) can be pushed
+	// If moving into a box, check if box(es) can be pushed
 	if warehouse[moveIndex] == 'O' || warehouse[moveIndex] == '[' || warehouse[moveIndex] == ']' {
-		var count, warehouseWithMovedBoxes = pushBoxes(warehouse, indexer, []int{robot[0] + move[0], robot[1] + move[1]}, move)
+		var boxes = [][]int{[]int{robot[0] + move[0], robot[1] + move[1]}}
+		// If moving vertically, make sure to also test other part of the double-sized box
+		if move[1] != 0 && warehouse[moveIndex] == '[' {
+			boxes = append(boxes, []int{robot[0] + move[0] + 1, robot[1] + move[1]})
+		}
+		if move[1] != 0 && warehouse[moveIndex] == ']' {
+			boxes = append(boxes, []int{robot[0] + move[0] - 1, robot[1] + move[1]})
+		}
+		var allowed, warehouseWithMovedBoxes = pushBoxes(warehouse, indexer, boxes, move)
 		// If boxes moved
-		if count > 0 {
+		if allowed {
 			updatedRobot = []int{robot[0] + move[0], robot[1] + move[1]}
 			updatedWarehouse = warehouseWithMovedBoxes
 		} else
@@ -299,113 +307,85 @@ func updateWarehouse(robot []int, warehouse []rune, indexer matrix.MatrixIndexer
 	return updatedRobot, updatedWarehouse
 }
 
-func pushBoxes(warehouse []rune, indexer matrix.MatrixIndexer, box []int, move []int) (int, []rune) {
-	// Check if next box over can move
-	var boxIndex, _ = indexer.CoordinatesToIndex([]int{box[0], box[1]})
-	var moveIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + move[0], box[1] + move[1]})
-	// If moving single box into empty space, or any box horizontally move is allowed
-	if warehouse[moveIndex] == '.' && (warehouse[boxIndex] == 'O' || move[0] != 0) {
-		warehouse[moveIndex] = warehouse[boxIndex]
+func pushBoxes(warehouse []rune, indexer matrix.MatrixIndexer, boxes [][]int, move []int) (bool, []rune) {
+	// Initialize
+	var boxesToMove = make([][]int, 0, len(boxes))
+	// Check if all boxes can be moved and collect all boxes that need to be moved
+	for _, box := range boxes {
+		// Check if box can be moved
+		var _allowed, _boxes = checkBoxes(warehouse, indexer, [][]int{box}, move)
+		if !_allowed {
+			return false, warehouse
+		}
+		// Collect boxes which need to move
+		boxesToMove = append(boxesToMove, _boxes...)
+	}
+	// Move boxes
+	var boxChars = make([]rune, 0, len(boxesToMove))
+	for _, box := range boxesToMove {
+		var boxIndex, _ = indexer.CoordinatesToIndex(box)
+		boxChars = append(boxChars, warehouse[boxIndex])
+	}
+	for _, box := range boxesToMove {
+		var boxIndex, _ = indexer.CoordinatesToIndex(box)
 		warehouse[boxIndex] = '.'
-		return 1, warehouse
-	} else
-	// If moving double sided box vertically into empty space, check if other side of box can be pushed
-	if warehouse[moveIndex] == '.' && move[1] != 0 && (warehouse[boxIndex] == '[' || warehouse[boxIndex] == ']') {
-		fmt.Printf("%v\n", echoWarehouse(warehouse, indexer, []int{999, 999}))
-
-		// Copy warehouse and move this side
-		var warehouseWithMovedBoxes = append(make([]rune, 0, len(warehouse)), warehouse...)
-		warehouseWithMovedBoxes[moveIndex] = warehouseWithMovedBoxes[boxIndex]
-		warehouseWithMovedBoxes[boxIndex] = '.'
-		fmt.Println("Moved main side into empty ...")
-		fmt.Printf("%v\n", echoWarehouse(warehouseWithMovedBoxes, indexer, []int{999, 999}))
-		// Check if other side can be pushed
-		var sideOffset int
-		if warehouse[boxIndex] == '[' {
-			sideOffset = 1
-		} else if warehouse[boxIndex] == ']' {
-			sideOffset = -1
-		}
-		var count int
-		// Find other box side
-		var boxIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + sideOffset, box[1]})
-		var moveIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + move[0] + sideOffset, box[1] + move[1]})
-		// Check if other side needs to be checked
-		if warehouseWithMovedBoxes[boxIndex] == '[' || warehouseWithMovedBoxes[boxIndex] == ']' {
-			// Check if other box side can be moved
-			count, warehouseWithMovedBoxes = pushBoxes(warehouse, indexer, []int{box[0] + sideOffset, box[1]}, move)
-			if count > 0 {
-				// Move other box part
-				warehouseWithMovedBoxes[boxIndex] = warehouseWithMovedBoxes[moveIndex]
-				warehouseWithMovedBoxes[moveIndex] = '.'
-				fmt.Println("Moved other side into empty ...")
-				fmt.Printf("%v\n", echoWarehouse(warehouseWithMovedBoxes, indexer, []int{999, 999}))
-				return 1, warehouseWithMovedBoxes
-			} else {
-				return 0, warehouse
+	}
+	for i, box := range boxesToMove {
+		var movedIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + move[0], box[1] + move[1]})
+		warehouse[movedIndex] = boxChars[i]
+	}
+	// Return moved boxes
+	return true, warehouse
+}
+func checkBoxes(warehouse []rune, indexer matrix.MatrixIndexer, boxes [][]int, move []int) (bool, [][]int) {
+	// Initialize
+	var boxesToMove = make([][]int, 0, len(boxes))
+	// Check if each box is allowed to move
+	for _, box := range boxes {
+		// Initialize box and moved positions
+		var movedCoords = []int{box[0] + move[0], box[1] + move[1]}
+		var movedIndex, _ = indexer.CoordinatesToIndex(movedCoords)
+		// If moving into empty space, move is allowed
+		if warehouse[movedIndex] == '.' {
+			boxesToMove = append(boxesToMove, box)
+		} else
+		// If moving into wall, move is not allowed
+		if warehouse[movedIndex] == '#' {
+			return false, [][]int{}
+		} else
+		// If moving into a box, check if box(es) can be pushed
+		if warehouse[movedIndex] == 'O' || warehouse[movedIndex] == '[' || warehouse[movedIndex] == ']' {
+			var boxesToTest = [][]int{movedCoords}
+			// If moving vertically, make sure to also test other part of the double-sized box
+			if move[1] != 0 && warehouse[movedIndex] == '[' {
+				boxesToTest = append(boxesToTest, []int{box[0] + move[0] + 1, box[1] + move[1]})
 			}
-		} else {
-			return 1, warehouseWithMovedBoxes
-		}
-	} else
-	// If moving into wall, move is not allowed
-	if warehouse[moveIndex] == '#' {
-		return 0, warehouse
-	} else
-	// If moving into a box or a double sided box horizontally, check if box(es) can be pushed
-	if warehouse[moveIndex] == 'O' || (move[0] != 0 && (warehouse[moveIndex] == '[' || warehouse[moveIndex] == ']')) {
-		// Check if next box over can move
-		var count, warehouseWithMovedBoxes = pushBoxes(warehouse, indexer, []int{box[0] + move[0], box[1] + move[1]}, move)
-		if count > 0 {
-			warehouseWithMovedBoxes[moveIndex] = warehouseWithMovedBoxes[boxIndex]
-			warehouseWithMovedBoxes[boxIndex] = '.'
-			return count + 1, warehouseWithMovedBoxes
-		} else {
-			return 0, warehouse
-		}
-	} else
-	// If moving into a double sized box in a vertical direction, check if box(es) can be pushed
-	if warehouse[moveIndex] == '[' || warehouse[moveIndex] == ']' {
-		fmt.Printf("%v\n", echoWarehouse(warehouse, indexer, []int{999, 999}))
-
-		// Initialize
-		var sideOffset int
-		if warehouse[boxIndex] == '[' {
-			sideOffset = 1
-		} else if warehouse[boxIndex] == ']' {
-			sideOffset = -1
-		}
-		var count int
-		var warehouseWithMovedBoxes []rune
-		// Check if direct box part can be moved
-		count, warehouseWithMovedBoxes = pushBoxes(warehouse, indexer, []int{box[0] + move[0], box[1] + move[1]}, move)
-		if count > 0 {
-			// Move box part
-			warehouseWithMovedBoxes[moveIndex] = warehouseWithMovedBoxes[boxIndex]
-			warehouseWithMovedBoxes[boxIndex] = '.'
-			fmt.Println("Moved main side into another box ...")
-			fmt.Printf("%v\n", echoWarehouse(warehouseWithMovedBoxes, indexer, []int{999, 999}))
-			// Find other box side
-			var boxIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + sideOffset, box[1]})
-			var moveIndex, _ = indexer.CoordinatesToIndex([]int{box[0] + move[0] + sideOffset, box[1] + move[1]})
-			// Check if other box side can be moved
-			count, warehouseWithMovedBoxes = pushBoxes(warehouseWithMovedBoxes, indexer, []int{box[0] + move[0] + sideOffset, box[1] + move[1]}, move)
-			if count > 0 {
-				// Move other box part
-				warehouseWithMovedBoxes[boxIndex] = warehouseWithMovedBoxes[moveIndex]
-				warehouseWithMovedBoxes[moveIndex] = '.'
-				fmt.Println("Moved other side  another box ...")
-				fmt.Printf("%v\n", echoWarehouse(warehouseWithMovedBoxes, indexer, []int{999, 999}))
-				return count, warehouseWithMovedBoxes
-			} else {
-				return 0, warehouse
+			if move[1] != 0 && warehouse[movedIndex] == ']' {
+				boxesToTest = append(boxesToTest, []int{box[0] + move[0] - 1, box[1] + move[1]})
 			}
-		} else {
-			return 0, warehouse
+			// Check if boxes can be moved
+			var _allowed, _boxesToMove = checkBoxes(warehouse, indexer, boxesToTest, move)
+			if !_allowed {
+				return false, [][]int{}
+			}
+			// Collect boxes which need to move
+			boxesToMove = append(boxesToMove, _boxesToMove...)
+			boxesToMove = append(boxesToMove, box)
 		}
 	}
+	// Deduplicate boxes that need to be moved
+	var dedup = make(map[int]bool)
+	for _, box := range boxesToMove {
+		var boxIndex, _ = indexer.CoordinatesToIndex(box)
+		dedup[boxIndex] = true
+	}
+	var dedupedBoxesToMove = make([][]int, 0, len(boxesToMove))
+	for boxIndex := range dedup {
+		var boxCoords, _ = indexer.IndexToCoordinates(boxIndex)
+		dedupedBoxesToMove = append(dedupedBoxesToMove, boxCoords)
+	}
 	// This will never happen
-	return 0, warehouse
+	return true, dedupedBoxesToMove
 }
 
 func calculateResult(warehouse []rune, indexer matrix.MatrixIndexer) int {
