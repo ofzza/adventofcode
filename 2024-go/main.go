@@ -95,8 +95,8 @@ func main() {
 				} else {
 					resultOutput = "###### == ######"
 				}
-				if len(resultOutput) > 16 {
-					resultOutput = resultOutput[:16]
+				if len(resultOutput) > 32 {
+					resultOutput = resultOutput[:32]
 				}
 				fmt.Printf("   ✅ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			} else if execution.Expect != nil && execution.Expect != result {
@@ -110,8 +110,8 @@ func main() {
 				} else {
 					resultOutput = "###### != ######"
 				}
-				if len(resultOutput) > 16 {
-					resultOutput = resultOutput[:16]
+				if len(resultOutput) > 32 {
+					resultOutput = resultOutput[:32]
 				}
 				fmt.Printf("   ❌ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			} else {
@@ -125,8 +125,8 @@ func main() {
 				} else {
 					resultOutput = "######"
 				}
-				if len(resultOutput) > 16 {
-					resultOutput = resultOutput[:16]
+				if len(resultOutput) > 32 {
+					resultOutput = resultOutput[:32]
 				}
 				fmt.Printf("   ❔ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			}
