@@ -78,7 +78,7 @@ type Machine struct {
 }
 
 // Implementation
-func (day Day13) Run(index int, input any, verbose bool) (any, string, error) {
+func (day Day13) Run(index int, tag string, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, ok = input.(string)

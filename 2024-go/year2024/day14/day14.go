@@ -76,7 +76,7 @@ type Robot struct {
 }
 
 // Implementation
-func (day Day14) Run(index int, input any, verbose bool) (any, string, error) {
+func (day Day14) Run(index int, tag string, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var inputs = input.([]any)

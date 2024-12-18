@@ -85,7 +85,7 @@ func (day Day18) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day18) Run(index int, input any, verbose bool) (any, string, error) {
+func (day Day18) Run(index int, tag string, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var inputs = input.([]any)
@@ -230,9 +230,6 @@ func (day Day18) Run(index int, input any, verbose bool) (any, string, error) {
 				duration -= step
 			}
 		}
-
-		// Return count
-		return nil, output, errors.New("solution not found")
 	}
 
 	// Missing implementation

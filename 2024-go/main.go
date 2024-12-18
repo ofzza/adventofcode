@@ -64,7 +64,7 @@ func main() {
 			var startTime = time.Now()
 
 			// Get execution result
-			var result, output, err = day.Run(execution.Index, execution.Input, *pVerbose)
+			var result, output, err = day.Run(execution.Index, execution.Tag, execution.Input, *pVerbose)
 			var duration = time.Since(startTime)
 			if err != nil {
 				fmt.Printf("  ERROR %v\n", err.Error())

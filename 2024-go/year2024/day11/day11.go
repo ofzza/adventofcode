@@ -82,7 +82,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day11) Run(index int, input any, verbose bool) (any, string, error) {
+func (day Day11) Run(index int, tag string, input any, verbose bool) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, okValue = input.([]any)
