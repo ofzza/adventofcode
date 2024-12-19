@@ -74,8 +74,7 @@ func (day Day17) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day17/input.txt"); return string(b) }(),
-					Expect: nil, // 1164550639020442 too high
-					// 1164550638995611 too high
+					Expect: 109019476330651,
 				},
 			)
 		}
@@ -188,263 +187,64 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 	} else
 
 	// Part 2/2 (solution)
-	if index == 2 && tag == "solution!" {
-
-		// Find range of values producing correct length
-		var intM int = 0
-		var intMax int = int(^uint(0) >> 1)
-		var min int
-		var max int
-
-		// Echo finding lower bound
-		if verbose {
-			fmt.Println("Searching for lower possible bound ...")
-		}
-		// Search for lower bound
-		var i = (intMax - intM) / 2
-		var step = i
-		for {
-			// Get length for test input
-			var outputLength = runPrecompiledAndGetOutputLength(i)
-			// Echo
-			if verbose {
-				fmt.Printf("- Tested A=%v -> output length = %v\n", i, outputLength)
-			}
-			// Check length and target next attempt
-			step = step / 2
-			if step == 0 {
-				step = 1
-			}
-			if outputLength < len(code) {
-				i += step
-			} else if outputLength > len(code) {
-				i -= step
-			} else if runPrecompiledAndGetOutputLength(i-1) != outputLength-1 {
-				i -= step
-			} else {
-				// Echo lower bound
-				if verbose {
-					fmt.Printf("... found lower bound: %v\n\n", i)
-				}
-				// Store lower bound
-				min = i
-				break
-			}
-		}
-
-		// Echo finding upper bound
-		if verbose {
-			fmt.Println("Searching for upper possible bound ...")
-		}
-		// Search for upper bound
-		i = (intMax - intM) / 2
-		step = i
-		for {
-			// Get length for test input
-			var outputLength = runPrecompiledAndGetOutputLength(i)
-			// Echo
-			if verbose {
-				fmt.Printf("- Tested A=%v -> output length = %v\n", i, outputLength)
-			}
-			// Check length and target next attempt
-			step = step / 2
-			if step == 0 {
-				step = 1
-			}
-			if outputLength < len(code) {
-				i += step
-			} else if outputLength > len(code) {
-				i -= step
-			} else if runPrecompiledAndGetOutputLength(i+1) != outputLength+1 {
-				i += step
-			} else {
-				// Echo upper bound
-				if verbose {
-					fmt.Printf("... found upper bound: %v\n\n", i)
-				}
-				// Store upper bound
-				max = i
-				break
-			}
-		}
-
-		// Test out different values for A register
-		var maxMatchingOutputLength int = 0
-		// [35184372088832 - 281474976710655]
-		// A=40073700000000 -> depth 15
-		// A=41692200000000 -> depth 15
-		// A=43393600000000 -> depth 15
-		// A=46194200000000 -> depth 15
-		// A=55519800000000 -> depth 15
-		// A=56786800000000 -> depth 15
-		// A=60024500000000 -> depth 15
-		for i := min; i < max; i++ {
-			// Echo
-			if verbose && i%1e8 == 0 {
-				fmt.Printf("- Attempting program with register A=%v (max matched output length so far: %v)\n", i, maxMatchingOutputLength)
-			}
-
-			// Use precompiled computer
-			var success, matchedOutputLength = runPrecompiledAndCheckOutput(i, code)
-			if matchedOutputLength > maxMatchingOutputLength {
-				maxMatchingOutputLength = matchedOutputLength
-			}
-			if success {
-				return i, output, nil
-			}
-		}
-	} else
-
-	// Part 2/2 (solution, for real-real)
-	if index == 2 && tag == "solution!" {
-
-		// Initialize potential solutions
-		var best int = 0
-		var solutions = []string{""}
-		// Start evaluation loop
-	top:
-		for {
-			// Echo size of testing and best match so far:
-			if len(solutions) > 0 {
-				fmt.Printf("- Testing %v solutions of binary length %v -> best match so far: %v\n", len(solutions), len(solutions[0]), best)
-			}
-			// Test adding each seed to each solution
-			var next = make([]string, 0, len(solutions)*2)
-			for _, solution := range solutions {
-				for _, seed := range []string{"0", "1"} {
-					// Compose candidate
-					var candidateStr = seed + solution
-					var candidate, _ = strconv.ParseInt(candidateStr, 2, 64)
-					// Verify result matches
-					var success, matches = runPrecompiledAndCheckOutput(int(candidate), code)
-					// Check if match complete
-					if success {
-						return candidate, output, nil
-					}
-					// Store how well solution matches
-					if matches > best {
-						// Keep track of best match
-						best = matches
-						// Clear next and add only the new, lowest, best solution
-						solutions = make([]string, 0, len(solutions)*2)
-						solutions = append(solutions, candidateStr)
-						continue top
-					}
-					// Add candidate solutions
-					next = append(next, candidateStr)
-				}
-			}
-			// Update solutions
-			solutions = next
-		}
-
-	} else
-
-	// Part 2/2 (solution, for real-real-real)
 	if index == 2 && tag == "solution" {
 
-		// Establish search range
-		var max = int(^uint(0) >> 1)
-		var center = 0
-		var count int = 1024 * 1024
-		var step int = max / count
-		var best int = 0
+		// Find register A value
+		var ok, a = findRegisterValue(code, registers, computer)
 
-		// Search, refining step as you go
-		for {
-
-			// Initialize search success
-			var found = false
-
-			// Store equals
-			var equalsGlobal []int = []int{}
-			// Search around current center - if better match than previously, recenter search
-		search:
-			for i := 1; true; i++ {
-				// Ready candidates
-				var candidates []int = []int{}
-				if max-(i*step) >= center {
-					candidates = append(candidates, center+(i*step))
-				}
-				if center >= (i * step) {
-					candidates = append(candidates, center-(i*step))
-				}
-				if len(candidates) == 0 {
-					break
-				}
-				// Test candidates
-				var equalsLocal []int = []int{}
-				for _, candidate := range candidates {
-					// (Re)Initialize computer
-					computer.reset([]int{candidate, registers[1], registers[2]})
-					computer.output = make([]int, 0)
-					// Run computer
-					var result = computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
-						return true
-					})
-					// Check output
-					if len(result) == len(code) {
-						// Check how well output matches
-						var matchCount int = 0
-						for j := len(result) - 1; j >= 0; j-- {
-							if result[j] == code[j] {
-								matchCount++
-							} else {
-								break
-							}
-						}
-						// Check if equal to or better than best so far
-						if matchCount == best {
-							equalsLocal = append(equalsLocal, candidate)
-						}
-						// Check if better match than so far
-						if matchCount > best {
-							// Check if perfect match
-							if matchCount == len(code) {
-								return candidate, output, nil
-							} else
-							// Recenter search
-							{
-								best = matchCount
-								found = true
-								center = candidate
-							}
-							// Echo search progress
-							if verbose {
-								fmt.Printf("- Found output matching %v digits. Searching around %v in steps of %v ...\n", best, center, step)
-							}
-							// Start again with same step, around new center
-							break search
-						}
-					}
-				}
-
-				// If no results even equal previous, no point in searching wider
-				if len(equalsLocal) == 0 && best > 0 {
-					break search
-				}
-
-				// Store equals
-				equalsGlobal = append(equalsGlobal, equalsLocal...)
-			}
-
-			// If search failed, restart finer search
-			if !found {
-				if step > 1 {
-					// Update step
-					step /= 2
-					// Echo search progress
-					if verbose {
-						fmt.Printf("-   ... output matching %v digits. Searching around %v in steps of %v ...\n", best, center, step)
-					}
-				}
-			}
+		// Return solution
+		if ok {
+			return a, output, nil
+		} else {
+			return nil, output, errors.New("solution not found")
 		}
 
 	}
 
 	// Missing implementation
 	return nil, output, errors.New("missing implementation for required index")
+}
+
+func findRegisterValue(code []int, regs []int, computer ChronospatialComputer) (bool, int) {
+	return findRegisterValueInternal("", code, regs, computer)
+}
+func findRegisterValueInternal(prefix string, code []int, regs []int, computer ChronospatialComputer) (bool, int) {
+
+	// Test out options for next digit
+	for _, continuation := range []string{"000", "001", "010", "011", "100", "101", "110", "111"} {
+		// Compose candidate value
+		var candidateString = prefix + continuation
+		var candidateValue, _ = strconv.ParseInt(candidateString, 2, 64)
+		// (Re)Initialize and run computer
+		computer.reset([]int{int(candidateValue), regs[1], regs[2]})
+		computer.output = make([]int, 0)
+		computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
+			return true
+		})
+		// Check if output matches
+		var matches = true
+		for i := 0; i < len(computer.output); i++ {
+			if computer.output[len(computer.output)-i-1] != code[len(code)-i-1] {
+				matches = false
+				break
+			}
+		}
+		if matches {
+			// Check if fully solution
+			if len(computer.output) == len(code) {
+				return true, int(candidateValue)
+			}
+			// Accept candidate as new prefix and continue searching for matches
+			var ok, solution = findRegisterValueInternal(candidateString, code, regs, computer)
+			if ok {
+				return true, solution
+			}
+		}
+	}
+
+	// No match found, return no solution found
+	return false, 0
+
 }
 
 // Chronospatial Computer factory
@@ -628,94 +428,4 @@ func (comp ChronospatialComputer) getComboRegisterValue(operand int) (int, error
 	{
 		return -1, errors.New("unsupported combo operand value")
 	}
-}
-
-func runPrecompiledAndGetOutputLength(a int) int {
-	// 2,4 : B = A % 8             | B = [..., 0 , 0 , 0 , 0 , 0 , a2, a1, a0]
-	// 1,5 : B = B ^ 0b00000101    | B = [..., 0 , 0 , 0 , 0 , 0 ,!a2, a1,!a0]
-	// 7,5 : C = A / 2^B           | C = A >> B
-	//														 |
-	//														 |
-	//														 |
-	// 0,3 : A = A / 8             | A = A >> 3
-	// 4,0 : B = B ^ C             | B = [!a2, a1,!a0]] ^ (A >> B) = ???
-	// 1,6 : B = B ^ 0b0000110     | B = ???
-	// 5,5 : output += B % 8       | output += ???
-	// 3,0 : if A != 0 -> JUMP 0   |
-
-	// Initialize output pointer
-	var length int = 0
-
-	// Initialize registers
-	var A int = a
-	var B int = 0
-	var C int = 0
-
-	for {
-		// Set registers
-		B = A & 0b00000111
-		B = B ^ 0b00000101
-		C = A >> B
-		A = A >> 3
-		B = B ^ C
-		B = B ^ 0b00000110
-		// Register output
-		length++
-		// Continue or exit
-		if A == 0 {
-			break
-		}
-	}
-
-	// Validate exit state
-	return length
-}
-
-func runPrecompiledAndCheckOutput(a int, code []int) (bool, int) {
-	// 2,4 : B = A % 8             | B = [..., 0 , 0 , 0 , 0 , 0 , a2, a1, a0]
-	// 1,5 : B = B ^ 0b00000101    | B = [..., 0 , 0 , 0 , 0 , 0 ,!a2, a1,!a0]
-	// 7,5 : C = A / 2^B           | C = A >> B
-	//														 |
-	//														 |
-	//														 |
-	// 0,3 : A = A / 8             | A = A >> 3
-	// 4,0 : B = B ^ C             | B = [!a2, a1,!a0]] ^ (A >> B) = ???
-	// 1,6 : B = B ^ 0b0000110     | B = ???
-	// 5,5 : output += B % 8       | output += ???
-	// 3,0 : if A != 0 -> JUMP 0   |
-
-	// Initialize output pointer
-	var i int = 0
-
-	// Initialize registers
-	var A int = a
-	var B int = 0
-	var C int = 0
-
-	for {
-		// Set registers
-		B = A & 0b00000111
-		B = B ^ 0b00000101
-		C = A >> B
-		A = A >> 3
-		B = B ^ C
-		B = B ^ 0b00000110
-		// Validate output
-		var output = B & 0b00000111
-		if output != code[i] {
-			return false, i
-		} else {
-			i++
-			if i > len(code)-1 {
-				return false, i
-			}
-		}
-		// Continue or exit
-		if A == 0 {
-			break
-		}
-	}
-
-	// Validate exit state
-	return i == len(code), i
 }
