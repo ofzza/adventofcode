@@ -155,7 +155,7 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 			output += fmt.Sprintf("- Best score: %v\n", winningScore)
 		}
 
-		// Return count
+		// Return solution
 		return winningScore, output, nil
 	} else
 
@@ -217,7 +217,7 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 			count++
 		}
 
-		// Return count
+		// Return solution
 		return count, output, nil
 	}
 

@@ -161,7 +161,7 @@ func (day Day12) Run(index int, tag string, input any, verbose bool) (any, strin
 			price += len(region.plots) * len(region.perimeter)
 		}
 
-		// Return count
+		// Return solution
 		return price, output, nil
 	} else
 
@@ -181,7 +181,7 @@ func (day Day12) Run(index int, tag string, input any, verbose bool) (any, strin
 			price += len(region.plots) * region.sides
 		}
 
-		// Return count
+		// Return solution
 		return price, output, nil
 	}
 

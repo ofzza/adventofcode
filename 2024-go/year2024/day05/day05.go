@@ -132,7 +132,7 @@ func (day Day05) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return sum, output, nil
 	} else
 
@@ -173,7 +173,7 @@ func (day Day05) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return sum, output, nil
 	}
 

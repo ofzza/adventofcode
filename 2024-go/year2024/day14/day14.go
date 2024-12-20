@@ -176,7 +176,7 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 			output += fmt.Sprintf("  - Quadrant #4 (>%v, >%v): %v\n", midX, midY, quadrants[3])
 		}
 
-		// Return count
+		// Return solution
 		return safetyScore, output, nil
 	} else
 
@@ -223,7 +223,7 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return nil, output, nil
 	}
 

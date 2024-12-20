@@ -153,7 +153,7 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 			output += echoMemoryMap(indexer, memory, result)
 		}
 
-		// Return count
+		// Return solution
 		return len(result) - 1, output, nil
 	} else
 

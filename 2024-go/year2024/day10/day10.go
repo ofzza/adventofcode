@@ -145,14 +145,14 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 	// Part 1/2
 	if index == 1 {
 
-		// Return count
+		// Return solution
 		return summitsCount, output, nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
 
-		// Return count
+		// Return solution
 		return trailsCount, output, nil
 	}
 

@@ -172,7 +172,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return cksum, output, nil
 	} else
 
@@ -246,7 +246,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return cksum, output, nil
 	}
 

@@ -182,7 +182,7 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return calculateResult(warehouse, indexer), output, nil
 	} else
 
@@ -243,7 +243,7 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return calculateResult(warehouse, indexer), output, nil
 	}
 

@@ -113,7 +113,7 @@ func (day Day04) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			count += c
 		}
-		// Return count
+		// Return solution
 		return count, output, nil
 	} else
 

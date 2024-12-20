@@ -171,7 +171,7 @@ func (day Day11) Run(index int, tag string, input any, verbose bool) (any, strin
 			total += n
 		}
 
-		// Return count
+		// Return solution
 		return total, output, nil
 	}
 

@@ -201,7 +201,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 			return true
 		})
 
-		// Return count
+		// Return solution
 		return len(slices.Collect(maps.Keys(traversed))), output, nil
 	} else
 
@@ -363,7 +363,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 
-		// Return count
+		// Return solution
 		return count, output, nil
 	} else
 
@@ -564,7 +564,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 			return true
 		})
 
-		// Return count
+		// Return solution
 		return count, output, nil
 	}
 
