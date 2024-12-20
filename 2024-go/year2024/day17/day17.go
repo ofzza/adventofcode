@@ -4,6 +4,7 @@ import (
 	solution "adventofcode/lib"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -117,7 +118,9 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 		// Run computer
 		computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
 			// Echo execution
-			output += fmt.Sprintf("- %v. %v %v | %v -> %v: %v. %v\n", ipBefore, opCode, operand, regsBefore, regsAfter, ipAfter, outputValues)
+			if verbose {
+				output += fmt.Sprintf("- %v. %v %v | %v -> %v: %v. %v\n", ipBefore, opCode, operand, regsBefore, regsAfter, ipAfter, outputValues)
+			}
 			return true
 		})
 
@@ -132,62 +135,8 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 		return outputStr, output, nil
 	} else
 
-	// Part 2/2 (test)
-	if index == 2 && tag == "test" {
-
-		// Test out different values for A register
-		var start, _ = 0, 0
-		var maxOutputLength int = 0
-	loop:
-		for i := int(start); true; i++ {
-			// Echo
-			if verbose && i%1e6 == 0 {
-				fmt.Printf("- Attempting program with register A=%v (max output length so far: %v)\n", i, maxOutputLength)
-			}
-
-			// (Re)Initialize computer
-			computer.reset([]int{i, registers[1], registers[2]})
-			computer.output = make([]int, 0)
-			// Run computer
-			computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
-				// Check if output longer than program
-				if len(outputValues) > len(code) {
-					return false
-				}
-				// Check if output so far matches the program
-				for i := 0; i < len(outputValues); i++ {
-					if outputValues[i] != code[i] {
-						return false
-					}
-				}
-				// Allow execution to continue
-				return true
-			})
-
-			if len(computer.output) > maxOutputLength {
-				maxOutputLength = len(computer.output)
-				fmt.Printf("- Found output of length %v: %v\n", maxOutputLength, computer.output)
-			}
-
-			// Check if non-mismatched output is correct length
-			if len(computer.output) != len(code) {
-				continue loop
-			}
-			// Check if output matches program
-			for j := 0; j < len(computer.output); j++ {
-				if computer.output[j] != code[j] {
-					continue loop
-				}
-			}
-
-			// Return solution
-			return i, output, nil
-		}
-
-	} else
-
 	// Part 2/2 (solution)
-	if index == 2 && tag == "solution" {
+	if index == 2 {
 
 		// Find register A value
 		var ok, a = findRegisterValue(code, registers, computer)
@@ -206,12 +155,38 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 }
 
 func findRegisterValue(code []int, regs []int, computer ChronospatialComputer) (bool, int) {
-	return findRegisterValueInternal("", code, regs, computer)
+	// Detect the step of output length increase
+	var initialOutputLength int = -1
+	var continuations = make([]string, 0)
+	for i := 0; true; i++ {
+		// (Re)Initialize and run computer
+		computer.reset([]int{i, regs[1], regs[2]})
+		computer.output = make([]int, 0)
+		computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
+			return true
+		})
+		if initialOutputLength != -1 && len(computer.output) > initialOutputLength {
+			// Generate continuations
+			for j := 0; j < i; j++ {
+				var binary = strconv.FormatInt(int64(j), 2)
+				continuations = append(continuations, fmt.Sprintf("%0"+strconv.FormatInt(int64(math.Ceil(math.Log2(float64(i-1)))), 10)+"s", binary))
+			}
+			break
+		} else if initialOutputLength == -1 {
+			initialOutputLength = len(computer.output)
+		}
+	}
+	// Find register value
+	return findRegisterValueInternal("", continuations, code, regs, computer)
 }
-func findRegisterValueInternal(prefix string, code []int, regs []int, computer ChronospatialComputer) (bool, int) {
+func findRegisterValueInternal(prefix string, continuations []string, code []int, regs []int, computer ChronospatialComputer) (bool, int) {
 
 	// Test out options for next digit
-	for _, continuation := range []string{"000", "001", "010", "011", "100", "101", "110", "111"} {
+	for index, continuation := range continuations {
+		// Skip first "0" continuation when no prefix
+		if len(prefix) == 0 && index == 0 {
+			continue
+		}
 		// Compose candidate value
 		var candidateString = prefix + continuation
 		var candidateValue, _ = strconv.ParseInt(candidateString, 2, 64)
@@ -235,7 +210,7 @@ func findRegisterValueInternal(prefix string, code []int, regs []int, computer C
 				return true, int(candidateValue)
 			}
 			// Accept candidate as new prefix and continue searching for matches
-			var ok, solution = findRegisterValueInternal(candidateString, code, regs, computer)
+			var ok, solution = findRegisterValueInternal(candidateString, continuations, code, regs, computer)
 			if ok {
 				return true, solution
 			}

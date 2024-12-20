@@ -12,11 +12,12 @@
       "program": "./2024-go/main.go",
       "args": [
         "--verbose",
+        // "--obfuscate",
         "--summary",
         "--year",
         "2024",
         "--day",
-        "19",
+        "20",
         "--index",
         "1",
         "--tag",

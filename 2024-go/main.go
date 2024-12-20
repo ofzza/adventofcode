@@ -77,7 +77,7 @@ func main() {
 
 			// Output execution result
 			fmt.Printf("➡️ Year %v, Day %v, Index %v, Tag \"%v\" (%v/%v):\n", info.Year, info.Day, execution.Index, execution.Tag, i+1, len(executions))
-			if output != "" {
+			if *pVerbose && output != "" {
 				fmt.Print("\033[34m")
 				fmt.Printf("\n%v\n", output)
 				fmt.Print("\033[0m")
