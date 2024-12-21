@@ -114,7 +114,7 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo
 			if verbose {
-				fmt.Printf("- Checking %v/%v designs ... ", i+1, len(designs))
+				output += fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs))
 			}
 
 			// Find permutations
@@ -124,12 +124,12 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 				total++
 				// Echo
 				if verbose {
-					fmt.Printf(" Found %v permutations!\n", count)
+					output += fmt.Sprintf(" Found %v permutations!\n", count)
 				}
 			} else {
 				// Echo
 				if verbose {
-					fmt.Printf(" No permutations found!\n")
+					output += fmt.Sprintf(" No permutations found!\n")
 				}
 			}
 
@@ -148,7 +148,7 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo
 			if verbose {
-				fmt.Printf("- Checking %v/%v designs ... ", i+1, len(designs))
+				output += fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs))
 			}
 
 			// Find permutations
@@ -158,12 +158,12 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 				total += count
 				// Echo
 				if verbose {
-					fmt.Printf(" Found %v permutations!\n", count)
+					output += fmt.Sprintf(" Found %v permutations!\n", count)
 				}
 			} else {
 				// Echo
 				if verbose {
-					fmt.Printf(" No permutations found!\n")
+					output += fmt.Sprintf(" No permutations found!\n")
 				}
 			}
 

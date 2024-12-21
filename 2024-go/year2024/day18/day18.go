@@ -174,7 +174,6 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo testing duration
 			if verbose {
-				fmt.Printf("- Testing duration = %vns, step = %v: ", duration, step)
 				output += fmt.Sprintf("- Testing duration = %vns: ", duration)
 			}
 
@@ -197,10 +196,8 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 			// Echo if path blocked
 			if verbose {
 				if ok {
-					fmt.Printf(" Found path of length = %v\n", len(resultPath))
 					output += fmt.Sprintf(" Found path of length = %v\n", len(resultPath))
 				} else {
-					fmt.Println(" No path found!")
 					output += " No path found!\n"
 				}
 			}

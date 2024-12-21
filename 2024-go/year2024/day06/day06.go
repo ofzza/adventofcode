@@ -296,7 +296,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 					}
 					// Check all traveled positions for looping
 					if length < 0 {
-						fmt.Println(length)
+						fmt.Printf("WARNING: negative length=%v\n", length)
 					}
 					var section = make([][]int, 0, length)
 					if direction == pathing.DirectionRight {
@@ -490,7 +490,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 					}
 					// Check all traveled positions for looping
 					if length < 0 {
-						fmt.Println(length)
+						fmt.Printf("WARNING: negative length=%v\n", length)
 					}
 					var section = make([][]int, 0, length)
 					if direction == pathing.DirectionRight {

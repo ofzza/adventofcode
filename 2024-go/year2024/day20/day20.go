@@ -122,11 +122,8 @@ func (day Day20) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo labyrinth
 		if verbose {
-			fmt.Print("- Labyrinth:\n")
 			output += "- Labyrinth:\n"
-			fmt.Print(echoLabyrinth(labyrinth, indexer, -1, start, end, nil))
 			output += echoLabyrinth(labyrinth, indexer, -1, start, end, nil)
-			fmt.Print("\n")
 			output += "\n"
 		}
 
@@ -140,11 +137,8 @@ func (day Day20) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo best path without cheating
 		if verbose {
-			fmt.Printf("- Labyrinth path without cheating (length=%v):\n", len(path)-1)
 			output += fmt.Sprintf("- Labyrinth path without cheating (length=%v):\n", len(path)-1)
-			fmt.Print(echoLabyrinth(labyrinth, indexer, -1, start, end, path))
 			output += echoLabyrinth(labyrinth, indexer, -1, start, end, path)
-			fmt.Print("\n")
 			output += "\n"
 		}
 
@@ -152,17 +146,13 @@ func (day Day20) Run(index int, tag string, input any, verbose bool) (any, strin
 		var _, shortcutsCount = findPathShortcuts(labyrinth, indexer, path, minSavings, shortcutLength, func(shortcut []int) {
 			// Echo best path without cheating
 			if verbose {
-				fmt.Print("- Shortcut found:\n")
 				output += fmt.Sprint("- Shortcut found:\n")
-				fmt.Print(echoLabyrinth(labyrinth, indexer, shortcut[0], -1, -1, shortcut))
 				output += echoLabyrinth(labyrinth, indexer, shortcut[0], -1, -1, shortcut)
-				fmt.Print("\n")
 				output += "\n"
 			}
 		})
 
 		// Echo number of shortcuts found
-		fmt.Printf("- Total shortcut found: %v\n", shortcutsCount)
 		output += fmt.Sprintf("- Total shortcut found: %v\n", shortcutsCount)
 
 		// Return solution
