@@ -62,7 +62,7 @@ func (day Day21) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2024/data/day21/input.txt"); return string(b) }(),
-					Expect: nil, // 177814too low
+					Expect: 220493992841852,
 				},
 			)
 		}
@@ -98,7 +98,6 @@ func (day Day21) Run(index int, tag string, input any, verbose bool) (any, strin
 	for _, code := range codes {
 		// Echo starting work on code
 		if verbose {
-			fmt.Printf("- Processing input code '%v' ...", code)
 			output += fmt.Sprintf("- Processing input code '%v' ...", code)
 		}
 
@@ -107,24 +106,18 @@ func (day Day21) Run(index int, tag string, input any, verbose bool) (any, strin
 		for i := 0; i < directionalCount; i++ {
 			keymaps = append(keymaps, directionalKeymap)
 		}
-		var sequences, _ = generateChainedControllersCommands([]string{code}, keymaps, 0, make(map[string][]string, 0))
 
-		// Find shortest sequence
-		var minSequence string = ""
-		for _, sequence := range sequences {
-			if len(minSequence) == 0 || len(sequence) < len(minSequence) {
-				minSequence = sequence
-			}
-		}
+		// Try piping commands
+		var minSequenceLength = pipeCommands(code, keymaps, make(map[int]int, 0))
 
 		// Calculate sequence score
-		var sequenceScore, _ = strconv.ParseInt(code[:len(code)-1], 10, 64)
-		score += int(sequenceScore) * len(minSequence)
+		var sequenceValue, _ = strconv.ParseInt(code[:len(code)-1], 10, 64)
+		var sequenceScore = int(sequenceValue) * minSequenceLength
+		score += sequenceScore
 
 		// Echo completed code
 		if verbose {
-			fmt.Printf(" found %v solutions, minimal of which has length=%v\n", len(sequences), len(minSequence))
-			output += fmt.Sprintf(" found %v solutions, minimal of which has length=%v\n", len(sequences), len(minSequence))
+			output += fmt.Sprintf(" ... found solutions, minimal of which has length=%v, score=%v\n", minSequenceLength, sequenceScore)
 		}
 	}
 
@@ -132,152 +125,76 @@ func (day Day21) Run(index int, tag string, input any, verbose bool) (any, strin
 	return score, output, nil
 }
 
-func generateChainedControllersCommands(codes []string, keymaps []KeyMap, depth int, cache map[string][]string) ([]string, error) {
-	// Initialize all sequences
-	var allSequences = make([]string, 0)
-	var shortestSequenceYet int = -1
-	// Find all sequences
-	for _, code := range codes {
-		// Generate caching key
-		var cacheKey = generateCacheKey("", fmt.Sprintf("%v#%v", keymaps[0].id, depth), code)
-		// Check cache for solutions
-		var cachedSequences, ok = cache[cacheKey]
-		if ok {
-			allSequences = append(allSequences, cachedSequences...)
-			continue
-		}
-		// Generate sequences on 1st keymap
-		var sequences, err = generateControllerCommands(code, keymaps[0])
-		if err != nil {
-			return []string{}, err
-		}
-		// If final keymap, return sequences as final
-		if len(keymaps) == 1 {
-			allSequences = append(allSequences, sequences...)
-			cache[cacheKey] = sequences
-		} else
-		// If more keymaps available, forward sequences
-		{
-			// Extract only shortest sequences
-			for _, sequence := range sequences {
-				if shortestSequenceYet == -1 || len(sequence) < shortestSequenceYet {
-					shortestSequenceYet = len(sequence)
-				}
-			}
-			var shortestSequences = make([]string, 0, len(sequences))
-			for _, sequence := range sequences {
-				if len(sequence) <= shortestSequenceYet {
-					shortestSequences = append(shortestSequences, sequence)
-				}
-			}
-			// Forward sequences
-			var sequences, err = generateChainedControllersCommands(shortestSequences, keymaps[1:], depth+1, cache)
-			if err != nil {
-				return []string{}, err
-			}
-			allSequences = append(allSequences, sequences...)
-			cache[cacheKey] = sequences
-		}
+func pipeCommands(code string, keymaps []KeyMap, cache map[int]int) int {
+	// Initialize
+	var robots = make([]Robot, 0, len(keymaps))
+	for _, keymap := range keymaps {
+		robots = append(robots, Robot{key: 'A', keymap: keymap})
 	}
-	// Return all sequences
-	return allSequences, nil
+	// Pass commands to first robot and pipe to last
+	return pipeCommandsInternal(code, robots, 0, cache)
 }
-
-func generateControllerCommands(code string, keymap KeyMap) ([]string, error) {
-	// Find starting position
-	var current, ok = keymap.keys['A']
-	if !ok {
-		return []string{}, errors.New("failed finding 'A' key")
-	}
-	// Find all partial paths between requested keys
-	var sequences = append(make([]string, 0), "")
+func pipeCommandsInternal(code string, robots []Robot, depth int, cache map[int]int) int {
+	// Update current robot
+	var robotsUpdated = append(make([]Robot, 0, len(robots)), robots...)
+	// Process each of the code keys with first robot
+	var minCodeSequenceLength int = 0
 	for _, key := range code {
-		// Initialize partial sequences
-		var partials = make([]string, 0, len(code)*2)
-
-		// Find all partials from key to key
-		var target, ok = keymap.keys[key]
-		if !ok {
-			return []string{}, fmt.Errorf("failed finding '%v' key", key)
-		}
-		// If NULL path, just hit current key
-		if current[0] == target[0] && current[1] == target[1] {
-			// Add hitting 'A' to all sequences
-			partials = append(partials, "")
-		} else
-		// If not NULL path, process path options
-		{
-			// Try different midpoints
-			var midpoints [][]int
-			if current[0] == target[0] || current[1] == target[1] {
-				midpoints = [][]int{{target[0], current[0]}}
-			} else {
-				midpoints = [][]int{{target[0], current[1]}, {current[0], target[1]}}
-			}
-			for _, midpoint := range midpoints {
-				// Check if path midpoint is not forbidden
-				var midpointValid = true
-				for _, forbidden := range keymap.forbidden {
-					if midpoint[0] == forbidden[0] && midpoint[1] == forbidden[1] {
-						midpointValid = false
-						break
-					}
-				}
-				// If path is valid, generate commands
-				if midpointValid {
-					// Initialize partial sequence
-					var partial = ""
-					// Generate partial sequence (part #1)
-					var paths [][][]int
-					if current[0] == target[0] || current[1] == target[1] {
-						paths = [][][]int{{current, target}}
-					} else {
-						paths = [][][]int{{current, midpoint}, {midpoint, target}}
-					}
-					for _, path := range paths {
-						// Check if NULL path
-						if path[0][0] == path[1][0] && path[0][1] == path[1][1] {
-							continue
-						}
-						// If horizontal move right
-						if path[0][0] < path[1][0] {
-							partial += strings.Replace(fmt.Sprintf("%*s", path[1][0]-path[0][0], ""), " ", ">", -1)
-						} else
-						// If horizontal move left
-						if path[0][0] > path[1][0] {
-							partial += strings.Replace(fmt.Sprintf("%*s", path[0][0]-path[1][0], ""), " ", "<", -1)
-						} else
-						// If vertical move down
-						if path[0][1] < path[1][1] {
-							partial += strings.Replace(fmt.Sprintf("%*s", path[1][1]-path[0][1], ""), " ", "v", -1)
-						} else
-						// If vertical move up
-						if path[0][1] > path[1][1] {
-							partial += strings.Replace(fmt.Sprintf("%*s", path[0][1]-path[1][1], ""), " ", "^", -1)
-						}
-					}
-					// Store partial sequence
-					partials = append(partials, partial)
-				}
-			}
-		}
-
-		// Generate all permutations of existing sequences and partials
-		var updatedSequences = make([]string, 0, len(partials)*len(sequences))
-		for _, sequence := range sequences {
-			for _, partial := range partials {
-				updatedSequences = append(updatedSequences, sequence+partial+"A")
-			}
-		}
-		sequences = updatedSequences
-
-		// Set key as current position
-		current = target
+		// Generate sequences from next robot
+		var minKeySequenceLength = pipeKeyInternal(key, robotsUpdated, depth, cache)
+		// Append to previously generated sequences
+		minCodeSequenceLength += minKeySequenceLength
+		// Next key for current robot
+		robotsUpdated[0].key = key
 	}
-	// Return all sequences
-	return sequences, nil
+	// Return generated sequences
+	return minCodeSequenceLength
+}
+func pipeKeyInternal(nextKey rune, robots []Robot, depth int, cache map[int]int) int {
+	// Check cache
+	var cacheKey = generateCacheKey(depth, robots[0].key, nextKey)
+	var cachedSequences, cacheOk = cache[cacheKey]
+	if cacheOk {
+		return cachedSequences
+	}
+	// Pipe key to next robot
+	var paths, _ = robots[0].pathToNextKey(nextKey)
+	// If no next robots, return paths
+	if len(robots) == 1 {
+		// Get shortest path
+		var length = shortest(paths)
+		// Write to cache
+		cache[cacheKey] = length
+		// Return final paths
+		return length
+	} else
+	// If robots remaining ...
+	{
+		// For each path, pipe to next robot
+		var minSequenceLength int = -1
+		for _, path := range paths {
+			var pathSequenceLength = pipeCommandsInternal(path, robots[1:], depth+1, cache)
+			if minSequenceLength == -1 || pathSequenceLength < minSequenceLength {
+				minSequenceLength = pathSequenceLength
+			}
+		}
+		// Write to cache
+		cache[cacheKey] = minSequenceLength
+		// Return collected sequences
+		return minSequenceLength
+	}
 }
 
-func generateCacheKey(domain string, keymapId string, data string) string {
-	return fmt.Sprintf("%v:%v:%v", domain, keymapId, data)
+func shortest[T []any | string](sequences []T) int {
+	var length int = -1
+	for _, sequence := range sequences {
+		if length == -1 || len(sequence) < length {
+			length = len(sequence)
+		}
+	}
+	return length
+}
+
+func generateCacheKey(depth int, currentKey rune, nextKey rune) int {
+	return 1e9*depth + 1e6*int([]byte(string(currentKey))[0]) + 1e3*int([]byte(string(nextKey))[0])
 }
