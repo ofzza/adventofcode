@@ -5,7 +5,7 @@
 Run puzzles using:
 
 ```sh
-$ go run main.go -- [arg1 [arg2 ...]]
+$ go run main.go [arg1 [arg2 ...]]
 ```
 
 Available arguments:
@@ -30,5 +30,5 @@ Available arguments:
 For example:
 
 ```sh
-go run main.go -- --tag "solution" --verbose --obfuscate
+go run main.go --tag "solution" --verbose --obfuscate
 ```

@@ -7,7 +7,9 @@ import (
 	"time"
 
 	// Import solutions
-	Days "adventofcode/year2024"
+	solution "adventofcode/lib"
+	Days2024 "adventofcode/year2024"
+	Days2025 "adventofcode/year2025"
 )
 
 // Arguments
@@ -28,13 +30,18 @@ func main() {
 	// Parse arguments
 	flag.Parse()
 
+	// Aggregate years
+	var Days = []solution.ISolution{}
+	Days = append(Days, Days2024.Days...)
+	Days = append(Days, Days2025.Days...)
+
 	// Initialize summary
 	var tags = map[string]bool{}
 	var successByTag = map[string]int{"*": 0}
 	var failByTag = map[string]int{"*": 0}
 	var unknownByTag = map[string]int{"*": 0}
 	var timeByTag = map[string]int64{"*": 0}
-	for _, day := range Days.Days {
+	for _, day := range Days {
 		for _, execution := range day.GetExecutions(0, "") {
 			tags[execution.Tag] = true
 			successByTag[execution.Tag] = 0
@@ -45,7 +52,7 @@ func main() {
 	}
 
 	// Process all available solutions
-	for _, day := range Days.Days {
+	for _, day := range Days {
 		// Check solution's year/day
 		var info = day.GetInfo()
 		if (*pYear != 0 && info.Year != *pYear) || (*pDay != 0 && info.Day != *pDay) {
