@@ -9,7 +9,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "./2025-go/main.go",
+      "program": "${workspaceFolder}/2024-2025-go/main.go",
       "args": [
         "--verbose",
         // "--obfuscate",
@@ -19,9 +19,9 @@
         "--day",
         "1",
         "--index",
-        "1",
+        "2",
         "--tag",
-        "solution",
+        "test",
         "--single",
         "1"
       ]
