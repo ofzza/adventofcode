@@ -126,14 +126,10 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 			switch instruction.direction {
 			case 'R':
 				position = (((instruction.distance/100)+1)*100 + position + instruction.distance) % 100
-				if verbose {
-					output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
-				}
+				output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
 			case 'L':
 				position = (((instruction.distance/100)+1)*100 + position - instruction.distance) % 100
-				if verbose {
-					output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
-				}
+				output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
 			}
 			if position == 0 {
 				count++
@@ -165,10 +161,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 				position = position + instruction.distance
 				count += position / 100
 				position = position % 100
-
-				if verbose {
-					output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
-				}
+				output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
 			case 'L':
 				if position > 0 && position-instruction.distance <= 0 {
 					count++
@@ -176,9 +169,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 				position = position - instruction.distance
 				count += int(math.Abs(float64(position))) / 100
 				position = (100 + -1*((-1*position)%100)) % 100
-				if verbose {
-					output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
-				}
+				output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
 			}
 		}
 

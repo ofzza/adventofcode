@@ -4,7 +4,9 @@ import (
 	solution "adventofcode/lib"
 	"errors"
 	"fmt"
+	"math"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -34,7 +36,7 @@ func (day Day02) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  1,
 					Tag:    "test",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day02/input-test.txt"); return string(b) }(),
-					Expect: 0,
+					Expect: 1227775554,
 				},
 			)
 		}
@@ -46,7 +48,7 @@ func (day Day02) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  1,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day02/input.txt"); return string(b) }(),
-					Expect: 0,
+					Expect: 12599655151,
 				},
 			)
 		}
@@ -61,7 +63,7 @@ func (day Day02) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "test",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day02/input-test.txt"); return string(b) }(),
-					Expect: 0,
+					Expect: 4174379265,
 				},
 			)
 		}
@@ -73,7 +75,7 @@ func (day Day02) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day02/input.txt"); return string(b) }(),
-					Expect: 0,
+					Expect: 20942028255,
 				},
 			)
 		}
@@ -91,26 +93,105 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 	}
 
 	// Parse inputs
-	// TODO: ...
+	var rangeStrs = strings.Split(strings.Trim(value, "\r\n "), ",")
+	var ranges = make([]struct {
+		From int
+		To   int
+	}, len(rangeStrs))
+	for i, rangeStr := range rangeStrs {
+		var rangeBoundsStr = strings.Split(rangeStr, "-")
+		from, _ := strconv.Atoi(rangeBoundsStr[0])
+		to, _ := strconv.Atoi(rangeBoundsStr[1])
+		ranges[i] = struct {
+			From int
+			To   int
+		}{
+			From: from,
+			To:   to,
+		}
+	}
+
+	// Count invalid IDs
+	var sum = 0
 
 	// Part 1/2
 	if index == 1 {
 
-		// Mock implementation
-		output += fmt.Sprintf("Not implemented! (Input: '%v')", strings.Trim(value, "\r\n"))
+		// Process all ranges
+		for _, r := range ranges {
+
+			// Check if range contains no numbers of even length
+			if len(fmt.Sprint(r.From)) == len(fmt.Sprint(r.To)) && len(fmt.Sprint(r.From))%2 == 1 {
+				output += fmt.Sprintf("- [%d, %d]: SKIPPING due to no even number length IDs in the range\n", r.From, r.To)
+				continue
+			}
+
+			// Split range boundaries
+			var fromStr = fmt.Sprint(r.From)
+			from, _ := strconv.Atoi(fromStr[0:int(math.Floor(float64(len(fromStr))/2))])
+			var toStr = fmt.Sprint(r.To)
+			to, _ := strconv.Atoi(toStr[0:int(math.Ceil(float64(len(toStr))/2))])
+			output += fmt.Sprintf("- [%d, %d]: Processing as [%d, %d] ::: ", r.From, r.To, from, to)
+			for i := from; i <= to; i++ {
+				id, _ := strconv.Atoi(fmt.Sprintf("%d%d", i, i))
+				if id >= r.From && id <= r.To {
+					output += fmt.Sprintf("%d, ", id)
+					sum += id
+				}
+			}
+			output += "\n"
+		}
 
 		// Return solution
-		return 0, output, nil
+		return sum, output, nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
 
-		// Mock implementation
-		output += fmt.Sprintf("Not implemented! (Input: '%v')", strings.Trim(value, "\r\n"))
+		// Process all ranges
+		for _, r := range ranges {
+
+			var fromStr = fmt.Sprint(r.From)
+			var toStr = fmt.Sprint(r.To)
+			output += fmt.Sprintf("- [%d, %d]: ...\n", r.From, r.To)
+
+			// Try splitting into different number of (repeating) parts
+			var ids = make(map[int]bool)
+			for n := 2; n <= len(toStr); n++ {
+
+				// Split range boundaries
+				from, err := strconv.Atoi(fromStr[0:int(math.Floor(float64(len(fromStr))/float64(n)))])
+				if err != nil {
+					from = 0
+				}
+				to, err := strconv.Atoi(toStr[0:int(math.Ceil(float64(len(toStr))/float64(n)))])
+				if err != nil {
+					to = 0
+				}
+				output += fmt.Sprintf("  - Splitting into %d repetitions - processing as [%d, %d] ::: ", n, from, to)
+				for i := from; i <= to; i++ {
+					var idStr = ""
+					for j := 0; j < n; j++ {
+						idStr += fmt.Sprint(i)
+					}
+					id, _ := strconv.Atoi(idStr)
+					if id >= r.From && id <= r.To {
+						output += fmt.Sprintf("%d, ", id)
+						ids[id] = true
+					}
+				}
+				output += "\n"
+			}
+
+			// Sum up all deduplicated IDs
+			for id := range ids {
+				sum += id
+			}
+		}
 
 		// Return solution
-		return 0, output, nil
+		return sum, output, nil
 	}
 
 	// Missing implementation
