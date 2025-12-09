@@ -76,7 +76,7 @@ func (day Day08) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  Input{Iterations: 0, Input: func() string { var b, _ = os.ReadFile("./year2025/data/day08/input.txt"); return string(b) }()},
-					Expect: 0,
+					Expect: 975931446,
 				},
 			)
 		}
