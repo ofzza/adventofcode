@@ -4,9 +4,9 @@ import (
 	solution "adventofcode/lib"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"slices"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -76,7 +76,7 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day10/input.txt"); return string(b) }(),
-					Expect: 0,
+					Expect: 0
 				},
 			)
 		}
@@ -216,11 +216,6 @@ type Machine struct {
 	joltages      []int
 }
 
-type State struct {
-	set   bool
-	value int
-}
-
 func findInitializationSequence(target uint, state uint, buttonBitMaps []uint, i int, presses int) int {
 	// Try pressing or skipping the button
 	var stateAfterButtonSkip = state
@@ -248,136 +243,249 @@ func findInitializationSequence(target uint, state uint, buttonBitMaps []uint, i
 	}
 }
 
-func findJoltageSequence(joltages []int, buttonsMap [][]int) int {
-	// Organize joltages by buttons
-	var joltageMap = make([][]int, len(joltages))
-	for i, button := range buttonsMap {
+func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
+
+	// Organize buttons by joltages
+	var buttonsPerJoltageMap = make([][]int, len(joltages))
+	for i, button := range joltagesPerButtonsMap {
 		for _, joltage := range button {
-			joltageMap[joltage] = append(joltageMap[joltage], i)
+			buttonsPerJoltageMap[joltage] = append(buttonsPerJoltageMap[joltage], i)
 		}
 	}
 
-	// Order joltages by size
-	var joltageIndexes = make([]int, len(joltages))
-	for i, _ := range joltages {
-		joltageIndexes[i] = i
-	}
-	sort.Slice(joltageIndexes, func(i int, j int) bool {
-		if len(joltageMap[joltageIndexes[i]]) != len(joltageMap[joltageIndexes[j]]) {
-			return len(joltageMap[joltageIndexes[i]]) < len(joltageMap[joltageIndexes[j]])
-		} else {
-			return joltages[joltageIndexes[i]] < joltages[joltageIndexes[j]]
-		}
-	})
-
-	// For each joltage, generate possible button presses
-	var states = [][]State{make([]State, len(buttonsMap))}
-	for i, j := range joltageIndexes {
+	// Calculate per button maximum presses, from allowed joltages
+	var buttonMaxima = make([]uint16, len(joltagesPerButtonsMap))
+	for j, buttons := range buttonsPerJoltageMap {
 		var joltage = joltages[j]
-		var next = [][]State{}
-
-		// Prompt compatible states
-		fmt.Printf("    - Joltage %d/%d (#%d): Generating off of %d states ...", i+1, len(joltages), j+1, len(states))
-
-		for _, state := range states {
-
-			// Get connected buttons, not already set by the state
-			var joltageButtons = joltageMap[j]
-			var freeButtons = filterOutButtons(joltageButtons, state)
-			// Generate possible clicking states, compatible with current joltage
-			if len(freeButtons) > 0 {
-				var new = generateClickPermutations(state, joltageButtons, freeButtons, joltage)
-				next = append(next, new...)
-			} else {
-				next = append(next, state)
+		for _, b := range buttons {
+			if buttonMaxima[b] == 0 || joltage < int(buttonMaxima[b]) {
+				buttonMaxima[b] = uint16(joltage)
 			}
 		}
-		states = next
-
-		// Prompt compatible states
-		fmt.Printf(" found %d compatible states\n", len(states))
 	}
 
-	// Find minimum state
-	var min = -1
-	for _, state := range states {
-		var count = 0
-		for _, s := range state {
-			count += s.value
+	// Try to find ordering of joltages, where each next only has a single button not already pressed!?
+	var orderedJoltageIndexes, orderedJoltageUnusedButtonsCounts, _ = orderJoltages(buttonsPerJoltageMap, []int{}, []int{})
+	fmt.Printf("    ... determined order: %v\n", orderedJoltageIndexes)
+	fmt.Printf("    ... buttons/degrees of freedom per joltage: %v\n", orderedJoltageUnusedButtonsCounts)
+
+	// For each joltage, generate possible button presses
+	var buttonsReadoutPermutations = [][]uint16{make([]uint16, len(joltagesPerButtonsMap))}
+	var previouslyUsedButtons = make([]int, 0)
+	for i, joltageIndex := range orderedJoltageIndexes {
+		var cache = make(map[int][][]uint16)
+		var targetJoltage = joltages[joltageIndex]
+		var nextButtonsReadoutPermutations = [][]uint16{}
+
+		// Get connected buttons, not already set by the state
+		var allConnectedButtons = buttonsPerJoltageMap[joltageIndex]
+		var unpressedConnectedButtons = getOnlyUnpressedButtons(allConnectedButtons, previouslyUsedButtons)
+		// if len(unpressedConnectedButtons) == 0 {
+		// 	continue
+		// }
+
+		// Prompt generation starting state
+		fmt.Printf("    - Joltage %d/%d (#%d = %d): Generating off of %d states with %d unpressed buttons ...", i+1, len(joltages), joltageIndex+1, targetJoltage, len(buttonsReadoutPermutations), len(unpressedConnectedButtons))
+
+		// Generate permutations
+		for _, buttonReadoutPermutation := range buttonsReadoutPermutations {
+			// Generate possible clicking states, compatible with current joltage
+			var new = generateButtonPermutations(buttonReadoutPermutation, allConnectedButtons, unpressedConnectedButtons, buttonMaxima, targetJoltage, cache)
+			nextButtonsReadoutPermutations = append(nextButtonsReadoutPermutations, new...)
 		}
-		if min == -1 || count < min {
-			min = count
+		buttonsReadoutPermutations = nextButtonsReadoutPermutations
+
+		// Set buttons as used
+		previouslyUsedButtons = append(previouslyUsedButtons, allConnectedButtons...)
+
+		// Prompt generated permutations
+		fmt.Printf(" found %d compatible states\n", len(buttonsReadoutPermutations))
+	}
+
+	// Find minimum button presses in all valid permutations
+	var minButtonPresses = -1
+	var minButtonPressesPermutation []uint16 = []uint16{}
+	for _, buttonsReadoutPermutation := range buttonsReadoutPermutations {
+		var presses = 0
+		for _, s := range buttonsReadoutPermutation {
+			presses += int(s)
+		}
+		if minButtonPresses == -1 || presses < minButtonPresses {
+			minButtonPresses = presses
+			minButtonPressesPermutation = buttonsReadoutPermutation
 		}
 	}
-	return min
+
+	// Verify button presses
+	var reconstructedJoltages = make([]uint16, len(joltages))
+	for i, presses := range minButtonPressesPermutation {
+		for _, j := range joltagesPerButtonsMap[i] {
+			reconstructedJoltages[j] += presses
+		}
+	}
+	for i := 0; i < len(joltages); i++ {
+		if joltages[i] != int(reconstructedJoltages[i]) {
+			panic(fmt.Errorf("failed reconstructing joltages: %v / %v", joltages, reconstructedJoltages))
+		}
+	}
+
+	// Return min presses
+	return minButtonPresses
 }
 
-func generateClickPermutations(state []State, allButtons []int, freeButtons []int, limit int) [][]State {
-	var count = countClickInState(state, allButtons)
-	for _, b := range freeButtons {
-		state[b].set = true
+func orderJoltages(buttonsPerJoltageMap [][]int, orderedJoltageIndexes []int, orderedJoltageUnusedButtonsCounts []int) ([]int, []int, float64) {
+	// Check if ordering done
+	if len(orderedJoltageIndexes) == len(buttonsPerJoltageMap) {
+		return orderedJoltageIndexes, orderedJoltageUnusedButtonsCounts, 1
 	}
-	var states = [][]State{state}
+
+	// Collect all already "used" buttons
+	var usedButtons = []int{}
+	for _, i := range orderedJoltageIndexes {
+		usedButtons = append(usedButtons, buttonsPerJoltageMap[i]...)
+	}
+
+	// Try orderings starting with any/all joltages (not already used)
+	var bestScore = float64(-1)
+	var bestJoltageOrderedIndexes = []int{}
+	var bestJoltageOrderedUnusedButtonsCounts = []int{}
+	for i, joltageButtons := range buttonsPerJoltageMap {
+		var unusedJoltageButtons = []int{}
+		for _, b := range joltageButtons {
+			if !slices.Contains(usedButtons, b) {
+				unusedJoltageButtons = append(unusedJoltageButtons, b)
+			}
+		}
+		if !slices.Contains(orderedJoltageIndexes, i) {
+			var ordering, buttons, score = orderJoltages(buttonsPerJoltageMap, append(orderedJoltageIndexes, i), append(orderedJoltageUnusedButtonsCounts, len(unusedJoltageButtons)))
+			var calcScore = calculateOrderingScore(len(unusedJoltageButtons), score)
+			if bestScore == -1 || calcScore < bestScore {
+				bestScore = calcScore
+				bestJoltageOrderedIndexes = ordering
+				bestJoltageOrderedUnusedButtonsCounts = buttons
+			}
+		}
+	}
+
+	// Return best ordering
+	return bestJoltageOrderedIndexes, bestJoltageOrderedUnusedButtonsCounts, bestScore
+}
+
+func calculateOrderingScore(unusedButtonsCount int, score float64) float64 {
+	var normalizedUnusedButtonsCount = unusedButtonsCount
+	if normalizedUnusedButtonsCount == 0 {
+		normalizedUnusedButtonsCount = 5
+	}
+	return math.Pow(float64(normalizedUnusedButtonsCount), 3) + score
+}
+
+func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedButtons []int, unpressedConnectedButtons []int, buttonMaxima []uint16, targetJoltage int, cache map[int][][]uint16) [][]uint16 {
+	// Get current joltage
+	var joltage = getReadoutJoltage(buttonReadoutPermutation, allConnectedButtons)
+	// If joltage overshot, return no acceptable permutations
+	if joltage > targetJoltage {
+		return [][]uint16{}
+	}
+
+	// Generate permutations for unpressed buttons
+	var unpressedButtonPermutations = generateRawButtonPermutations(len(unpressedConnectedButtons), targetJoltage-joltage, cache)
+
+	// Merge existing permutation with unpressed buttons permutations
+	var buttonReadoutPermutations = make([][]uint16, len(unpressedButtonPermutations))
+	var buttonReadoutPermutationsIndex = 0
+	for i := range unpressedButtonPermutations {
+		// Merge permutation
+		var mergedPermutation = append([]uint16{}, buttonReadoutPermutation...)
+		for j := range unpressedConnectedButtons {
+			mergedPermutation[unpressedConnectedButtons[j]] = unpressedButtonPermutations[i][j]
+		}
+		// Verify if any single button overshoot its allowed maximum
+		var valid = true
+		for i := range mergedPermutation {
+			if mergedPermutation[i] > buttonMaxima[i] {
+				valid = false
+				break
+			}
+		}
+		// Store merged permutation
+		if valid {
+			buttonReadoutPermutations[buttonReadoutPermutationsIndex] = mergedPermutation
+			buttonReadoutPermutationsIndex++
+		}
+	}
+
+	// Return permutations
+	return buttonReadoutPermutations[0:buttonReadoutPermutationsIndex]
+}
+
+func generateRawButtonPermutations(count int, target int, cache map[int][][]uint16) [][]uint16 {
+	// Check cache
+	var cacheKey = 1000000*target + count
+	if cacheValue, ok := cache[cacheKey]; ok {
+		return cacheValue
+	}
+
+	// Initialize
+	var initial = make([]uint16, count)
+	var permutations = [][]uint16{initial}
+	var total = 0
+
 	for {
-		if count >= limit {
+		if total == target {
 			break
 		}
 
-		var next = make([][]State, len(states)*len(freeButtons))
-		for i, state := range states {
-			for j, b := range freeButtons {
-				var n = append([]State{}, state...)
-				n[b].value++
-				next[i*len(freeButtons)+j] = n
+		var nextPermutations = make([][]uint16, len(permutations)*count)
+		for i, permutation := range permutations {
+			for b := 0; b < count; b++ {
+				var nextPermutation = append([]uint16{}, permutation...)
+				nextPermutation[b]++
+				nextPermutations[i*count+b] = nextPermutation
 			}
 		}
 
-		var dedup = make(map[string][]State)
-		for _, n := range next {
-			dedup[fmt.Sprintf("%v", n)] = n
-		}
-		next = make([][]State, len(dedup))
-		var i = 0
-		for _, n := range dedup {
-			next[i] = n
-			i++
-		}
+		// Deduplicate permutations
+		nextPermutations = deduplicatePermutations(nextPermutations)
 
-		states = next
-		count++
+		// Replace with next and continue ...
+		permutations = nextPermutations
+		total++
 	}
 
-	return states
+	// Cache generated permutations
+	cache[cacheKey] = permutations
+
+	// Return generated permutations
+	return permutations
 }
 
-func countClickInState(state []State, buttons []int) int {
-	var count = 0
-	for _, b := range buttons {
-		if state[b].set {
-			count += state[b].value
-		}
+func deduplicatePermutations(permutations [][]uint16) [][]uint16 {
+	var dedup = make(map[string][]uint16)
+	for _, n := range permutations {
+		dedup[fmt.Sprintf("%v", n)] = n
 	}
-	return count
-}
-
-func filterOutButtons(buttons []int, state []State) []int {
-	var remove = make([]int, len(state))
+	permutations = make([][]uint16, len(dedup))
 	var i = 0
-	for j, s := range state {
-		if s.set {
-			remove[i] = j
-			i++
-		}
+	for _, n := range dedup {
+		permutations[i] = n
+		i++
 	}
-	if i == 0 {
-		return buttons
-	}
-	remove = remove[0:i]
+	return permutations
+}
 
-	var filtered = make([]int, len(buttons))
-	i = 0
-	for _, b := range buttons {
-		if !slices.Contains(remove, b) {
+func getReadoutJoltage(buttonReadoutPermutation []uint16, readoutButtons []int) int {
+	var joltage = 0
+	for _, b := range readoutButtons {
+		joltage += int(buttonReadoutPermutation[b])
+	}
+	return joltage
+}
+
+func getOnlyUnpressedButtons(allConnectedButtons []int, previouslyUsedButtons []int) []int {
+	var filtered = make([]int, len(allConnectedButtons))
+	var i = 0
+	for _, b := range allConnectedButtons {
+		if !slices.Contains(previouslyUsedButtons, b) {
 			filtered[i] = b
 			i++
 		}
