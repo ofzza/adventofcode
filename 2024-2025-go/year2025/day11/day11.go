@@ -34,7 +34,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  1,
 					Tag:    "test",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day11/input-test-01.txt"); return string(b) }(),
-					Expect: 5,
+					Expect: uint64(5),
 				},
 			)
 		}
@@ -46,7 +46,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  1,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day11/input.txt"); return string(b) }(),
-					Expect: 500,
+					Expect: uint64(500),
 				},
 			)
 		}
@@ -61,7 +61,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "test",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day11/input-test-02.txt"); return string(b) }(),
-					Expect: 2,
+					Expect: uint64(2),
 				},
 			)
 		}
@@ -73,7 +73,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day11/input.txt"); return string(b) }(),
-					Expect: 0, // 284861348640000 too low
+					Expect: uint(0),
 				},
 			)
 		}
@@ -97,9 +97,9 @@ func (day Day11) Run(index int, tag string, input any, verbose bool) (any, strin
 		var lineParts = strings.Split(strings.Trim(lineStr, "\r\n "), ":")
 		var id = strings.Trim(lineParts[0], "\r\n ")
 		var outputsStr = strings.Split(strings.Trim(lineParts[1], "\r\n "), " ")
-		var outputs = make([]DeviceId, len(outputsStr))
+		var outputs = make([]string, len(outputsStr))
 		for j, outputStr := range outputsStr {
-			outputs[j] = DeviceId{id: strings.Trim(outputStr, "\r\n ")}
+			outputs[j] = strings.Trim(outputStr, "\r\n ")
 		}
 		devices[i] = Device{
 			self: DeviceId{
@@ -111,32 +111,26 @@ func (day Day11) Run(index int, tag string, input any, verbose bool) (any, strin
 	}
 
 	// Connect map indexes by name
-	var _map = make(map[string]int)
+	var deviceIndexByIdMap = make(map[string]int)
 	for _, device := range devices {
-		_map[device.self.id] = device.self.index
+		deviceIndexByIdMap[device.self.id] = device.self.index
 	}
-	// Map indexes to output devices, and register endpoint devices
-	for i := 0; i < len(devices); i++ {
-		var device = &devices[i]
-		for j := range device.outputs {
-			var output = &device.outputs[j]
-			var index, ok = _map[output.id]
-			// If existing device, set index
-			if ok {
-				output.index = index
-			} else
+
+	// Register endpoint devices
+	var count = len(devices)
+	for i := 0; i < count; i++ {
+		for j := range devices[i].outputs {
+			var output = devices[i].outputs[j]
 			// If endpoint device, register and set index
-			{
+			if _, ok = deviceIndexByIdMap[output]; !ok {
 				var index = len(devices)
-				var new = Device{
+				deviceIndexByIdMap[output] = index
+				devices = append(devices, Device{
 					self: DeviceId{
-						id:    output.id,
+						id:    output,
 						index: index,
 					},
-				}
-				devices = append(devices, new)
-				output.index = index
-				_map[output.id] = output.index
+				})
 			}
 		}
 	}
@@ -145,22 +139,20 @@ func (day Day11) Run(index int, tag string, input any, verbose bool) (any, strin
 	if index == 1 {
 
 		// Return solution
-		return countPaths(_map["you"], _map["out"], []int{}, devices), output, nil
+		return countPaths("you", "out", []string{}, devices, deviceIndexByIdMap), output, nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
 
-		// var test = countPaths(_map["dac"], _map["fft"], []int{}, devices)
-		// panic(test)
-
-		// Organize devices
-		var svrToDac = countPaths(_map["svr"], _map["dac"], []int{_map["fft"], _map["out"]}, devices)
-		var dacToFft = countPaths(_map["dac"], _map["fft"], []int{_map["svr"], _map["out"]}, devices)
-		var fftToOut = countPaths(_map["fft"], _map["out"], []int{_map["svr"], _map["dac"]}, devices)
-		var svrToFft = countPaths(_map["svr"], _map["fft"], []int{_map["dac"], _map["out"]}, devices)
-		var fftToDac = countPaths(_map["fft"], _map["dac"], []int{_map["svr"], _map["out"]}, devices)
-		var dacToOut = countPaths(_map["dac"], _map["out"], []int{_map["svr"], _map["fft"]}, devices)
+		// Organize devices: svr -> dac -> fft -> out
+		var svrToDac = countPaths("svr", "dac", []string{}, devices, deviceIndexByIdMap)
+		var dacToFft = countPaths("dac", "fft", []string{}, devices, deviceIndexByIdMap)
+		var fftToOut = countPaths("fft", "out", []string{}, devices, deviceIndexByIdMap)
+		// Organize devices: svr -> fft -> dac -> out
+		var svrToFft = countPaths("svr", "fft", []string{}, devices, deviceIndexByIdMap)
+		var fftToDac = countPaths("fft", "dac", []string{}, devices, deviceIndexByIdMap)
+		var dacToOut = countPaths("dac", "out", []string{}, devices, deviceIndexByIdMap)
 
 		// Return solution
 		var count = (svrToDac * dacToFft * fftToOut) + (svrToFft * fftToDac * dacToOut)
@@ -173,7 +165,7 @@ func (day Day11) Run(index int, tag string, input any, verbose bool) (any, strin
 
 type Device struct {
 	self    DeviceId
-	outputs []DeviceId
+	outputs []string
 	info    DeviceInfo
 }
 
@@ -184,77 +176,116 @@ type DeviceId struct {
 
 type DeviceInfo struct {
 	processed bool
-	paths     int
+	paths     uint64
 }
 
-func countPaths(from int, to int, skip []int, devices []Device) int {
-	organize([]int{to}, skip, devices)
-	return devices[from].info.paths
+func countPaths(from string, to string, skip []string, orgDevices []Device, indexByOutputIdMap map[string]int) uint64 {
+	var fromIndex, fromOk = indexByOutputIdMap[from]
+	var toIndex, toOk = indexByOutputIdMap[to]
+	if !fromOk || !toOk {
+		panic("unknown device id")
+	}
+	var skipIndices = make([]int, len(skip))
+	for i, s := range skip {
+		var sIndex, sOk = indexByOutputIdMap[s]
+		if !sOk {
+			panic("unknown device id")
+		}
+		skipIndices[i] = sIndex
+	}
+	var devices = organize([]int{toIndex}, skipIndices, orgDevices, indexByOutputIdMap)
+	return devices[fromIndex].info.paths
 }
 
-func organize(endpoints []int, skip []int, devices []Device) {
-	// Initialize devices
-	for i := range devices {
-		var device = &devices[i]
+func organize(endpoints []int, skip []int, orgDevices []Device, indexByOutputIdMap map[string]int) []Device {
+	// Initialize a copy of devices and prepare for processing
+	var devices = make([]Device, len(orgDevices))
+	for i := range orgDevices {
+		devices[i] = orgDevices[i]
 		// If endpoint, set as having a single path  and freeze as already (pre)processed
-		if slices.Contains(endpoints, device.self.index) {
-			device.info.processed = true
-			device.info.paths = 1
+		if slices.Contains(endpoints, devices[i].self.index) {
+			devices[i].info.processed = true
+			devices[i].info.paths = 1
 		} else
 		// If must be skipped, set as having no paths and freeze as already (pre)processed
-		if slices.Contains(skip, device.self.index) {
-			device.info.processed = true
-			device.info.paths = 0
+		if slices.Contains(skip, devices[i].self.index) {
+			devices[i].info.processed = true
+			devices[i].info.paths = 0
 		} else
 		// If device has no outputs, set as having no paths and freeze as already (pre)processed
-		if len(device.outputs) == 0 {
-			device.info.processed = true
-			device.info.paths = 0
-		} else
-		// ... else, reset device
-		{
-			device.info.processed = false
-			device.info.paths = 0
+		if len(devices[i].outputs) == 0 {
+			devices[i].info.processed = true
+			devices[i].info.paths = 0
 		}
 	}
 
 	// Find paths to endpoint(s)
 	for {
-
 		// Find all devices connected to endpoint(s) or to other devices with known paths to endpoint(s)
+		var pending = make(map[int]uint64)
 		var hasUnprocessedDevices = false
 		for i := range devices {
-			var device = &devices[i]
-			if device.info.processed {
+			if devices[i].info.processed {
 				continue
 			}
 
-			// If processed, process all outputs
+			// Process unprocessed device's outputs ...
+			hasUnprocessedDevices = true
 			var hasUnprocessedOutputs = false
-			var paths = 0
-			for j := range device.outputs {
-				var outputDevice = &devices[device.outputs[j].index]
-
-				if !outputDevice.info.processed {
+			var paths uint64 = 0
+			for _, output := range devices[i].outputs {
+				var outputIndex, _ = indexByOutputIdMap[output]
+				if !devices[outputIndex].info.processed {
 					hasUnprocessedOutputs = true
 					break
 				}
 
-				paths += outputDevice.info.paths
+				paths += devices[outputIndex].info.paths
 			}
 
 			if hasUnprocessedOutputs {
-				hasUnprocessedDevices = true
 				continue
 			}
 
-			device.info.processed = true
-			device.info.paths = paths
+			pending[i] = paths
 		}
 
+		// Apply pending changes
+		for i, paths := range pending {
+			devices[i].info.processed = true
+			devices[i].info.paths = paths
+		}
+
+		// Done when all devices processed
 		if !hasUnprocessedDevices {
 			break
 		}
-
 	}
+
+	// Verify all devices are processed
+	for i := range devices {
+		if !devices[i].info.processed {
+			panic("device not processed")
+		}
+		if slices.Contains(endpoints, i) {
+			if devices[i].info.paths != 1 {
+				panic("endpoint device path differs from 1")
+			}
+		} else if slices.Contains(skip, i) {
+			if devices[i].info.paths != 0 {
+				panic("skipped device path differs from 0")
+			}
+		} else {
+			var paths uint64 = 0
+			for _, output := range devices[i].outputs {
+				paths += devices[indexByOutputIdMap[output]].info.paths
+			}
+			if devices[i].info.paths != paths {
+				panic("device paths count differs from its outputs'")
+			}
+		}
+	}
+
+	// Return processed devices
+	return devices
 }

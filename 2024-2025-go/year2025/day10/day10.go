@@ -180,8 +180,6 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 	if index == 2 {
 
 		// Prompt
-		fmt.Printf("\n")
-		fmt.Printf("> Initializing:\n")
 		output += "\n"
 		output += "> Initializing:\n"
 
@@ -189,13 +187,11 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 		var presses = 0
 		for i, machine := range machines {
 			// Prompt
-			fmt.Printf("  > Machine %d/%d:\n", i+1, len(machines))
-			// output += fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p)
+			output += fmt.Sprintf("  > Machine %d/%d:\n", i+1, len(machines))
 			// Find minimum joltage stabilizing sequence
 			var p = findJoltageSequence(machine.joltages, machine.buttonMap)
 			// Prompt
-			fmt.Printf("    = Stabilized joltages #%d with %d button presses\n", i+1, p)
-			// output += fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p)
+			output += fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p)
 			// Store initialization presses count
 			presses += p
 		}
@@ -265,14 +261,14 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 	}
 
 	// Try to find ordering of joltages, where each next only has a single button not already pressed!?
-	var orderedJoltageIndexes, orderedJoltageUnusedButtonsCounts, _ = orderJoltages(buttonsPerJoltageMap, []int{}, []int{})
-	fmt.Printf("    ... determined order: %v\n", orderedJoltageIndexes)
-	fmt.Printf("    ... buttons/degrees of freedom per joltage: %v\n", orderedJoltageUnusedButtonsCounts)
+	var orderedJoltageIndexes, _, _ = orderJoltages(buttonsPerJoltageMap, []int{}, []int{})
+	// fmt.Printf("    ... determined order: %v\n", orderedJoltageIndexes)
+	// fmt.Printf("    ... buttons/degrees of freedom per joltage: %v\n", orderedJoltageUnusedButtonsCounts)
 
 	// For each joltage, generate possible button presses
 	var buttonsReadoutPermutations = [][]uint16{make([]uint16, len(joltagesPerButtonsMap))}
 	var previouslyUsedButtons = make([]int, 0)
-	for i, joltageIndex := range orderedJoltageIndexes {
+	for _, joltageIndex := range orderedJoltageIndexes {
 		var cache = make(map[int][][]uint16)
 		var targetJoltage = joltages[joltageIndex]
 		var nextButtonsReadoutPermutations = [][]uint16{}
@@ -285,7 +281,7 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 		// }
 
 		// Prompt generation starting state
-		fmt.Printf("    - Joltage %d/%d (#%d = %d): Generating off of %d states with %d unpressed buttons ...", i+1, len(joltages), joltageIndex+1, targetJoltage, len(buttonsReadoutPermutations), len(unpressedConnectedButtons))
+		// fmt.Printf("    - Joltage %d/%d (#%d = %d): Generating off of %d states with %d unpressed buttons ...", i+1, len(joltages), joltageIndex+1, targetJoltage, len(buttonsReadoutPermutations), len(unpressedConnectedButtons))
 
 		// Generate permutations
 		for _, buttonReadoutPermutation := range buttonsReadoutPermutations {
@@ -299,7 +295,7 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 		previouslyUsedButtons = append(previouslyUsedButtons, allConnectedButtons...)
 
 		// Prompt generated permutations
-		fmt.Printf(" found %d compatible states\n", len(buttonsReadoutPermutations))
+		// fmt.Printf(" found %d compatible states\n", len(buttonsReadoutPermutations))
 	}
 
 	// Find minimum button presses in all valid permutations
