@@ -84,12 +84,11 @@ func (day Day01) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day01) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day01) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -118,7 +117,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Log state
 		if verbose {
-			output += fmt.Sprintf("> Position: %d (%d)\n", position, count)
+			log.Log(fmt.Sprintf("> Position: %d (%d)\n", position, count))
 		}
 
 		// Follow instructions
@@ -126,10 +125,10 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 			switch instruction.direction {
 			case 'R':
 				position = (((instruction.distance/100)+1)*100 + position + instruction.distance) % 100
-				output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
+				log.Log(fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count))
 			case 'L':
 				position = (((instruction.distance/100)+1)*100 + position - instruction.distance) % 100
-				output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
+				log.Log(fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count))
 			}
 			if position == 0 {
 				count++
@@ -137,7 +136,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -148,7 +147,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Log state
 		if verbose {
-			output += fmt.Sprintf("> Position: %d (%d)\n", position, count)
+			log.Log(fmt.Sprintf("> Position: %d (%d)\n", position, count))
 		}
 
 		// Follow instructions
@@ -161,7 +160,7 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 				position = position + instruction.distance
 				count += position / 100
 				position = position % 100
-				output += fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count)
+				log.Log(fmt.Sprintf("> Move R %d >>> Position: %d (%d)\n", instruction.distance, position, count))
 			case 'L':
 				if position > 0 && position-instruction.distance <= 0 {
 					count++
@@ -169,14 +168,14 @@ func (day Day01) Run(index int, tag string, input any, verbose bool) (any, strin
 				position = position - instruction.distance
 				count += int(math.Abs(float64(position))) / 100
 				position = (100 + -1*((-1*position)%100)) % 100
-				output += fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count)
+				log.Log(fmt.Sprintf("> Move L %d >>> Position: %d (%d)\n", instruction.distance, position, count))
 			}
 		}
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }

@@ -84,12 +84,11 @@ func (day Day02) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day02) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day02) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -122,7 +121,7 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Check if range contains no numbers of even length
 			if len(fmt.Sprint(r.From)) == len(fmt.Sprint(r.To)) && len(fmt.Sprint(r.From))%2 == 1 {
-				output += fmt.Sprintf("- [%d, %d]: SKIPPING due to no even number length IDs in the range\n", r.From, r.To)
+				log.Log(fmt.Sprintf("- [%d, %d]: SKIPPING due to no even number length IDs in the range\n", r.From, r.To))
 				continue
 			}
 
@@ -131,19 +130,19 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 			from, _ := strconv.Atoi(fromStr[0:int(math.Floor(float64(len(fromStr))/2))])
 			var toStr = fmt.Sprint(r.To)
 			to, _ := strconv.Atoi(toStr[0:int(math.Ceil(float64(len(toStr))/2))])
-			output += fmt.Sprintf("- [%d, %d]: Processing as [%d, %d] ::: ", r.From, r.To, from, to)
+			log.Log(fmt.Sprintf("- [%d, %d]: Processing as [%d, %d] ::: ", r.From, r.To, from, to))
 			for i := from; i <= to; i++ {
 				id, _ := strconv.Atoi(fmt.Sprintf("%d%d", i, i))
 				if id >= r.From && id <= r.To {
-					output += fmt.Sprintf("%d, ", id)
+					log.Log(fmt.Sprintf("%d, ", id))
 					sum += id
 				}
 			}
-			output += "\n"
+			log.Log("\n")
 		}
 
 		// Return solution
-		return sum, output, nil
+		return sum, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -154,7 +153,7 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			var fromStr = fmt.Sprint(r.From)
 			var toStr = fmt.Sprint(r.To)
-			output += fmt.Sprintf("- [%d, %d]: ...\n", r.From, r.To)
+			log.Log(fmt.Sprintf("- [%d, %d]: ...\n", r.From, r.To))
 
 			// Try splitting into different number of (repeating) parts
 			var ids = make(map[int]bool)
@@ -169,7 +168,7 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 				if err != nil {
 					to = 0
 				}
-				output += fmt.Sprintf("  - Splitting into %d repetitions - processing as [%d, %d] ::: ", n, from, to)
+				log.Log(fmt.Sprintf("  - Splitting into %d repetitions - processing as [%d, %d] ::: ", n, from, to))
 				for i := from; i <= to; i++ {
 					var idStr = ""
 					for j := 0; j < n; j++ {
@@ -177,11 +176,11 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 					}
 					id, _ := strconv.Atoi(idStr)
 					if id >= r.From && id <= r.To {
-						output += fmt.Sprintf("%d, ", id)
+						log.Log(fmt.Sprintf("%d, ", id))
 						ids[id] = true
 					}
 				}
-				output += "\n"
+				log.Log("\n")
 			}
 
 			// Sum up all deduplicated IDs
@@ -191,9 +190,9 @@ func (day Day02) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return sum, output, nil
+		return sum, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }

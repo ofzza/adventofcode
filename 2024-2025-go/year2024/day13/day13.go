@@ -78,12 +78,11 @@ type Machine struct {
 }
 
 // Implementation
-func (day Day13) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day13) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -120,13 +119,13 @@ func (day Day13) Run(index int, tag string, input any, verbose bool) (any, strin
 			var solutions = calculatePresses(machine)
 			if len(solutions) == 0 {
 				if verbose {
-					output += fmt.Sprintf("- Machine %v: Can't be solved!\n", i+1)
+					log.Log(fmt.Sprintf("- Machine %v: Can't be solved!\n", i+1))
 				}
 				continue
 			}
 			// Find lowest price
 			if verbose {
-				output += fmt.Sprintf("- Machine %v: A=%v, B=%v, Prize=%v\n", i+1, machine.a, machine.b, machine.prize)
+				log.Log(fmt.Sprintf("- Machine %v: A=%v, B=%v, Prize=%v\n", i+1, machine.a, machine.b, machine.prize))
 			}
 			var lowest int = -1
 			for _, solution := range solutions {
@@ -135,18 +134,18 @@ func (day Day13) Run(index int, tag string, input any, verbose bool) (any, strin
 					lowest = price
 				}
 				if verbose {
-					output += fmt.Sprintf("  - Ax%v + Bx%v = %v\n", solution[0], solution[1], price)
+					log.Log(fmt.Sprintf("  - Ax%v + Bx%v = %v\n", solution[0], solution[1], price))
 				}
 			}
 			// Sum up price
 			cost += lowest
 			if verbose {
-				output += fmt.Sprintf("  - Solution price = %v\n", lowest)
+				log.Log(fmt.Sprintf("  - Solution price = %v\n", lowest))
 			}
 		}
 
 		// Return solution
-		return cost, output, nil
+		return cost, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -165,13 +164,13 @@ func (day Day13) Run(index int, tag string, input any, verbose bool) (any, strin
 			var solutions = calculatePresses(machine)
 			if len(solutions) == 0 {
 				if verbose {
-					output += fmt.Sprintf("- Machine %v: Can't be solved!\n", i+1)
+					log.Log(fmt.Sprintf("- Machine %v: Can't be solved!\n", i+1))
 				}
 				continue
 			}
 			// Find lowest price
 			if verbose {
-				output += fmt.Sprintf("- Machine %v: A=%v, B=%v, Prize=%v\n", i+1, machine.a, machine.b, machine.prize)
+				log.Log(fmt.Sprintf("- Machine %v: A=%v, B=%v, Prize=%v\n", i+1, machine.a, machine.b, machine.prize))
 			}
 			var lowest int = -1
 			for _, solution := range solutions {
@@ -180,22 +179,22 @@ func (day Day13) Run(index int, tag string, input any, verbose bool) (any, strin
 					lowest = price
 				}
 				if verbose {
-					output += fmt.Sprintf("  - Ax%v + Bx%v = %v\n", solution[0], solution[1], price)
+					log.Log(fmt.Sprintf("  - Ax%v + Bx%v = %v\n", solution[0], solution[1], price))
 				}
 			}
 			// Sum up price
 			cost += lowest
 			if verbose {
-				output += fmt.Sprintf("  - Solution price = %v\n", lowest)
+				log.Log(fmt.Sprintf("  - Solution price = %v\n", lowest))
 			}
 		}
 
 		// Return solution
-		return cost, output, nil
+		return cost, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func testPasses(m Machine) [][]int {

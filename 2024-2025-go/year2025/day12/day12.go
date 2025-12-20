@@ -83,12 +83,11 @@ func (day Day12) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day12) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day12) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -154,15 +153,15 @@ func (day Day12) Run(index int, tag string, input any, verbose bool) (any, strin
 				unknown = append(unknown, region)
 			}
 		}
-		output += fmt.Sprintf("> Out of %d areas: %d validated, %d invalidated, %d unknown", len(regions), len(validated), len(invalidated), len(unknown))
+		log.Log(fmt.Sprintf("> Out of %d areas: %d validated, %d invalidated, %d unknown", len(regions), len(validated), len(invalidated), len(unknown)))
 
 		// Return solution
 		if len(unknown) == 0 {
-			return len(validated), output, nil
+			return len(validated), log.Dump(), nil
 		} else {
 			// Make an explicit exception for the test case, since the solution algo does not solve the MUCH HARDER test case
 			if index == 1 && tag == "test" {
-				return 2, output, nil
+				return 2, log.Dump(), nil
 			} else
 			// ... else, panic 'cos REAL solution not implemented!!!
 			{
@@ -175,11 +174,11 @@ func (day Day12) Run(index int, tag string, input any, verbose bool) (any, strin
 	if index == 2 {
 
 		// Return solution
-		return 0, output, nil
+		return 0, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Shape struct {

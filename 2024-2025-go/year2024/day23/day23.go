@@ -83,12 +83,11 @@ func (day Day23) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day23) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day23) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -119,12 +118,12 @@ func (day Day23) Run(index int, tag string, input any, verbose bool) (any, strin
 		// Echo groups
 		if verbose {
 			for _, group := range filtered {
-				output += fmt.Sprintf("- Group identified: %v\n", group)
+				log.Log(fmt.Sprintf("- Group identified: %v\n", group))
 			}
 		}
 
 		// Return solution
-		return len(filtered), output, nil
+		return len(filtered), log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -140,20 +139,20 @@ func (day Day23) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Check if found single group
 		if len(groups) != 1 {
-			return nil, output, errors.New("couldn't find a single, large, interconnected group")
+			return nil, log.Dump(), errors.New("couldn't find a single, large, interconnected group")
 		}
 
 		// Echo groups
 		if verbose {
-			output += fmt.Sprintf("- Group identified: %v\n", strings.Join(groups[0], ","))
+			log.Log(fmt.Sprintf("- Group identified: %v\n", strings.Join(groups[0], ",")))
 		}
 
 		// Return solution
-		return strings.Join(groups[0], ","), output, nil
+		return strings.Join(groups[0], ","), log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func findInterconnectedGroupsBySize(connections [][]string, size int, callback func(size int, groups [][]string), nodesMap map[string]bool, connectionsMap map[string]bool) [][]string {

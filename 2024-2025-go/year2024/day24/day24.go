@@ -86,15 +86,14 @@ func (day Day24) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day24) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day24) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var inputs, okInputs = input.([]any)
 	var _, okOperation = inputs[0].(string)
 	var _, okSwaps = inputs[1].(int)
 	var value, okValue = inputs[2].(string)
 	if !okInputs || !okOperation || !okSwaps || !okValue {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -132,7 +131,7 @@ func (day Day24) Run(index int, tag string, input any, verbose bool) (any, strin
 		var result, _, _ = resolveValue(wires)
 
 		// Return solution
-		return result, output, nil
+		return result, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -140,7 +139,7 @@ func (day Day24) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo
 		if verbose {
-			output += "- Verifying digits:\n"
+			log.Log("- Verifying digits:\n")
 		}
 
 		// Verify digits
@@ -151,27 +150,27 @@ func (day Day24) Run(index int, tag string, input any, verbose bool) (any, strin
 			if verbose {
 				var key = fmt.Sprintf("z%02d", i)
 				if verified {
-					output += fmt.Sprintf("  - Verifying digit #%02d: Verified\n", i)
-					output += fmt.Sprintf("    %v\n", unpackDefinition(key, wires))
-					output += "\n"
+					log.Log(fmt.Sprintf("  - Verifying digit #%02d: Verified\n", i))
+					log.Log(fmt.Sprintf("    %v\n", unpackDefinition(key, wires)))
+					log.Log("\n")
 				} else {
-					output += fmt.Sprintf("  - Verifying digit #%02d: Failed!!!\n", i)
-					output += fmt.Sprintf("    %v\n", unpackDefinition(key, wires))
-					output += "\n"
+					log.Log(fmt.Sprintf("  - Verifying digit #%02d: Failed!!!\n", i))
+					log.Log(fmt.Sprintf("    %v\n", unpackDefinition(key, wires)))
+					log.Log("\n")
 				}
 			}
 		}
 
 		// Echo
 		if verbose {
-			output += "\n\n"
-			output += "- Fixing digits (STRICT):\n"
+			log.Log("\n\n")
+			log.Log("- Fixing digits (STRICT):\n")
 		}
 
 		// Try fixing wires (STRICT)
 		var ok, swaps = fixWires(wires, []string{}, []string{}, true, func(swaps []string, faults []int) {
 			if verbose {
-				output += fmt.Sprintf("  %*s- Having swapped %v, remaining %v faults: %v\n", len(swaps), "", swaps, len(faults), faults)
+				log.Log(fmt.Sprintf("  %*s- Having swapped %v, remaining %v faults: %v\n", len(swaps), "", swaps, len(faults), faults))
 			}
 		})
 		if ok {
@@ -187,29 +186,29 @@ func (day Day24) Run(index int, tag string, input any, verbose bool) (any, strin
 			slices.Sort(swaps)
 			// Echo
 			if verbose {
-				output += fmt.Sprintf("- Best solution found: %v\n", swaps)
+				log.Log(fmt.Sprintf("- Best solution found: %v\n", swaps))
 				if len(faults) == 0 {
-					output += "  ... verification: VERIFIED!\n"
+					log.Log("  ... verification: VERIFIED!\n")
 				} else {
-					output += "  ... verification: FAILED!!!\n"
+					log.Log("  ... verification: FAILED!!!\n")
 				}
 			}
 			// Return sorted, swapped wires
-			return strings.Join(swaps, ","), output, nil
+			return strings.Join(swaps, ","), log.Dump(), nil
 		} else
 
 		// Try fixing in non strict mode
 		{
 			// Echo
 			if verbose {
-				output += "\n\n"
-				output += "- Fixing digits (NOT STRICT):\n"
+				log.Log("\n\n")
+				log.Log("- Fixing digits (NOT STRICT):\n")
 			}
 
 			// Try fixing wires (NOT STRICT)
 			var ok, swaps = fixWires(wires, []string{}, []string{}, false, func(swaps []string, faults []int) {
 				if verbose {
-					output += fmt.Sprintf("  %*s- Having swapped %v, remaining %v faults: %v\n", len(swaps), "", swaps, len(faults), faults)
+					log.Log(fmt.Sprintf("  %*s- Having swapped %v, remaining %v faults: %v\n", len(swaps), "", swaps, len(faults), faults))
 				}
 			})
 			if ok {
@@ -225,24 +224,24 @@ func (day Day24) Run(index int, tag string, input any, verbose bool) (any, strin
 				slices.Sort(swaps)
 				// Echo
 				if verbose {
-					output += fmt.Sprintf("- Best solution found: %v\n", swaps)
+					log.Log(fmt.Sprintf("- Best solution found: %v\n", swaps))
 					if len(faults) == 0 {
-						output += "  ... verification: VERIFIED!\n"
+						log.Log("  ... verification: VERIFIED!\n")
 					} else {
-						output += "  ... verification: FAILED!!!\n"
+						log.Log("  ... verification: FAILED!!!\n")
 					}
 				}
 				// Return sorted, swapped wires
-				return strings.Join(swaps, ","), output, nil
+				return strings.Join(swaps, ","), log.Dump(), nil
 			}
 		}
 
 		// Return solution
-		return nil, output, nil
+		return nil, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Wire struct {

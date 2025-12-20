@@ -82,12 +82,11 @@ func (day Day25) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day25) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day25) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -128,8 +127,8 @@ func (day Day25) Run(index int, tag string, input any, verbose bool) (any, strin
 
 	// Echo locks and keys
 	if verbose {
-		output += fmt.Sprintf("- Locks: %v\n", locks)
-		output += fmt.Sprintf("- Keys : %v\n", keys)
+		log.Log(fmt.Sprintf("- Locks: %v\n", locks))
+		log.Log(fmt.Sprintf("- Keys : %v\n", keys))
 	}
 
 	// Part 1/2
@@ -155,16 +154,16 @@ func (day Day25) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
 
 		// Return solution
-		return nil, output, nil
+		return nil, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }

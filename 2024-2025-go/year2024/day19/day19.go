@@ -82,12 +82,11 @@ func (day Day19) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day19) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day19) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -114,7 +113,7 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo
 			if verbose {
-				output += fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs))
+				log.Log(fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs)))
 			}
 
 			// Find permutations
@@ -124,19 +123,19 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 				total++
 				// Echo
 				if verbose {
-					output += fmt.Sprintf(" Found %v permutations!\n", count)
+					log.Log(fmt.Sprintf(" Found %v permutations!\n", count))
 				}
 			} else {
 				// Echo
 				if verbose {
-					output += fmt.Sprintf(" No permutations found!\n")
+					log.Log(fmt.Sprintf(" No permutations found!\n"))
 				}
 			}
 
 		}
 
 		// Return solution
-		return total, output, nil
+		return total, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -148,7 +147,7 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo
 			if verbose {
-				output += fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs))
+				log.Log(fmt.Sprintf("- Checking %v/%v designs ... ", i+1, len(designs)))
 			}
 
 			// Find permutations
@@ -158,23 +157,23 @@ func (day Day19) Run(index int, tag string, input any, verbose bool) (any, strin
 				total += count
 				// Echo
 				if verbose {
-					output += fmt.Sprintf(" Found %v permutations!\n", count)
+					log.Log(fmt.Sprintf(" Found %v permutations!\n", count))
 				}
 			} else {
 				// Echo
 				if verbose {
-					output += fmt.Sprintf(" No permutations found!\n")
+					log.Log(fmt.Sprintf(" No permutations found!\n"))
 				}
 			}
 
 		}
 
 		// Return solution
-		return total, output, nil
+		return total, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func findPermutations(towels []string, design string) int {

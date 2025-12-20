@@ -71,12 +71,11 @@ func (day Day21) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day21) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day21) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -98,7 +97,7 @@ func (day Day21) Run(index int, tag string, input any, verbose bool) (any, strin
 	for _, code := range codes {
 		// Echo starting work on code
 		if verbose {
-			output += fmt.Sprintf("- Processing input code '%v' ...", code)
+			log.Log(fmt.Sprintf("- Processing input code '%v' ...", code))
 		}
 
 		// Initialize keymaps
@@ -117,12 +116,12 @@ func (day Day21) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo completed code
 		if verbose {
-			output += fmt.Sprintf(" ... found solutions, minimal of which has length=%v, score=%v\n", minSequenceLength, sequenceScore)
+			log.Log(fmt.Sprintf(" ... found solutions, minimal of which has length=%v, score=%v\n", minSequenceLength, sequenceScore))
 		}
 	}
 
 	// Return solution
-	return score, output, nil
+	return score, log.Dump(), nil
 }
 
 func pipeCommands(code string, keymaps []KeyMap, cache map[int]int) int {

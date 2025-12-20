@@ -102,12 +102,11 @@ func (day Day15) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day15) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day15) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -154,8 +153,8 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo warehouse
 		if verbose {
-			output += fmt.Sprintf("- #%v:\n", 0)
-			output += fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot))
+			log.Log(fmt.Sprintf("- #%v:\n", 0))
+			log.Log(fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot)))
 		}
 
 		// Apply all directions
@@ -177,13 +176,13 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 				if direction == pathing.DirectionBottom {
 					directionStr = "Bottom"
 				}
-				output += fmt.Sprintf("- #%v (%v):\n", i+1, directionStr)
-				output += fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot))
+				log.Log(fmt.Sprintf("- #%v (%v):\n", i+1, directionStr))
+				log.Log(fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot)))
 			}
 		}
 
 		// Return solution
-		return calculateResult(warehouse, indexer), output, nil
+		return calculateResult(warehouse, indexer), log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -215,8 +214,8 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo warehouse
 		if verbose {
-			output += fmt.Sprintf("- #%v:\n", 0)
-			output += fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot))
+			log.Log(fmt.Sprintf("- #%v:\n", 0))
+			log.Log(fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot)))
 		}
 
 		// Apply all directions
@@ -238,17 +237,17 @@ func (day Day15) Run(index int, tag string, input any, verbose bool) (any, strin
 				if direction == pathing.DirectionBottom {
 					directionStr = "Bottom"
 				}
-				output += fmt.Sprintf("- #%v (%v):\n", i+1, directionStr)
-				output += fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot))
+				log.Log(fmt.Sprintf("- #%v (%v):\n", i+1, directionStr))
+				log.Log(fmt.Sprintf("%v\n", echoWarehouse(warehouse, indexer, robot)))
 			}
 		}
 
 		// Return solution
-		return calculateResult(warehouse, indexer), output, nil
+		return calculateResult(warehouse, indexer), log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func updateWarehouse(robot []int, warehouse []rune, indexer matrix.MatrixIndexer, direction byte) ([]int, []rune) {

@@ -85,12 +85,11 @@ func (day Day08) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day08) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day08) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(Input)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -141,7 +140,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		var junctionB = junctions[b]
 
 		// Echo joining junctions
-		output += fmt.Sprintf("> Joining junctions %d [%d, %d, %d] and %d [%d, %d, %d]\n", junctionA.index, junctionA.x, junctionA.y, junctionA.z, junctionB.index, junctionB.x, junctionB.y, junctionB.z)
+		log.Log(fmt.Sprintf("> Joining junctions %d [%d, %d, %d] and %d [%d, %d, %d]\n", junctionA.index, junctionA.x, junctionA.y, junctionA.z, junctionB.index, junctionB.x, junctionB.y, junctionB.z))
 
 		// Join junctions/circuits
 		for _, index := range circuitMap[junctionB.circuit].junctions {
@@ -179,7 +178,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		})
 
 		// Return solution
-		return len(circuits[0].junctions) * len(circuits[1].junctions) * len(circuits[2].junctions), output, nil
+		return len(circuits[0].junctions) * len(circuits[1].junctions) * len(circuits[2].junctions), log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -198,13 +197,13 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 			// Check if single circuit
 			if len(circuitMap) == 1 {
 				// Return solution
-				return junctions[distances[i].a].x * junctions[distances[i].b].x, output, nil
+				return junctions[distances[i].a].x * junctions[distances[i].b].x, log.Dump(), nil
 			}
 		}
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Input struct {

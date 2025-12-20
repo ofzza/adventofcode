@@ -82,12 +82,11 @@ func (day Day07) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day07) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day07) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -109,7 +108,7 @@ func (day Day07) Run(index int, tag string, input any, verbose bool) (any, strin
 					beamsInt[i] = 1
 				}
 			}
-			output += fmt.Sprintf("%s\n", echoLine(lines[0], beamsInt))
+			log.Log(fmt.Sprintf("%s\n", echoLine(lines[0], beamsInt)))
 		}
 
 		// Simulate tachyon beams
@@ -146,12 +145,12 @@ func (day Day07) Run(index int, tag string, input any, verbose bool) (any, strin
 						beamsInt[i] = 1
 					}
 				}
-				output += fmt.Sprintf("%s\n", echoLine(lines[y], beamsInt))
+				log.Log(fmt.Sprintf("%s\n", echoLine(lines[y], beamsInt)))
 			}
 		}
 
 		// Return solution
-		return splits, output, nil
+		return splits, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -163,7 +162,7 @@ func (day Day07) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo initial line
 		if verbose {
-			output += fmt.Sprintf("%s\n", echoLine(lines[0], beams))
+			log.Log(fmt.Sprintf("%s\n", echoLine(lines[0], beams)))
 		}
 
 		// Simulate tachyon beams
@@ -194,7 +193,7 @@ func (day Day07) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo next line
 			if verbose {
-				output += fmt.Sprintf("%s\n", echoLine(lines[y], beams))
+				log.Log(fmt.Sprintf("%s\n", echoLine(lines[y], beams)))
 			}
 		}
 
@@ -205,11 +204,11 @@ func (day Day07) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return sum, output, nil
+		return sum, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func echoLine(line string, beams []int) string {

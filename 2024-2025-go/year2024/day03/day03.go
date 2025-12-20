@@ -83,12 +83,11 @@ func (day Day03) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day03) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day03) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Part 1/2
@@ -107,7 +106,7 @@ func (day Day03) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return result, output, nil
+		return result, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -138,9 +137,9 @@ func (day Day03) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return result, output, nil
+		return result, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }

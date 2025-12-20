@@ -20,6 +20,7 @@ var (
 	pTag       *string = flag.String("tag", "", "Will run only puzzles marked with specified tag")
 	pSingle    *int    = flag.Int("single", -1, "Will run only single puzzle input with specified index")
 	pVerbose   *bool   = flag.Bool("verbose", false, "If execution output should be verbose")
+	pDebugging *bool   = flag.Bool("debugging", false, "If execution output should be immediate instead of post execution, making execution potentially slower, but more appropriate for debugging purposes")
 	pObfuscate *bool   = flag.Bool("obfuscate", false, "If execution output should be obfuscated")
 	pSummary   *bool   = flag.Bool("summary", false, "If execution summary should be output")
 )
@@ -67,11 +68,16 @@ func main() {
 				continue
 			}
 
+			// Initialize logger
+			var log = solution.Logger{
+				Debugging: *pDebugging,
+			}
+
 			// Initialize stopwatch
 			var startTime = time.Now()
 
 			// Get execution result
-			var result, output, err = day.Run(execution.Index, execution.Tag, execution.Input, *pVerbose)
+			var result, output, err = day.Run(execution.Index, execution.Tag, execution.Input, *pVerbose, log)
 			var duration = time.Since(startTime)
 			if err != nil {
 				fmt.Printf("  ERROR %v\n", err.Error())

@@ -83,12 +83,11 @@ func (day Day05) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day05) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day05) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -125,15 +124,15 @@ func (day Day05) Run(index int, tag string, input any, verbose bool) (any, strin
 				var middleValue = pages[len(pages)/2]
 				sum += middleValue
 				if verbose {
-					output += fmt.Sprintf("- %v: Valid -> += %v\n", pages, middleValue)
+					log.Log(fmt.Sprintf("- %v: Valid -> += %v\n", pages, middleValue))
 				}
 			} else if verbose {
-				output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
+				log.Log(fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]))
 			}
 		}
 
 		// Return solution
-		return sum, output, nil
+		return sum, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -146,39 +145,39 @@ func (day Day05) Run(index int, tag string, input any, verbose bool) (any, strin
 			var valid, indexA, indexB = checkPages(pages, rules)
 			if valid {
 				if verbose {
-					output += fmt.Sprintf("- %v: Valid\n", pages)
+					log.Log(fmt.Sprintf("- %v: Valid\n", pages))
 				}
 			} else {
 				if verbose {
-					output += fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB])
+					log.Log(fmt.Sprintf("- %v: Invalid -> %v > %v\n", pages, pages[indexA], pages[indexB]))
 				}
 				var fixed = pages
 				for {
 					fixed = attemptFix(fixed, indexA, indexB)
 					if verbose {
-						output += fmt.Sprintf("  - Attempting fix: %v", fixed)
+						log.Log(fmt.Sprintf("  - Attempting fix: %v", fixed))
 					}
 					valid, indexA, indexB = checkPages(fixed, rules)
 					if valid {
 						var middleValue = fixed[len(fixed)/2]
 						sum += middleValue
 						if verbose {
-							output += fmt.Sprintf(" ... succedeed -> %v!\n", middleValue)
+							log.Log(fmt.Sprintf(" ... succedeed -> %v!\n", middleValue))
 						}
 						break
 					} else if verbose {
-						output += fmt.Sprintf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB])
+						log.Log(fmt.Sprintf(" ... failed! -> %v > %v\n", fixed[indexA], fixed[indexB]))
 					}
 				}
 			}
 		}
 
 		// Return solution
-		return sum, output, nil
+		return sum, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func mapPageIndexes(pages []int) map[int]int {

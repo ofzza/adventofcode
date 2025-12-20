@@ -76,16 +76,15 @@ type Robot struct {
 }
 
 // Implementation
-func (day Day14) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day14) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var inputs = input.([]any)
 	var width, okWidth = inputs[0].(int)
 	var height, okHeight = inputs[1].(int)
 	var duration, okDuration = inputs[2].(int)
 	var value, okValue = inputs[3].(string)
 	if !okWidth || !okHeight || !okDuration || !okValue {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -113,9 +112,9 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo initial robots' state
 		if verbose {
-			output += fmt.Sprintf("Calculating position in %vs for robots in space [%v, %v] with initial state:\n", duration, width, height)
+			log.Log(fmt.Sprintf("Calculating position in %vs for robots in space [%v, %v] with initial state:\n", duration, width, height))
 			for _, robot := range robots {
-				output += fmt.Sprintf("  - Robot: position=%v velocity=%v\n", robot.position, robot.velocity)
+				log.Log(fmt.Sprintf("  - Robot: position=%v velocity=%v\n", robot.position, robot.velocity))
 			}
 		}
 
@@ -124,8 +123,8 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo robots updated state after requested duration
 		if verbose {
-			output += "\n"
-			output += fmt.Sprintf("After %vs ...\n", duration)
+			log.Log("\n")
+			log.Log(fmt.Sprintf("After %vs ...\n", duration))
 		}
 
 		// Calculate safety factor
@@ -138,46 +137,46 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 		for _, robot := range updated {
 			// Echo
 			if verbose {
-				output += fmt.Sprintf("  - Robot: position=%v velocity=%v", robot.position, robot.velocity)
+				log.Log(fmt.Sprintf("  - Robot: position=%v velocity=%v", robot.position, robot.velocity))
 			}
 			// Add to correct quadrant
 			if robot.position[0] < midX && robot.position[1] < midY {
 				quadrants[0]++
 				if verbose {
-					output += fmt.Sprintln(" (Q1)")
+					log.Log(fmt.Sprintln(" (Q1)"))
 				}
 			} else if robot.position[0] > midX && robot.position[1] < midY {
 				quadrants[1]++
 				if verbose {
-					output += fmt.Sprintln(" (Q2)")
+					log.Log(fmt.Sprintln(" (Q2)"))
 				}
 			} else if robot.position[0] < midX && robot.position[1] > midY {
 				quadrants[2]++
 				if verbose {
-					output += fmt.Sprintln(" (Q3)")
+					log.Log(fmt.Sprintln(" (Q3)"))
 				}
 			} else if robot.position[0] > midX && robot.position[1] > midY {
 				quadrants[3]++
 				if verbose {
-					output += fmt.Sprintln(" (Q4)")
+					log.Log(fmt.Sprintln(" (Q4)"))
 				}
 			} else if verbose {
-				output += fmt.Sprintln(" (--)")
+				log.Log(fmt.Sprintln(" (--)"))
 			}
 		}
 		var safetyScore = quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3]
 
 		// Echo robots updated state after requested duration
 		if verbose {
-			output += fmt.Sprintf("... robots safety score is %v!\n", safetyScore)
-			output += fmt.Sprintf("  - Quadrant #1 (<%v, <%v): %v\n", midX, midY, quadrants[0])
-			output += fmt.Sprintf("  - Quadrant #2 (>%v, <%v): %v\n", midX, midY, quadrants[1])
-			output += fmt.Sprintf("  - Quadrant #3 (<%v, >%v): %v\n", midX, midY, quadrants[2])
-			output += fmt.Sprintf("  - Quadrant #4 (>%v, >%v): %v\n", midX, midY, quadrants[3])
+			log.Log(fmt.Sprintf("... robots safety score is %v!\n", safetyScore))
+			log.Log(fmt.Sprintf("  - Quadrant #1 (<%v, <%v): %v\n", midX, midY, quadrants[0]))
+			log.Log(fmt.Sprintf("  - Quadrant #2 (>%v, <%v): %v\n", midX, midY, quadrants[1]))
+			log.Log(fmt.Sprintf("  - Quadrant #3 (<%v, >%v): %v\n", midX, midY, quadrants[2]))
+			log.Log(fmt.Sprintf("  - Quadrant #4 (>%v, >%v): %v\n", midX, midY, quadrants[3]))
 		}
 
 		// Return solution
-		return safetyScore, output, nil
+		return safetyScore, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -197,7 +196,7 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 			var detected = float64(count)/float64(len(updated)) > 0.8
 			// Display robots' position
 			if detected && verbose {
-				output += fmt.Sprintf("Robots' positions after %vs:\n", i)
+				log.Log(fmt.Sprintf("Robots' positions after %vs:\n", i))
 				for y := 0; y < height; y++ {
 					for x := 0; x < width; x++ {
 						// Count up robots at this position
@@ -209,26 +208,26 @@ func (day Day14) Run(index int, tag string, input any, verbose bool) (any, strin
 						}
 						// Output number of robots at this position
 						if count == 0 {
-							output += fmt.Sprintf("%c", '.')
+							log.Log(fmt.Sprintf("%c", '.'))
 						} else {
-							output += fmt.Sprintf("%c", '#')
+							log.Log(fmt.Sprintf("%c", '#'))
 						}
 					}
-					output += fmt.Sprintln()
+					log.Log(fmt.Sprintln())
 				}
-				output += fmt.Sprintln()
+				log.Log(fmt.Sprintln())
 
 				// Return result
-				return i, output, nil
+				return i, log.Dump(), nil
 			}
 		}
 
 		// Return solution
-		return nil, output, nil
+		return nil, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func update(robots []Robot, width int, height int, duration int) []Robot {

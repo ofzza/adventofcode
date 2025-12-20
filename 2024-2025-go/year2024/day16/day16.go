@@ -102,12 +102,11 @@ func (day Day16) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day16) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day16) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -145,18 +144,18 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo score and path
 			if verbose {
-				output += fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score)
-				output += fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path))
+				log.Log(fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score))
+				log.Log(fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path)))
 			}
 		})
 
 		// Echo best found score and path
 		if verbose {
-			output += fmt.Sprintf("- Best score: %v\n", winningScore)
+			log.Log(fmt.Sprintf("- Best score: %v\n", winningScore))
 		}
 
 		// Return solution
-		return winningScore, output, nil
+		return winningScore, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -171,8 +170,8 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo score and path
 			if verbose {
-				output += fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score)
-				output += fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path))
+				log.Log(fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score))
+				log.Log(fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path)))
 			}
 		})
 
@@ -190,17 +189,17 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo score and path
 			if verbose {
-				output += fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score)
-				output += fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path))
+				log.Log(fmt.Sprintf("Ending score: %v\n", path[len(path)-1].score))
+				log.Log(fmt.Sprintf("%v\n", echoLabyrinth(labyrinth, indexer, path[len(path)-1], start, end, path)))
 			}
 		})
 
 		// Echo best found score and path
 		if verbose {
-			output += fmt.Sprintf("- Best score: %v\n", winningScore)
-			output += fmt.Sprintf("- %v winning paths:\n", len(winningPaths))
+			log.Log(fmt.Sprintf("- Best score: %v\n", winningScore))
+			log.Log(fmt.Sprintf("- %v winning paths:\n", len(winningPaths)))
 			for _, winningPath := range winningPaths {
-				output += fmt.Sprintf("%v\n\n", echoLabyrinth(labyrinth, indexer, winningPath[len(winningPath)-1], start, end, winningPath))
+				log.Log(fmt.Sprintf("%v\n\n", echoLabyrinth(labyrinth, indexer, winningPath[len(winningPath)-1], start, end, winningPath)))
 			}
 		}
 
@@ -218,11 +217,11 @@ func (day Day16) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Step struct {

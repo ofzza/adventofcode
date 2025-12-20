@@ -85,12 +85,11 @@ func (day Day10) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day10) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day10) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -100,7 +99,7 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 		var lineParts = strings.Split(strings.Trim(lineStr, "\r\n "), " ")
 
 		// Echo machine
-		output += fmt.Sprintf("> Machine #%d:\n", i)
+		log.Log(fmt.Sprintf("> Machine #%d:\n", i))
 
 		// Parse LEDs
 		var ledsPart = lineParts[0]
@@ -113,10 +112,10 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 		// Echo LEDs
-		output += fmt.Sprintf(fmt.Sprintf("  - LEDs: %%s -> %%0%db\n", size), ledsStr, leds)
+		log.Log(fmt.Sprintf(fmt.Sprintf("  - LEDs: %%s -> %%0%db\n", size), ledsStr, leds))
 
 		// Echo Buttons
-		output += "  - Buttons: "
+		log.Log("  - Buttons: ")
 		// Parse button wiring
 		var buttonsParts = lineParts[1 : len(lineParts)-1]
 		var buttons = make([][]int, len(buttonsParts))
@@ -134,10 +133,10 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 			buttons[j] = button
 			buttonBitMasks[j] = buttonBitMask
 			// Echo Button
-			output += fmt.Sprintf(fmt.Sprintf("%%v -> %%0%db, ", size), button, buttonBitMask)
+			log.Log(fmt.Sprintf(fmt.Sprintf("%%v -> %%0%db, ", size), button, buttonBitMask))
 		}
 		// Echo Buttons
-		output += "\n"
+		log.Log("\n")
 
 		// Parse joltages
 		var joltagesPart = lineParts[len(lineParts)-1]
@@ -148,7 +147,7 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 			joltages[i] = joltage
 		}
 		// Echo Joltages
-		output += fmt.Sprintf("  - Joltages: %v\n", joltages)
+		log.Log(fmt.Sprintf("  - Joltages: %v\n", joltages))
 
 		// Store parsed machine spec
 		machines[i] = Machine{size: uint(size), leds: leds, buttonMap: buttons, buttonsBitMap: buttonBitMasks, joltages: joltages}
@@ -158,8 +157,8 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 	if index == 1 {
 
 		// Prompt
-		output += "\n"
-		output += "> Initializing:\n"
+		log.Log("\n")
+		log.Log("> Initializing:\n")
 
 		// Initialize all machines
 		var presses = 0
@@ -167,41 +166,41 @@ func (day Day10) Run(index int, tag string, input any, verbose bool) (any, strin
 			// Initialize machine
 			var p = findInitializationSequence(machine.leds, 0b00000000, machine.buttonsBitMap, 0, 0)
 			// Prompt
-			output += fmt.Sprintf("  - Initialized #%d with %d button presses\n", i+1, p)
+			log.Log(fmt.Sprintf("  - Initialized #%d with %d button presses\n", i+1, p))
 			// Store initialization presses count
 			presses += p
 		}
 
 		// Return solution
-		return presses, output, nil
+		return presses, log.Dump(), nil
 	} else
 
 	// Part 2/2
 	if index == 2 {
 
 		// Prompt
-		output += "\n"
-		output += "> Initializing:\n"
+		log.Log("\n")
+		log.Log("> Initializing:\n")
 
 		// Stabilize all machines
 		var presses = 0
 		for i, machine := range machines {
 			// Prompt
-			output += fmt.Sprintf("  > Machine %d/%d:\n", i+1, len(machines))
+			log.Log(fmt.Sprintf("  > Machine %d/%d:\n", i+1, len(machines)))
 			// Find minimum joltage stabilizing sequence
 			var p = findJoltageSequence(machine.joltages, machine.buttonMap)
 			// Prompt
-			output += fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p)
+			log.Log(fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p))
 			// Store initialization presses count
 			presses += p
 		}
 
 		// Return solution
-		return presses, output, nil
+		return presses, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Machine struct {
@@ -268,8 +267,8 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 	// For each joltage, generate possible button presses
 	var buttonsReadoutPermutations = [][]uint16{make([]uint16, len(joltagesPerButtonsMap))}
 	var previouslyUsedButtons = make([]int, 0)
+	var cache = make(map[int][][][]uint16)
 	for _, joltageIndex := range orderedJoltageIndexes {
-		var cache = make(map[int][][]uint16)
 		var targetJoltage = joltages[joltageIndex]
 		var nextButtonsReadoutPermutations = [][]uint16{}
 
@@ -375,7 +374,7 @@ func calculateOrderingScore(unusedButtonsCount int, score float64) float64 {
 	return math.Pow(float64(normalizedUnusedButtonsCount), 3) + score
 }
 
-func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedButtons []int, unpressedConnectedButtons []int, buttonMaxima []uint16, targetJoltage int, cache map[int][][]uint16) [][]uint16 {
+func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedButtons []int, unpressedConnectedButtons []int, buttonMaxima []uint16, targetJoltage int, cache map[int][][][]uint16) [][]uint16 {
 	// Get current joltage
 	var joltage = getReadoutJoltage(buttonReadoutPermutation, allConnectedButtons)
 	// If joltage overshot, return no acceptable permutations
@@ -414,17 +413,21 @@ func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedB
 	return buttonReadoutPermutations[0:buttonReadoutPermutationsIndex]
 }
 
-func generateRawButtonPermutations(count int, target int, cache map[int][][]uint16) [][]uint16 {
-	// Check cache
-	var cacheKey = 1000000*target + count
-	if cacheValue, ok := cache[cacheKey]; ok {
-		return cacheValue
-	}
-
+func generateRawButtonPermutations(count int, target int, cache map[int][][][]uint16) [][]uint16 {
 	// Initialize
 	var initial = make([]uint16, count)
 	var permutations = [][]uint16{initial}
 	var total = 0
+
+	// Check cache
+	if cached, ok := cache[count]; ok {
+		var index = len(cached)-1
+		if index > target { index = target }
+		permutations = append([][]uint16{}, cached[index]...)
+		total = index
+	} else {
+		cache[count] = append(make([][][]uint16, 0), [][]uint16{initial})
+	}
 
 	for {
 		if total == target {
@@ -446,10 +449,11 @@ func generateRawButtonPermutations(count int, target int, cache map[int][][]uint
 		// Replace with next and continue ...
 		permutations = nextPermutations
 		total++
+
+		// Cache generated permutations
+		cache[count] = append(cache[count], nextPermutations)
 	}
 
-	// Cache generated permutations
-	cache[cacheKey] = permutations
 
 	// Return generated permutations
 	return permutations

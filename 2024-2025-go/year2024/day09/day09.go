@@ -88,12 +88,11 @@ type Block struct {
 }
 
 // Implementation
-func (day Day09) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day09) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -134,7 +133,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo disk image
 		if verbose {
-			output += "- Disk: " + echoDiskImage(diskImage)
+			log.Log("- Disk: " + echoDiskImage(diskImage))
 		}
 
 		// Compact
@@ -160,7 +159,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			diskImage[i] = -1
 			// Echo disk image
 			if verbose {
-				output += "- Disk: " + echoDiskImage(diskImage)
+				log.Log("- Disk: " + echoDiskImage(diskImage))
 			}
 		}
 
@@ -173,7 +172,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return cksum, output, nil
+		return cksum, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -181,7 +180,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo disk image
 		if verbose {
-			output += "- FS: " + echoDiskFs(diskFs)
+			log.Log("- FS: " + echoDiskFs(diskFs))
 		}
 
 		// Compact
@@ -192,7 +191,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo FS record being compacted
 			if verbose {
-				output += fmt.Sprintf("- Compacting block id=%v, size=%v\n", diskFs[i].id, diskFs[i].size)
+				log.Log(fmt.Sprintf("- Compacting block id=%v, size=%v\n", diskFs[i].id, diskFs[i].size))
 			}
 			// Find first empty block large enough for file
 			var emptyPointer int = -1
@@ -211,13 +210,13 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo FS empty space found
 			if verbose {
-				output += fmt.Sprintf("  - Found empty space at index=%v, size=%v\n", emptyPointer, diskFs[emptyPointer].size)
+				log.Log(fmt.Sprintf("  - Found empty space at index=%v, size=%v\n", emptyPointer, diskFs[emptyPointer].size))
 			}
 			// Move block
 			if diskFs[emptyPointer].size >= diskFs[i].size {
 				// Check for pre-alocated empty space extension block(s)
 				if diskFs[emptyPointer+1].id != -1 || diskFs[emptyPointer+1].size != 0 {
-					return 0, output, errors.New("(pre)alocated empty space not found")
+					return 0, log.Dump(), errors.New("(pre)alocated empty space not found")
 				}
 				var emptySpaceSize = diskFs[emptyPointer].size
 				// Move file to empty space
@@ -228,14 +227,14 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 			// Echo disk image
 			if verbose {
-				output += "  - FS: " + echoDiskFs(diskFs)
+				log.Log("  - FS: " + echoDiskFs(diskFs))
 			}
 		}
 
 		// Echo disk image
 		diskImage = generateDiskImage(diskFs)
 		if verbose {
-			output += "- Disk: " + echoDiskImage(diskImage)
+			log.Log("- Disk: " + echoDiskImage(diskImage))
 		}
 
 		// Calculate checksum
@@ -247,11 +246,11 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return cksum, output, nil
+		return cksum, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func echoDiskImage(diskImage []int) string {

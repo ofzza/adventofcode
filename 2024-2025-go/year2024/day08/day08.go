@@ -83,12 +83,11 @@ func (day Day08) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day08) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day08) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -128,7 +127,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		iterateAntennaPairs(freqAntennas, func(frequency rune, coordsA []int, coordsB []int) {
 			// Echo antenna pair
 			if verbose {
-				output += fmt.Sprintf("  - %v -> %v: ", coordsA, coordsB)
+				log.Log(fmt.Sprintf("  - %v -> %v: ", coordsA, coordsB))
 			}
 			// Get antinodes
 			var anodesArray = make([][]int, 0, indexer.GetDimensions()[0])
@@ -136,7 +135,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 			anodesArray = append(anodesArray, findAntinodes(indexer, coordsB, coordsA, 1)...)
 			// Echo antinodes
 			if verbose {
-				output += fmt.Sprintf("%v\n", anodesArray)
+				log.Log(fmt.Sprintf("%v\n", anodesArray))
 			}
 			// Deduplicate antinodes
 			for _, anode := range anodesArray {
@@ -151,7 +150,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		})
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -163,7 +162,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		iterateAntennaPairs(freqAntennas, func(frequency rune, coordsA []int, coordsB []int) {
 			// Echo antenna pair
 			if verbose {
-				output += fmt.Sprintf("  - %v -> %v: ", coordsA, coordsB)
+				log.Log(fmt.Sprintf("  - %v -> %v: ", coordsA, coordsB))
 			}
 			// Get antinodes
 			var anodesArray = make([][]int, 0, indexer.GetDimensions()[0])
@@ -173,7 +172,7 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 			anodesArray = append(anodesArray, coordsB)
 			// Echo antinodes
 			if verbose {
-				output += fmt.Sprintf("%v\n", anodesArray)
+				log.Log(fmt.Sprintf("%v\n", anodesArray))
 			}
 			// Deduplicate antinodes
 			for _, anode := range anodesArray {
@@ -188,11 +187,11 @@ func (day Day08) Run(index int, tag string, input any, verbose bool) (any, strin
 		})
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 // Iterates over all antenna pairs

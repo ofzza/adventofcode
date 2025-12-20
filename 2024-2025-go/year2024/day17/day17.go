@@ -84,12 +84,12 @@ func (day Day17) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day17) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day17) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
 	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -119,7 +119,7 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 		computer.Run(func(ipBefore int, ipAfter int, opCode int, operand int, regsBefore []int, regsAfter []int, outputValues []int) bool {
 			// Echo execution
 			if verbose {
-				output += fmt.Sprintf("- %v. %v %v | %v -> %v: %v. %v\n", ipBefore, opCode, operand, regsBefore, regsAfter, ipAfter, outputValues)
+				log.Log(fmt.Sprintf("- %v. %v %v | %v -> %v: %v. %v\n", ipBefore, opCode, operand, regsBefore, regsAfter, ipAfter, outputValues))
 			}
 			return true
 		})
@@ -132,7 +132,7 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 		var outputStr = strings.Join(outputStrs, ",")
 
 		// Return solution
-		return outputStr, output, nil
+		return outputStr, log.Dump(), nil
 	} else
 
 	// Part 2/2 (solution)
@@ -143,15 +143,15 @@ func (day Day17) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Return solution
 		if ok {
-			return a, output, nil
+			return a, log.Dump(), nil
 		} else {
-			return nil, output, errors.New("solution not found")
+			return nil, log.Dump(), errors.New("solution not found")
 		}
 
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func findRegisterValue(code []int, regs []int, computer ChronospatialComputer) (bool, int) {

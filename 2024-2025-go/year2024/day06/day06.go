@@ -86,12 +86,11 @@ func (day Day06) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day06) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day06) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse and initialize inputs
@@ -144,7 +143,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Trace guard's path
 		if verbose {
-			output += fmt.Sprintf("Bounds: X[%v, %v] Y[%v, %v]\n", boundsHorizontal[0], boundsHorizontal[1], boundsVertical[0], boundsVertical[1])
+			log.Log(fmt.Sprintf("Bounds: X[%v, %v] Y[%v, %v]\n", boundsHorizontal[0], boundsHorizontal[1], boundsVertical[0], boundsVertical[1]))
 		}
 		tracePath(guard, boundsHorizontal, boundsVertical, obstaclesXY, obstaclesYX, func(direction byte, length int, a []int, b []int) bool {
 			// Output section
@@ -162,7 +161,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				label = "DOWN "
 			}
 			if verbose {
-				output += fmt.Sprintf("- Moving %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length)
+				log.Log(fmt.Sprintf("- Moving %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length))
 			}
 			// Note all traveled positions
 			var section = make([][]int, 0, length)
@@ -191,18 +190,18 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				if err == nil {
 					traversed[index] = true
 					if verbose {
-						output += fmt.Sprintf("%v, ", position)
+						log.Log(fmt.Sprintf("%v, ", position))
 					}
 				}
 			}
 			if verbose {
-				output += fmt.Sprintln()
+				log.Log(fmt.Sprintln())
 			}
 			return true
 		})
 
 		// Return solution
-		return len(slices.Collect(maps.Keys(traversed))), output, nil
+		return len(slices.Collect(maps.Keys(traversed))), log.Dump(), nil
 	} else
 
 	// Part 2/2 (working 11.5sec)
@@ -214,7 +213,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 			for x := boundsHorizontal[0]; x <= boundsHorizontal[1]; x++ {
 				// Prompt
 				if verbose {
-					output += fmt.Sprintf("- Additional obstacle: [%v, %v] -> Starting from [%v, %v]\n", x, y, guard.x, guard.y)
+					log.Log(fmt.Sprintf("- Additional obstacle: [%v, %v] -> Starting from [%v, %v]\n", x, y, guard.x, guard.y))
 				}
 				// fmt.Printf("- Additional obstacle: [%v, %v] -> Starting from [%v, %v]\n", x, y, guard.x, guard.y)
 				// Create additional obstacle
@@ -230,14 +229,14 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				// Check if obstacle can be placed: Within bounds
 				if !indexer.CheckIfValidCoordinates(updatedObstacleCoords) {
 					if verbose {
-						output += "  ~~~> SKIP: Not within bounds!\n"
+						log.Log("  ~~~> SKIP: Not within bounds!\n")
 					}
 					continue
 				}
 				// Check if obstacle can be placed: Not on start position
 				if updatedObstacleCoords[0] == guard.x && updatedObstacleCoords[1] == guard.y {
 					if verbose {
-						output += "  ~~~> SKIP: Starting position!\n"
+						log.Log("  ~~~> SKIP: Starting position!\n")
 					}
 					continue
 				}
@@ -246,7 +245,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				var _, okObstacle = obstacles[updateObstacleIndex]
 				if okObstacle {
 					if verbose {
-						output += "  ~~~> SKIP: Already obstacle!\n"
+						log.Log("  ~~~> SKIP: Already obstacle!\n")
 					}
 					continue
 				}
@@ -255,23 +254,23 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				updatedObstaclesYX[updatedObstacleCoords[1]] = append(updatedObstaclesYX[updatedObstacleCoords[1]], updatedObstacleCoords[0])
 
 				// // Prompt map
-				// if verbose { output += "\n" }
+				// if verbose { log.Log("\n" })
 				// // fmt.Println()
 				// for y:=boundsVertical[0]; y<=boundsVertical[1]; y++ {
-				// 	if verbose { output += "  " }
+				// 	if verbose { log.Log("  " })
 				// 	// fmt.Print("    ")
 				// 	for x:=boundsHorizontal[0]; x<=boundsHorizontal[1]; x++ {
 				// 		var foundY = false
 				// 		for _, dy := range updatedObstaclesXY[x] { if dy == y { foundY = true; break} }
 				// 		var foundX = false
 				// 		for _, dx := range updatedObstaclesYX[y] { if dx == x { foundX = true; break } }
-				// 		if verbose { if foundX { output += "#" } else if x == guard.x && y == guard.y { output += "^"} else { output += "." } }
+				// 		if verbose { if foundX { log.Log("#" } else if x == guard.x && y == guard.y { output += "^"} else { output += "." } })
 				// 		if foundX && foundY { fmt.Sprintf("#") } else if x == guard.x && y == guard.y { fmt.Sprintf("^")} else { fmt.Sprintf(".") }
 				// 	}
-				// 	if verbose { output += "\n" }
+				// 	if verbose { log.Log("\n" })
 				// 	// fmt.Println()
 				// }
-				// if verbose { output += "\n" }
+				// if verbose { log.Log("\n" })
 				// // fmt.Println()
 
 				// Test if looping
@@ -292,7 +291,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 						label = "DOWN "
 					}
 					if verbose {
-						output += fmt.Sprintf("  - Checking %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length)
+						log.Log(fmt.Sprintf("  - Checking %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length))
 					}
 					// Check all traveled positions for looping
 					if length < 0 {
@@ -328,7 +327,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 							var p, ok = traversed[index]
 							// Log position
 							if verbose {
-								output += fmt.Sprintf("%v(%v), ", position, p)
+								log.Log(fmt.Sprintf("%v(%v), ", position, p))
 							}
 							// Set/Update position direction(s)
 							if !ok {
@@ -339,32 +338,32 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 							// Check if loop detected
 							if ok && (p&direction) != 0 {
 								if verbose {
-									output += " ~~~> LOOP DETECTED!\n"
+									log.Log(" ~~~> LOOP DETECTED!\n")
 								}
 								return false
 							}
 						}
 					}
 					if verbose {
-						output += "\n"
+						log.Log("\n")
 					}
 					return true
 				})
 				if !loopDetectionTraceFinished {
 					count++
 					if verbose {
-						output += "    ~~~> LOOP DETECTED!\n"
+						log.Log("    ~~~> LOOP DETECTED!\n")
 					}
 				} else {
 					if verbose {
-						output += "    ~~~> no loop detected\n"
+						log.Log("    ~~~> no loop detected\n")
 					}
 				}
 			}
 		}
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	} else
 
 	// Part 2/2 (optimized 1.5sec, but broken)
@@ -373,7 +372,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 		// Trace guard's path
 		var count int = 0
 		if verbose {
-			output += fmt.Sprintf("Bounds: X[%v, %v] Y[%v, %v]\n", boundsHorizontal[0], boundsHorizontal[1], boundsVertical[0], boundsVertical[1])
+			log.Log(fmt.Sprintf("Bounds: X[%v, %v] Y[%v, %v]\n", boundsHorizontal[0], boundsHorizontal[1], boundsVertical[0], boundsVertical[1]))
 		}
 		tracePath(guard, boundsHorizontal, boundsVertical, obstaclesXY, obstaclesYX, func(direction byte, length int, a []int, b []int) bool {
 			// Output section
@@ -391,7 +390,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 				label = "DOWN "
 			}
 			if verbose {
-				output += fmt.Sprintf("- Moving %v ([%v, %v] -> [%v, %v]) -> %v:\n", label, a[0], a[1], b[0], b[1], length)
+				log.Log(fmt.Sprintf("- Moving %v ([%v, %v] -> [%v, %v]) -> %v:\n", label, a[0], a[1], b[0], b[1], length))
 			}
 			// Note all traveled positions
 			var section = make([][]int, 0, length)
@@ -486,7 +485,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 						label = "DOWN "
 					}
 					if verbose {
-						output += fmt.Sprintf("  - Checking %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length)
+						log.Log(fmt.Sprintf("  - Checking %v ([%v, %v] -> [%v, %v]) -> %v: ", label, a[0], a[1], b[0], b[1], length))
 					}
 					// Check all traveled positions for looping
 					if length < 0 {
@@ -522,7 +521,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 							var p, ok = loopingPositions[index]
 							// Log position
 							if verbose {
-								output += fmt.Sprintf("%v(%v), ", position, p)
+								log.Log(fmt.Sprintf("%v(%v), ", position, p))
 							}
 							// Set/Update position direction(s)
 							if !ok {
@@ -533,7 +532,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 							// Check if loop detected
 							if ok && (p&direction) != 0 {
 								if verbose {
-									output += " ~~~> LOOP DETECTED!\n"
+									log.Log(" ~~~> LOOP DETECTED!\n")
 								}
 								return false
 							}
@@ -541,7 +540,7 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 
 					}
 					if verbose {
-						output += " ~~~> No loop detected!\n"
+						log.Log(" ~~~> No loop detected!\n")
 					}
 					return true
 				})
@@ -559,17 +558,17 @@ func (day Day06) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			}
 			if verbose {
-				output += fmt.Sprintln()
+				log.Log(fmt.Sprintln())
 			}
 			return true
 		})
 
 		// Return solution
-		return count, output, nil
+		return count, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func tracePath(

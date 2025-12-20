@@ -85,16 +85,15 @@ func (day Day18) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day18) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day18) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var inputs = input.([]any)
 	var width, okWidth = inputs[0].(int)
 	var height, okHeight = inputs[1].(int)
 	var duration, okDuration = inputs[2].(int)
 	var value, valueOk = inputs[3].(string)
 	if !okWidth || !valueOk || !okHeight || !okDuration {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -112,8 +111,8 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 	// Echo parsed inputs
 	if verbose {
-		output += fmt.Sprintf("[%v x %v] field, after %vns of corruption on coordinates:\n", width, height, duration)
-		output += fmt.Sprintf("%v\n", coords)
+		log.Log(fmt.Sprintf("[%v x %v] field, after %vns of corruption on coordinates:\n", width, height, duration))
+		log.Log(fmt.Sprintf("%v\n", coords))
 	}
 
 	// Part 1/2
@@ -124,9 +123,9 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo memory map
 		if verbose {
-			output += "\n"
-			output += echoMemoryMap(indexer, memory, nil)
-			output += "\n"
+			log.Log("\n")
+			log.Log(echoMemoryMap(indexer, memory, nil))
+			log.Log("\n")
 		}
 
 		// Find shortest path traversing from start to finish
@@ -140,7 +139,7 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 		var result []int = nil
 		traverseMemoryMap(indexer, memory, endIndex, path, history, func(path []int) {
 			// Check found path
-			output += fmt.Sprintf("- Found finishing path of length %v: %v\n", len(path), path)
+			log.Log(fmt.Sprintf("- Found finishing path of length %v: %v\n", len(path), path))
 			// Check if new best path
 			if result == nil || len(path) < len(result) {
 				result = append(make([]int, 0, len(path)), path...)
@@ -149,12 +148,12 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo memory map with result path
 		if verbose {
-			output += "\n"
-			output += echoMemoryMap(indexer, memory, result)
+			log.Log("\n")
+			log.Log(echoMemoryMap(indexer, memory, result))
 		}
 
 		// Return solution
-		return len(result) - 1, output, nil
+		return len(result) - 1, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -174,7 +173,7 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Echo testing duration
 			if verbose {
-				output += fmt.Sprintf("- Testing duration = %vns: ", duration)
+				log.Log(fmt.Sprintf("- Testing duration = %vns: ", duration))
 			}
 
 			// Test if path can be found
@@ -196,9 +195,9 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 			// Echo if path blocked
 			if verbose {
 				if ok {
-					output += fmt.Sprintf(" Found path of length = %v\n", len(resultPath))
+					log.Log(fmt.Sprintf(" Found path of length = %v\n", len(resultPath)))
 				} else {
-					output += " No path found!\n"
+					log.Log(" No path found!\n")
 				}
 			}
 
@@ -211,9 +210,9 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 
 			// Check if found inflection point
 			if ok && results[duration+1] == 0 {
-				return fmt.Sprintf("%v,%v", coords[duration][0], coords[duration][1]), output, nil
+				return fmt.Sprintf("%v,%v", coords[duration][0], coords[duration][1]), log.Dump(), nil
 			} else if !ok && results[duration-1] > 0 {
-				return fmt.Sprintf("%v,%v", coords[duration-1][0], coords[duration-1][1]), output, nil
+				return fmt.Sprintf("%v,%v", coords[duration-1][0], coords[duration-1][1]), log.Dump(), nil
 			}
 
 			// Half duration
@@ -230,7 +229,7 @@ func (day Day18) Run(index int, tag string, input any, verbose bool) (any, strin
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func getMemoryMap(indexer matrix.MatrixIndexer, coords [][]int) []bool {

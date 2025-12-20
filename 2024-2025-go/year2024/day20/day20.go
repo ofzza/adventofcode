@@ -83,15 +83,14 @@ func (day Day20) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day20) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day20) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var inputs, inputsOk = input.([]any)
 	var shortcutLength, shortcutLengthOk = inputs[0].(int)
 	var minSavings, minSavingsOk = inputs[1].(int)
 	var value, valueOk = inputs[2].(string)
 	if !inputsOk || !shortcutLengthOk || !minSavingsOk || !valueOk {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -122,9 +121,9 @@ func (day Day20) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Echo labyrinth
 		if verbose {
-			output += "- Labyrinth:\n"
-			output += echoLabyrinth(labyrinth, indexer, -1, start, end, nil)
-			output += "\n"
+			log.Log("- Labyrinth:\n")
+			log.Log(echoLabyrinth(labyrinth, indexer, -1, start, end, nil))
+			log.Log("\n")
 		}
 
 		// Traverse labyrinth
@@ -132,35 +131,35 @@ func (day Day20) Run(index int, tag string, input any, verbose bool) (any, strin
 
 		// Check if ifinished
 		if !finished {
-			return nil, output, errors.New("failed finding path through the labyrinth")
+			return nil, log.Dump(), errors.New("failed finding path through the labyrinth")
 		}
 
 		// Echo best path without cheating
 		if verbose {
-			output += fmt.Sprintf("- Labyrinth path without cheating (length=%v):\n", len(path)-1)
-			output += echoLabyrinth(labyrinth, indexer, -1, start, end, path)
-			output += "\n"
+			log.Log(fmt.Sprintf("- Labyrinth path without cheating (length=%v):\n", len(path)-1))
+			log.Log(echoLabyrinth(labyrinth, indexer, -1, start, end, path))
+			log.Log("\n")
 		}
 
 		// Search for shortcutsCount
 		var _, shortcutsCount = findPathShortcuts(labyrinth, indexer, path, minSavings, shortcutLength, func(shortcut []int) {
 			// Echo best path without cheating
 			if verbose {
-				output += fmt.Sprint("- Shortcut found:\n")
-				output += echoLabyrinth(labyrinth, indexer, shortcut[0], -1, -1, shortcut)
-				output += "\n"
+				log.Log(fmt.Sprint("- Shortcut found:\n"))
+				log.Log(echoLabyrinth(labyrinth, indexer, shortcut[0], -1, -1, shortcut))
+				log.Log("\n")
 			}
 		})
 
 		// Echo number of shortcuts found
-		output += fmt.Sprintf("- Total shortcut found: %v\n", shortcutsCount)
+		log.Log(fmt.Sprintf("- Total shortcut found: %v\n", shortcutsCount))
 
 		// Return solution
-		return shortcutsCount, output, nil
+		return shortcutsCount, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 func traverseLabyrinth(labyrinth []rune, indexer matrix.MatrixIndexer, current int, end int, path []int, history map[int]int, callback func(path []int)) (bool, []int) {

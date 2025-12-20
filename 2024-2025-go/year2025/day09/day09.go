@@ -83,12 +83,11 @@ func (day Day09) GetExecutions(index int, tag string) []solution.SolutionExecuti
 }
 
 // Implementation
-func (day Day09) Run(index int, tag string, input any, verbose bool) (any, string, error) {
+func (day Day09) Run(index int, tag string, input any, verbose bool, log solution.Logger) (any, string, error) {
 	// Initialize
-	var output = ""
 	var value, ok = input.(string)
 	if !ok {
-		return nil, output, errors.New("failed casting execution to correct Input/Output types")
+		return nil, log.Dump(), errors.New("failed casting execution to correct Input/Output types")
 	}
 
 	// Parse inputs
@@ -102,10 +101,10 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 	}
 
 	// if !validateNoSuperfluousLines(coords) {
-	// 	return 0, output, errors.New("detected superfluous lines - need to implemented preprocessing step")
+	// 	return 0, log.Dump(), errors.New("detected superfluous lines - need to implemented preprocessing step")
 	// }
 	// if !validateNoOverlappingLines(coords) {
-	// 	return 0, output, errors.New("detected overlapping lines - ouch")
+	// 	return 0, log.Dump(), errors.New("detected overlapping lines - ouch")
 	// }
 
 	// Part 1/2
@@ -123,7 +122,7 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 		}
 
 		// Return solution
-		return max, output, nil
+		return max, log.Dump(), nil
 	} else
 
 	// Part 2/2
@@ -140,11 +139,11 @@ func (day Day09) Run(index int, tag string, input any, verbose bool) (any, strin
 			}
 		}
 		// Return solution
-		return max, output, nil
+		return max, log.Dump(), nil
 	}
 
 	// Missing implementation
-	return nil, output, errors.New("missing implementation for required index")
+	return nil, log.Dump(), errors.New("missing implementation for required index")
 }
 
 type Coord struct {
