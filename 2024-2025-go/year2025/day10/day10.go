@@ -188,7 +188,7 @@ func (day Day10) Run(index int, tag string, input any, verbose bool, log solutio
 			// Prompt
 			log.Log(fmt.Sprintf("  > Machine %d/%d:\n", i+1, len(machines)))
 			// Find minimum joltage stabilizing sequence
-			var p = findJoltageSequence(machine.joltages, machine.buttonMap)
+			var p = findJoltageSequence(machine.joltages, machine.buttonMap, &log)
 			// Prompt
 			log.Log(fmt.Sprintf("  - Stabilized joltages #%d with %d button presses\n", i+1, p))
 			// Store initialization presses count
@@ -238,7 +238,7 @@ func findInitializationSequence(target uint, state uint, buttonBitMaps []uint, i
 	}
 }
 
-func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
+func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int, log *solution.Logger) int {
 
 	// Organize buttons by joltages
 	var buttonsPerJoltageMap = make([][]int, len(joltages))
@@ -248,44 +248,29 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 		}
 	}
 
-	// Calculate per button maximum presses, from allowed joltages
-	var buttonMaxima = make([]uint16, len(joltagesPerButtonsMap))
-	for j, buttons := range buttonsPerJoltageMap {
-		var joltage = joltages[j]
-		for _, b := range buttons {
-			if buttonMaxima[b] == 0 || joltage < int(buttonMaxima[b]) {
-				buttonMaxima[b] = uint16(joltage)
-			}
-		}
-	}
-
 	// Try to find ordering of joltages, where each next only has a single button not already pressed!?
 	var orderedJoltageIndexes, _, _ = orderJoltages(buttonsPerJoltageMap, []int{}, []int{})
-	// fmt.Printf("    ... determined order: %v\n", orderedJoltageIndexes)
-	// fmt.Printf("    ... buttons/degrees of freedom per joltage: %v\n", orderedJoltageUnusedButtonsCounts)
+	log.Log(fmt.Sprintf("    ... determined order: %v\n", orderedJoltageIndexes))
 
 	// For each joltage, generate possible button presses
+	var cache = make(map[int][][][]uint16)
 	var buttonsReadoutPermutations = [][]uint16{make([]uint16, len(joltagesPerButtonsMap))}
 	var previouslyUsedButtons = make([]int, 0)
-	var cache = make(map[int][][][]uint16)
-	for _, joltageIndex := range orderedJoltageIndexes {
+	for i, joltageIndex := range orderedJoltageIndexes {
 		var targetJoltage = joltages[joltageIndex]
 		var nextButtonsReadoutPermutations = [][]uint16{}
 
 		// Get connected buttons, not already set by the state
 		var allConnectedButtons = buttonsPerJoltageMap[joltageIndex]
 		var unpressedConnectedButtons = getOnlyUnpressedButtons(allConnectedButtons, previouslyUsedButtons)
-		// if len(unpressedConnectedButtons) == 0 {
-		// 	continue
-		// }
 
 		// Prompt generation starting state
-		// fmt.Printf("    - Joltage %d/%d (#%d = %d): Generating off of %d states with %d unpressed buttons ...", i+1, len(joltages), joltageIndex+1, targetJoltage, len(buttonsReadoutPermutations), len(unpressedConnectedButtons))
+		log.Log(fmt.Sprintf("    - Joltage %d/%d (#%d = %d): Generating off of %d states with %d unpressed buttons ...", i+1, len(joltages), joltageIndex+1, targetJoltage, len(buttonsReadoutPermutations), len(unpressedConnectedButtons)))
 
 		// Generate permutations
 		for _, buttonReadoutPermutation := range buttonsReadoutPermutations {
 			// Generate possible clicking states, compatible with current joltage
-			var new = generateButtonPermutations(buttonReadoutPermutation, allConnectedButtons, unpressedConnectedButtons, buttonMaxima, targetJoltage, cache)
+			var new = generateButtonPermutations(joltagesPerButtonsMap, buttonReadoutPermutation, allConnectedButtons, unpressedConnectedButtons, joltages, targetJoltage, cache)
 			nextButtonsReadoutPermutations = append(nextButtonsReadoutPermutations, new...)
 		}
 		buttonsReadoutPermutations = nextButtonsReadoutPermutations
@@ -294,7 +279,7 @@ func findJoltageSequence(joltages []int, joltagesPerButtonsMap [][]int) int {
 		previouslyUsedButtons = append(previouslyUsedButtons, allConnectedButtons...)
 
 		// Prompt generated permutations
-		// fmt.Printf(" found %d compatible states\n", len(buttonsReadoutPermutations))
+		log.Log(fmt.Sprintf(" found %d compatible states\n", len(buttonsReadoutPermutations)))
 	}
 
 	// Find minimum button presses in all valid permutations
@@ -374,7 +359,7 @@ func calculateOrderingScore(unusedButtonsCount int, score float64) float64 {
 	return math.Pow(float64(normalizedUnusedButtonsCount), 3) + score
 }
 
-func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedButtons []int, unpressedConnectedButtons []int, buttonMaxima []uint16, targetJoltage int, cache map[int][][][]uint16) [][]uint16 {
+func generateButtonPermutations(joltagesPerButtonsMap [][]int, buttonReadoutPermutation []uint16, allConnectedButtons []int, unpressedConnectedButtons []int, joltageMaxima []int, targetJoltage int, cache map[int][][][]uint16) [][]uint16 {
 	// Get current joltage
 	var joltage = getReadoutJoltage(buttonReadoutPermutation, allConnectedButtons)
 	// If joltage overshot, return no acceptable permutations
@@ -394,12 +379,17 @@ func generateButtonPermutations(buttonReadoutPermutation []uint16, allConnectedB
 		for j := range unpressedConnectedButtons {
 			mergedPermutation[unpressedConnectedButtons[j]] = unpressedButtonPermutations[i][j]
 		}
-		// Verify if any single button overshoot its allowed maximum
+
+		// Verify if joltages overshoot
 		var valid = true
-		for i := range mergedPermutation {
-			if mergedPermutation[i] > buttonMaxima[i] {
-				valid = false
-				break
+		var verificationJoltages = make([]int, len(joltageMaxima))
+		for i, presses := range mergedPermutation {
+			for _, j := range joltagesPerButtonsMap[i] {
+				verificationJoltages[j] += int(presses)
+				if verificationJoltages[j] > joltageMaxima[j] {
+					valid = false;
+					break;
+				}
 			}
 		}
 		// Store merged permutation

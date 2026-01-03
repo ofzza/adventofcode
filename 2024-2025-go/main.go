@@ -4,6 +4,8 @@ import (
 	// Import built in packages
 	"flag"
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	// Import solutions
@@ -23,6 +25,7 @@ var (
 	pDebugging *bool   = flag.Bool("debugging", false, "If execution output should be immediate instead of post execution, making execution potentially slower, but more appropriate for debugging purposes")
 	pObfuscate *bool   = flag.Bool("obfuscate", false, "If execution output should be obfuscated")
 	pSummary   *bool   = flag.Bool("summary", false, "If execution summary should be output")
+	pGraph   	 *bool   = flag.Bool("graph", false, "If execution summary graph should be output")
 )
 
 // Main entry point
@@ -41,6 +44,7 @@ func main() {
 	var successByTag = map[string]int{"*": 0}
 	var failByTag = map[string]int{"*": 0}
 	var unknownByTag = map[string]int{"*": 0}
+	var timeByExecution = []struct{label string; time int64}{}
 	var timeByTag = map[string]int64{"*": 0}
 	for _, day := range Days {
 		for _, execution := range day.GetExecutions(0, "") {
@@ -85,11 +89,14 @@ func main() {
 			}
 
 			// Update summary timing
+			var label = fmt.Sprintf("%04d-%02d.%2d %s", info.Year, info.Day, execution.Index, execution.Tag)
+			var time = duration.Microseconds()
+			timeByExecution = append(timeByExecution, struct{label string; time int64}{ label, time })
 			timeByTag[execution.Tag] += duration.Microseconds()
 			timeByTag["*"] += duration.Microseconds()
 
 			// Output execution result
-			fmt.Printf("➡️ Year %v, Day %v, Index %v, Tag \"%v\" (%v/%v):\n", info.Year, info.Day, execution.Index, execution.Tag, i+1, len(executions))
+			fmt.Printf("➡️  Year %v, Day %v, Index %v, Tag \"%v\" (%v/%v):\n", info.Year, info.Day, execution.Index, execution.Tag, i+1, len(executions))
 			if *pVerbose && output != "" {
 				fmt.Print("\033[34m")
 				fmt.Printf("\n%v\n", output)
@@ -144,6 +151,32 @@ func main() {
 				fmt.Printf("   ❔ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			}
 
+		}
+	}
+
+	// Print out summary grapg
+	if *pGraph {
+		// Calculate proportions
+		var maxExecutionTime float64 = 0;
+		for _, exec := range timeByExecution {
+			if math.Log2(float64(exec.time)) > maxExecutionTime {
+				maxExecutionTime = math.Log2(float64(exec.time));
+			}
+		}
+		var terminalWidth = 64
+		var labelWidth = 20
+		var timePerSection float64 = maxExecutionTime / float64(terminalWidth - labelWidth)
+
+		// Output execution time graph
+		fmt.Printf("\n")
+		fmt.Printf("--- EXECUTION TIME (Log2) ---\n")
+		fmt.Printf("\n")
+		for _, exec := range timeByExecution {
+			var paddedLabelFmt = fmt.Sprintf("%s-%ds", "%", labelWidth)
+			var paddedLabel = fmt.Sprintf(paddedLabelFmt, exec.label)
+			var timeLineFmt = fmt.Sprintf(fmt.Sprintf("%s%ds", "%", int(math.Log2(float64(exec.time)) / timePerSection)), "");
+			var timeLine = strings.Replace(timeLineFmt, " ", "#", -1)
+			fmt.Printf("- %s [🕐 %9d μs]: %s\n",paddedLabel,  exec.time, timeLine)
 		}
 	}
 

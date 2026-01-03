@@ -21,11 +21,13 @@ Available arguments:
 
 - Format output:
 
-  | Description | Syntax                              | Explanation                            |
-  | ----------- | ----------------------------------- | -------------------------------------- |
-  | --verbose   | `$ go run main.go -- --verbose[:N]` | Will output more information           |
-  | --obfuscate | `$ go run main.go -- --obfuscate`   | Will obfuscate the final result        |
-  | --summary   | `$ go run main.go -- --summary`     | Will print summary at end of execution |
+  | Description | Syntax                              | Explanation                                                                                             |
+  | ----------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+  | --verbose   | `$ go run main.go -- --verbose[:N]` | Will output more information                                                                            |
+  | --debugging | `$ go run main.go -- --verbose[:N]` | Will output during execution instead of after, possibly costing performance, but helping with debugging |
+  | --obfuscate | `$ go run main.go -- --obfuscate`   | Will obfuscate the final result                                                                         |
+  | --summary   | `$ go run main.go -- --summary`     | Will print summary at end of execution                                                                  |
+  | --graph     | `$ go run main.go -- --graph`       | Will print execution time graph at end of execution                                                     |
 
 For example:
 

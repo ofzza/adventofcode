@@ -12,16 +12,17 @@
       "program": "${workspaceFolder}/2024-2025-go/main.go",
       "args": [
         "--verbose",
-        // "--obfuscate",
+        "--debugging",
         "--summary",
+        "--graph",
         "--year",
         "2025",
         "--day",
-        "10",
+        "1",
         "--index",
-        "2",
+        "1",
         "--tag",
-        "test",
+        "solution",
         "--single",
         "1"
       ]
