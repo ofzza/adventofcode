@@ -74,6 +74,7 @@ func main() {
 
 			// Initialize logger
 			var log = solution.Logger{
+				Verbsose: *pVerbose,
 				Debugging: *pDebugging,
 			}
 
@@ -89,7 +90,7 @@ func main() {
 			}
 
 			// Update summary timing
-			var label = fmt.Sprintf("%04d-%02d.%2d %s", info.Year, info.Day, execution.Index, execution.Tag)
+			var label = fmt.Sprintf("%04d-%02d.%02d %s", info.Year, info.Day, execution.Index, execution.Tag)
 			var time = duration.Microseconds()
 			timeByExecution = append(timeByExecution, struct{label string; time int64}{ label, time })
 			timeByTag[execution.Tag] += duration.Microseconds()
@@ -115,8 +116,8 @@ func main() {
 				} else {
 					resultOutput = "###### == ######"
 				}
-				if len(resultOutput) > 32 {
-					resultOutput = resultOutput[:32]
+				if len(resultOutput) > 36 {
+					resultOutput = resultOutput[:36] + " ..."
 				}
 				fmt.Printf("   ✅ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			} else if execution.Expect != nil && execution.Expect != result {
@@ -130,8 +131,8 @@ func main() {
 				} else {
 					resultOutput = "###### != ######"
 				}
-				if len(resultOutput) > 32 {
-					resultOutput = resultOutput[:32]
+				if len(resultOutput) > 36 {
+					resultOutput = resultOutput[:32] + " ..."
 				}
 				fmt.Printf("   ❌ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			} else {
@@ -145,8 +146,8 @@ func main() {
 				} else {
 					resultOutput = "######"
 				}
-				if len(resultOutput) > 32 {
-					resultOutput = resultOutput[:32]
+				if len(resultOutput) > 36 {
+					resultOutput = resultOutput[:36] + " ..."
 				}
 				fmt.Printf("   ❔ %v (In %vμs)\n", resultOutput, duration.Microseconds())
 			}

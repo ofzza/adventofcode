@@ -1,4 +1,4 @@
-package year2024
+package year2025
 
 import (
 	solution "adventofcode/lib"
@@ -73,7 +73,7 @@ func (day Day11) GetExecutions(index int, tag string) []solution.SolutionExecuti
 					Index:  2,
 					Tag:    "solution",
 					Input:  func() string { var b, _ = os.ReadFile("./year2025/data/day11/input.txt"); return string(b) }(),
-					Expect: uint(0),
+					Expect: uint64(287039700129600),
 				},
 			)
 		}

@@ -1,4 +1,4 @@
-package year2024
+package year2025
 
 import (
 	solution "adventofcode/lib"

@@ -1,5 +1,8 @@
 # Log files
 *.log
 
+# Debugging files
+debug*
+
 # Local files
 *.gitignore.*
